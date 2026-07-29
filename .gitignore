@@ -18,8 +18,12 @@ data/logs/
 data/state/
 
 site/dist/
+site/data/
 site/.vite/
 exports/private/
+
+vault/*
+!vault/README.md
 
 *.zip
 *.tgz

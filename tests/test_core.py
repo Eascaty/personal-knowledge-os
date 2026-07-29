@@ -37,6 +37,7 @@ class CorePipelineTest(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.paths = ProjectPaths.from_root(self.root)
         initialize_layout(self.paths)
+        self.assertTrue((self.paths.inbox_dir / "files").is_dir())
         self.runtime = load_runtime(self.paths)
         self.runtime["pipeline"]["retry_base_seconds"] = 0
         self.taxonomy = load_taxonomy(self.paths)

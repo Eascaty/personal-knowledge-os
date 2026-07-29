@@ -71,6 +71,7 @@ class ProjectPaths:
             self.root,
             self.config_dir,
             self.inbox_dir,
+            self.inbox_dir / "files",
             self.data_dir,
             self.raw_dir,
             self.normalized_dir,
