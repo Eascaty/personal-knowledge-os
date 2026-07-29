@@ -1,0 +1,85 @@
+# 仅保留为最初设计记录；运行时唯一权威配置是 taxonomy.json。
+version: 1
+updated_at: "2026-07-27T01:00:00+08:00"
+
+rules:
+  locked_levels: 3
+  allow_ai_children_from_level: 4
+  one_primary_path: true
+  allow_secondary_relations: true
+  uncertain_destination: "待归类"
+  default_visibility: "private"
+
+root:
+  id: root
+  name: "我的知识体系"
+  locked: true
+  children:
+    - id: finance
+      name: "金融"
+      locked: true
+      children:
+        - id: finance-economy
+          name: "财经"
+          locked: true
+          children:
+            - id: finance-economy-credit-card
+              name: "信用卡"
+              locked: true
+              children:
+                - id: finance-economy-credit-card-us-stocks
+                  name: "美股"
+                  locked: true
+
+    - id: ai
+      name: "AI"
+      locked: true
+      children:
+        - id: ai-agent
+          name: "Agent"
+          locked: true
+          children:
+            - id: ai-agent-intelligent-agent
+              name: "智能体"
+              locked: true
+
+    - id: technology
+      name: "技术"
+      locked: true
+      children:
+        - id: technology-programmer
+          name: "程序员"
+          locked: true
+          children:
+            - id: technology-programmer-java
+              name: "Java开发"
+              locked: true
+              children:
+                - id: technology-programmer-java-basics
+                  name: "Java基础"
+                - id: technology-programmer-java-jvm
+                  name: "JVM"
+                  children:
+                    - id: technology-programmer-java-jvm-memory
+                      name: "内存模型"
+                    - id: technology-programmer-java-jvm-classloading
+                      name: "类加载"
+                    - id: technology-programmer-java-jvm-gc
+                      name: "垃圾回收"
+                      children:
+                        - id: technology-programmer-java-jvm-gc-g1
+                          name: "G1"
+                        - id: technology-programmer-java-jvm-gc-zgc
+                          name: "ZGC"
+                    - id: technology-programmer-java-jvm-diagnostics
+                      name: "性能诊断"
+                - id: technology-programmer-java-concurrency
+                  name: "并发编程"
+                - id: technology-programmer-java-spring
+                  name: "Spring生态"
+                - id: technology-programmer-java-database
+                  name: "数据库"
+                - id: technology-programmer-java-microservices
+                  name: "微服务"
+                - id: technology-programmer-java-engineering
+                  name: "工程实践"

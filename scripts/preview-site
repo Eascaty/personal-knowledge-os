@@ -1,0 +1,8 @@
+#!/bin/zsh
+set -eu
+
+SCRIPT_DIR=${0:A:h}
+PROJECT_ROOT=${SCRIPT_DIR:h}
+exec /usr/bin/python3 -m http.server 8765 \
+  --bind 127.0.0.1 \
+  --directory "${PROJECT_ROOT}/site/dist"

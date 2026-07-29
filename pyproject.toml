@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-knowledge-os"
+version = "0.1.0"
+description = "Local-first, zero-paid-API personal knowledge pipeline"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Private project" }
+authors = [{ name = "LocalKnowledgeOS" }]
+dependencies = []
+
+[project.scripts]
+knowledge-os = "knowledge_os.cli:main"
+knowledge-os-site = "knowledge_os.site.__main__:main"
+knowledge-os-ops = "knowledge_os.operations.__main__:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+knowledge_os = ["default_taxonomy.json", "site/assets/*"]
+
+[tool.unittest]
+start-directory = "tests"

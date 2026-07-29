@@ -1,0 +1,8 @@
+#!/bin/zsh
+set -eu
+
+SCRIPT_DIR=${0:A:h}
+PROJECT_ROOT=${SCRIPT_DIR:h}
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONPATH="${PROJECT_ROOT}/src"
+exec /usr/bin/python3 -m knowledge_os.operations --root "${PROJECT_ROOT}" backup "$@"

@@ -1,0 +1,746 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-29T16:29:31+00:00",
+  "visibility": "private",
+  "site": {
+    "title": "我的知识体系",
+    "visibility": "private"
+  },
+  "root": "root",
+  "taxonomy": {
+    "id": "root",
+    "name": "我的知识体系",
+    "locked": true,
+    "keywords": [],
+    "children": [
+      {
+        "id": "finance",
+        "name": "金融",
+        "locked": true,
+        "keywords": [
+          "金融",
+          "财经",
+          "经济",
+          "投资",
+          "股票",
+          "证券",
+          "信用卡",
+          "美股",
+          "finance",
+          "stock",
+          "credit card"
+        ],
+        "children": [
+          {
+            "id": "finance-economy",
+            "name": "财经",
+            "locked": true,
+            "keywords": [
+              "财经",
+              "经济",
+              "投资",
+              "市场",
+              "宏观",
+              "证券",
+              "股票",
+              "信用卡",
+              "美股"
+            ],
+            "children": [
+              {
+                "id": "finance-economy-credit-card",
+                "name": "信用卡",
+                "locked": true,
+                "keywords": [
+                  "信用卡",
+                  "银行卡",
+                  "额度",
+                  "账单",
+                  "credit card",
+                  "美股"
+                ],
+                "children": [
+                  {
+                    "id": "finance-economy-credit-card-us-stocks",
+                    "name": "美股",
+                    "locked": true,
+                    "keywords": [
+                      "美股",
+                      "纳斯达克",
+                      "纽交所",
+                      "nasdaq",
+                      "nyse",
+                      "s&p",
+                      "标普"
+                    ],
+                    "direct_document_count": 0,
+                    "document_count": 0
+                  }
+                ],
+                "direct_document_count": 0,
+                "document_count": 0
+              }
+            ],
+            "direct_document_count": 0,
+            "document_count": 0
+          }
+        ],
+        "direct_document_count": 0,
+        "document_count": 0
+      },
+      {
+        "id": "ai",
+        "name": "AI",
+        "locked": true,
+        "keywords": [
+          "AI",
+          "人工智能",
+          "大模型",
+          "机器学习",
+          "神经网络",
+          "LLM",
+          "Agent",
+          "智能体",
+          "RAG",
+          "prompt"
+        ],
+        "children": [
+          {
+            "id": "ai-agent",
+            "name": "Agent",
+            "locked": true,
+            "keywords": [
+              "Agent",
+              "智能代理",
+              "智能体",
+              "工具调用",
+              "多智能体",
+              "agentic"
+            ],
+            "children": [
+              {
+                "id": "ai-agent-intelligent-agent",
+                "name": "智能体",
+                "locked": true,
+                "keywords": [
+                  "智能体",
+                  "自主代理",
+                  "规划",
+                  "记忆",
+                  "工具使用",
+                  "multi-agent"
+                ],
+                "direct_document_count": 0,
+                "document_count": 0
+              }
+            ],
+            "direct_document_count": 0,
+            "document_count": 0
+          }
+        ],
+        "direct_document_count": 0,
+        "document_count": 0
+      },
+      {
+        "id": "technology",
+        "name": "技术",
+        "locked": true,
+        "keywords": [
+          "技术",
+          "软件",
+          "编程",
+          "代码",
+          "开发",
+          "程序员",
+          "Java",
+          "JVM",
+          "Spring",
+          "数据库",
+          "微服务",
+          "并发"
+        ],
+        "children": [
+          {
+            "id": "technology-programmer",
+            "name": "程序员",
+            "locked": true,
+            "keywords": [
+              "程序员",
+              "编程",
+              "软件开发",
+              "代码",
+              "工程师",
+              "Java",
+              "JVM",
+              "Spring"
+            ],
+            "children": [
+              {
+                "id": "technology-programmer-java",
+                "name": "Java开发",
+                "locked": true,
+                "keywords": [
+                  "Java",
+                  "JDK",
+                  "JVM",
+                  "Spring",
+                  "Maven",
+                  "Gradle",
+                  "垃圾回收",
+                  "并发"
+                ],
+                "children": [
+                  {
+                    "id": "technology-programmer-java-basics",
+                    "name": "Java基础",
+                    "keywords": [
+                      "Java基础",
+                      "集合",
+                      "泛型",
+                      "反射",
+                      "注解",
+                      "异常",
+                      "语法"
+                    ],
+                    "direct_document_count": 0,
+                    "document_count": 0
+                  },
+                  {
+                    "id": "technology-programmer-java-jvm",
+                    "name": "JVM",
+                    "keywords": [
+                      "JVM",
+                      "虚拟机",
+                      "字节码",
+                      "内存模型",
+                      "类加载",
+                      "垃圾回收",
+                      "GC",
+                      "G1",
+                      "ZGC"
+                    ],
+                    "children": [
+                      {
+                        "id": "technology-programmer-java-jvm-memory",
+                        "name": "内存模型",
+                        "keywords": [
+                          "内存模型",
+                          "JMM",
+                          "堆",
+                          "栈",
+                          "方法区",
+                          "可见性"
+                        ],
+                        "direct_document_count": 0,
+                        "document_count": 0
+                      },
+                      {
+                        "id": "technology-programmer-java-jvm-classloading",
+                        "name": "类加载",
+                        "keywords": [
+                          "类加载",
+                          "ClassLoader",
+                          "双亲委派",
+                          "字节码"
+                        ],
+                        "direct_document_count": 0,
+                        "document_count": 0
+                      },
+                      {
+                        "id": "technology-programmer-java-jvm-gc",
+                        "name": "垃圾回收",
+                        "keywords": [
+                          "垃圾回收",
+                          "垃圾收集",
+                          "GC",
+                          "收集器",
+                          "停顿",
+                          "G1",
+                          "ZGC"
+                        ],
+                        "children": [
+                          {
+                            "id": "technology-programmer-java-jvm-gc-g1",
+                            "name": "G1",
+                            "keywords": [
+                              "G1",
+                              "Garbage First",
+                              "Region",
+                              "Mixed GC"
+                            ],
+                            "direct_document_count": 0,
+                            "document_count": 0
+                          },
+                          {
+                            "id": "technology-programmer-java-jvm-gc-zgc",
+                            "name": "ZGC",
+                            "keywords": [
+                              "ZGC",
+                              "着色指针",
+                              "并发转移"
+                            ],
+                            "direct_document_count": 0,
+                            "document_count": 0
+                          }
+                        ],
+                        "direct_document_count": 0,
+                        "document_count": 0
+                      },
+                      {
+                        "id": "technology-programmer-java-jvm-diagnostics",
+                        "name": "性能诊断",
+                        "keywords": [
+                          "性能诊断",
+                          "JFR",
+                          "jstack",
+                          "jmap",
+                          "arthas",
+                          "火焰图"
+                        ],
+                        "direct_document_count": 0,
+                        "document_count": 0
+                      }
+                    ],
+                    "direct_document_count": 0,
+                    "document_count": 0
+                  },
+                  {
+                    "id": "technology-programmer-java-concurrency",
+                    "name": "并发编程",
+                    "keywords": [
+                      "并发",
+                      "线程",
+                      "锁",
+                      "volatile",
+                      "synchronized",
+                      "线程池",
+                      "CompletableFuture"
+                    ],
+                    "direct_document_count": 0,
+                    "document_count": 0
+                  },
+                  {
+                    "id": "technology-programmer-java-spring",
+                    "name": "Spring生态",
+                    "keywords": [
+                      "Spring",
+                      "Spring Boot",
+                      "Spring Cloud",
+                      "IoC",
+                      "AOP",
+                      "Bean"
+                    ],
+                    "direct_document_count": 0,
+                    "document_count": 0
+                  },
+                  {
+                    "id": "technology-programmer-java-database",
+                    "name": "数据库",
+                    "keywords": [
+                      "数据库",
+                      "MySQL",
+                      "PostgreSQL",
+                      "SQL",
+                      "事务",
+                      "索引",
+                      "Redis"
+                    ],
+                    "direct_document_count": 0,
+                    "document_count": 0
+                  },
+                  {
+                    "id": "technology-programmer-java-microservices",
+                    "name": "微服务",
+                    "keywords": [
+                      "微服务",
+                      "服务治理",
+                      "注册中心",
+                      "网关",
+                      "分布式",
+                      "RPC"
+                    ],
+                    "direct_document_count": 0,
+                    "document_count": 0
+                  },
+                  {
+                    "id": "technology-programmer-java-engineering",
+                    "name": "工程实践",
+                    "keywords": [
+                      "工程实践",
+                      "测试",
+                      "重构",
+                      "设计模式",
+                      "CI",
+                      "CD",
+                      "代码审查"
+                    ],
+                    "direct_document_count": 0,
+                    "document_count": 0
+                  }
+                ],
+                "direct_document_count": 0,
+                "document_count": 0
+              }
+            ],
+            "direct_document_count": 0,
+            "document_count": 0
+          }
+        ],
+        "direct_document_count": 0,
+        "document_count": 0
+      },
+      {
+        "id": "uncategorized",
+        "name": "待归类",
+        "locked": true,
+        "keywords": [],
+        "direct_document_count": 0,
+        "document_count": 0
+      }
+    ],
+    "direct_document_count": 0,
+    "document_count": 0
+  },
+  "nodes": [
+    {
+      "id": "root",
+      "parent_id": null,
+      "name": "我的知识体系",
+      "level": 0,
+      "path": [],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "finance",
+      "parent_id": "root",
+      "name": "金融",
+      "level": 1,
+      "path": [
+        "金融"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "ai",
+      "parent_id": "root",
+      "name": "AI",
+      "level": 1,
+      "path": [
+        "AI"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "technology",
+      "parent_id": "root",
+      "name": "技术",
+      "level": 1,
+      "path": [
+        "技术"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "uncategorized",
+      "parent_id": "root",
+      "name": "待归类",
+      "level": 1,
+      "path": [
+        "待归类"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "ai-agent",
+      "parent_id": "ai",
+      "name": "Agent",
+      "level": 2,
+      "path": [
+        "AI",
+        "Agent"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer",
+      "parent_id": "technology",
+      "name": "程序员",
+      "level": 2,
+      "path": [
+        "技术",
+        "程序员"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "finance-economy",
+      "parent_id": "finance",
+      "name": "财经",
+      "level": 2,
+      "path": [
+        "金融",
+        "财经"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java",
+      "parent_id": "technology-programmer",
+      "name": "Java开发",
+      "level": 3,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "finance-economy-credit-card",
+      "parent_id": "finance-economy",
+      "name": "信用卡",
+      "level": 3,
+      "path": [
+        "金融",
+        "财经",
+        "信用卡"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "ai-agent-intelligent-agent",
+      "parent_id": "ai-agent",
+      "name": "智能体",
+      "level": 3,
+      "path": [
+        "AI",
+        "Agent",
+        "智能体"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-basics",
+      "parent_id": "technology-programmer-java",
+      "name": "Java基础",
+      "level": 4,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "Java基础"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "finance-economy-credit-card-us-stocks",
+      "parent_id": "finance-economy-credit-card",
+      "name": "美股",
+      "level": 4,
+      "path": [
+        "金融",
+        "财经",
+        "信用卡",
+        "美股"
+      ],
+      "locked": true,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-jvm",
+      "parent_id": "technology-programmer-java",
+      "name": "JVM",
+      "level": 4,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "JVM"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-concurrency",
+      "parent_id": "technology-programmer-java",
+      "name": "并发编程",
+      "level": 4,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "并发编程"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-spring",
+      "parent_id": "technology-programmer-java",
+      "name": "Spring生态",
+      "level": 4,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "Spring生态"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-database",
+      "parent_id": "technology-programmer-java",
+      "name": "数据库",
+      "level": 4,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "数据库"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-microservices",
+      "parent_id": "technology-programmer-java",
+      "name": "微服务",
+      "level": 4,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "微服务"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-engineering",
+      "parent_id": "technology-programmer-java",
+      "name": "工程实践",
+      "level": 4,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "工程实践"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-jvm-memory",
+      "parent_id": "technology-programmer-java-jvm",
+      "name": "内存模型",
+      "level": 5,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "JVM",
+        "内存模型"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-jvm-classloading",
+      "parent_id": "technology-programmer-java-jvm",
+      "name": "类加载",
+      "level": 5,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "JVM",
+        "类加载"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-jvm-gc",
+      "parent_id": "technology-programmer-java-jvm",
+      "name": "垃圾回收",
+      "level": 5,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "JVM",
+        "垃圾回收"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-jvm-diagnostics",
+      "parent_id": "technology-programmer-java-jvm",
+      "name": "性能诊断",
+      "level": 5,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "JVM",
+        "性能诊断"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-jvm-gc-g1",
+      "parent_id": "technology-programmer-java-jvm-gc",
+      "name": "G1",
+      "level": 6,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "JVM",
+        "垃圾回收",
+        "G1"
+      ],
+      "locked": false,
+      "document_count": 0
+    },
+    {
+      "id": "technology-programmer-java-jvm-gc-zgc",
+      "parent_id": "technology-programmer-java-jvm-gc",
+      "name": "ZGC",
+      "level": 6,
+      "path": [
+        "技术",
+        "程序员",
+        "Java开发",
+        "JVM",
+        "垃圾回收",
+        "ZGC"
+      ],
+      "locked": false,
+      "document_count": 0
+    }
+  ],
+  "documents": [],
+  "relations": [],
+  "stats": {
+    "sources": 0,
+    "documents": 0,
+    "nodes": 25,
+    "relations": 0
+  }
+}

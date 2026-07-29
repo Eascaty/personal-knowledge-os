@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "model": {
+    "provider": "rules",
+    "ollama": {
+      "base_url": "http://127.0.0.1:11434",
+      "model": "qwen3:8b",
+      "timeout_seconds": 120
+    }
+  },
+  "pipeline": {
+    "max_attempts": 3,
+    "retry_base_seconds": 30,
+    "max_file_mb": 512,
+    "stale_job_minutes": 30
+  },
+  "site": {
+    "title": "我的知识体系",
+    "visibility": "private"
+  }
+}

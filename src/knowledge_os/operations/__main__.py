@@ -1,0 +1,97 @@
+"""Command-line utilities for health, gate and backup operations."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Any, Optional, Sequence
+
+from .gate import run_prebuild_gate
+from .health import run_health_checks, write_health_report
+from .lock import LockUnavailable, ProjectLock
+from .snapshot import SnapshotError, create_sqlite_snapshot
+
+
+def _emit(value: Any) -> None:
+    print(json.dumps(value, ensure_ascii=False, indent=2))
+
+
+def _doctor(arguments: argparse.Namespace) -> int:
+    with ProjectLock(arguments.root, purpose="doctor"):
+        report = run_health_checks(arguments.root)
+        destination = write_health_report(report)
+    payload = report.to_dict()
+    payload["report"] = str(destination)
+    _emit(payload)
+    return 0 if report.passed else 1
+
+
+def _gate(arguments: argparse.Namespace) -> int:
+    with ProjectLock(arguments.root, purpose="gate"):
+        result = run_prebuild_gate(arguments.root)
+    _emit(
+        {
+            "allowed": result.allowed,
+            "summary": result.summary,
+            "checks": [check.to_dict() for check in result.checks],
+        }
+    )
+    return 0 if result.allowed else 1
+
+
+def _backup(arguments: argparse.Namespace) -> int:
+    root = arguments.root.expanduser().resolve()
+    database = root / "data" / "state" / "knowledge.sqlite3"
+    output = (
+        arguments.output.expanduser().resolve()
+        if arguments.output
+        else root / "exports" / "private" / "backups"
+    )
+    with ProjectLock(root, purpose="backup"):
+        result = create_sqlite_snapshot(database, output)
+    _emit(
+        {
+            "ok": True,
+            "snapshot": str(result.snapshot),
+            "sha256": result.sha256,
+            "size_bytes": result.size_bytes,
+            "created_at": result.created_at,
+            "integrity": result.integrity,
+        }
+    )
+    return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="python -m knowledge_os.operations",
+        description="Knowledge OS 本地健康检查、发布门禁和一致性备份",
+    )
+    parser.add_argument("--root", type=Path, default=Path.cwd())
+    commands = parser.add_subparsers(dest="command", required=True)
+
+    doctor = commands.add_parser("doctor", help="运行离线健康检查并写入 health.md")
+    doctor.set_defaults(handler=_doctor)
+
+    gate = commands.add_parser("gate", help="运行离线发布门禁")
+    gate.set_defaults(handler=_gate)
+
+    backup = commands.add_parser("backup", help="生成经过完整性验证的 SQLite 快照")
+    backup.add_argument("--output", type=Path)
+    backup.set_defaults(handler=_backup)
+    return parser
+
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    arguments = build_parser().parse_args(argv)
+    try:
+        return int(arguments.handler(arguments))
+    except (LockUnavailable, SnapshotError, OSError, ValueError) as exc:
+        print("knowledge-os operations: {}".format(exc), file=sys.stderr)
+        return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
