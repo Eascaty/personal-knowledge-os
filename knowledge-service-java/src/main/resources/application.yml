@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: personal-knowledge-service
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: ${PORT:8080}
+
+knowledge:
+  database-path: ${KNOWLEDGE_DB_PATH:data/state/knowledge.sqlite3}
