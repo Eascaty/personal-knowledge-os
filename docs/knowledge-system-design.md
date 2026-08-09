@@ -337,6 +337,8 @@ $HOME/ai/knowledge/
 
 GitHub Actions 只检出公开仓库，在隔离临时目录导入 `tests/fixtures/` 中3份固定虚构资料，生成独立 SQLite 和 public 静态站点。只有数据库、构建清单、可见性、隐私、密钥和断链门禁全部通过时，产物才会部署到 GitHub Pages。
 
+公开地址：<https://eascaty.github.io/personal-knowledge-os/>
+
 该工作流不读取维护者电脑，也不能访问真实 `inbox/`、`data/state/`、`vault/` 或 `site/dist/`。
 
 ### 7.2 真实私密知识默认方案

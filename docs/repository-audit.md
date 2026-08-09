@@ -26,6 +26,7 @@
 - Git 公开归档不包含真实知识、SQLite、私密导出或生成站点。
 - GitHub Dependabot 安全告警：0。
 - v0.3.1 Release 已包含正式 Java JAR 与 SHA-256 校验文件。
+- GitHub Pages 公开 Demo 已从固定虚构资料自动构建并上线，不包含维护者本机知识。
 
 ## 有意留到后续
 

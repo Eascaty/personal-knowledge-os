@@ -12,7 +12,7 @@
 
 **本地优先 · 默认私密 · 零付费 API · Python 流水线 + Java 只读 API**
 
-![Personal Knowledge OS 知识地图效果图](docs/assets/knowledge-map.png)
+![Personal Knowledge OS GitHub Pages 公开 Demo](docs/assets/pages-demo.jpg)
 
 ## 在线体验
 
