@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PROJECT_ROOT=$(dirname -- "${SCRIPT_DIR}")
+OUTPUT_DIR=${1:-"${PROJECT_ROOT}/demo-dist"}
+
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONPATH="${PROJECT_ROOT}/src"
+exec python3 -B -m knowledge_os.demo \
+  --repository-root "${PROJECT_ROOT}" \
+  --output "${OUTPUT_DIR}"
