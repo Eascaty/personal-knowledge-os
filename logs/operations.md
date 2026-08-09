@@ -99,3 +99,10 @@
 - 从 GitHub CLI 官方 Release 下载并按官方 SHA-256 校验 `gh 2.97.0`；通过本机 v2rayN SOCKS 代理完成 `Eascaty` 登录。
 - 增加许可证、贡献指南、安全策略、Issue/PR 模板、Dependabot、GitHub Actions CI 与 Java 增量演进路线。
 - 本阶段尚未创建远程仓库或上传代码，等待最终本地验证。
+
+### GitHub Actions 首次 CI 修复（2026-08-09）
+
+- 已创建私有安全暂存仓库 `Eascaty/personal-knowledge-os`，并推送开源候选分支、创建草稿 PR #1。
+- 首次 GitHub Actions 在 Python 3.9、3.12、3.13 三个任务中均于测试入口退出，错误为 `./scripts/test: cannot execute: required file not found`。
+- 根因是测试脚本使用 macOS 自带、Ubuntu Runner 默认不存在的 `/bin/zsh`，并写死系统 Python 路径。
+- 经用户确认，将测试入口改为 POSIX `sh`，使用可移植的项目路径解析和 Actions 已配置的 `python3`。

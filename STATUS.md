@@ -1,8 +1,8 @@
 # 项目状态
 
 - 更新时间：2026-08-09（Asia/Shanghai）
-- 阶段：本地全链路完成，正在准备 GitHub 开源首发
-- 总体状态：可本地运行；开源元数据和 CI 已补齐，等待最终测试与推送
+- 阶段：GitHub 开源首发候选版本验证中
+- 总体状态：可本地运行；开源候选分支和草稿 PR 已推送，正在修复并复验 CI
 
 ## 已实现
 
@@ -52,10 +52,11 @@
 - GitHub CLI 2.97.0 已从官方 Release 安装并通过 v2rayN 本地代理登录为 `Eascaty`。
 - 已选择 `Eascaty/personal-knowledge-os`、Public 与 Apache-2.0，并完成许可证、贡献指南、安全策略、Issue/PR 模板、Dependabot 和 CI 的本地准备。
 - 已建立 Java 21 + Spring Boot 增量演进路线；现有 Python MVP 保持可运行，不做无价值重写。
+- 已创建私有安全暂存仓库和草稿 PR #1；首次 CI 暴露测试入口依赖 macOS `zsh`，已改为跨平台 POSIX `sh`。
 
 ## 尚需用户以后完成
 
-1. 完成开源候选版本的测试、隐私检查、提交、远程仓库创建与首次推送。
+1. 完成 PR #1 的线上 CI 复验、合并，并将仓库切换为 Public。
 2. 创建 Java 领域模型与只读 API 的首个 GitHub Issue。
 3. 对大体量、跨子主题的综合笔记增加按标题分块和多知识卡片生成。
 4. 如需持续后台运行，再明确选择是否安装 launchd 模板。
