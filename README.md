@@ -3,6 +3,8 @@
 [![CI](https://github.com/Eascaty/personal-knowledge-os/actions/workflows/ci.yml/badge.svg)](https://github.com/Eascaty/personal-knowledge-os/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-3776AB.svg)](pyproject.toml)
+[![Java](https://img.shields.io/badge/Java-21-ED8B00.svg)](knowledge-service-java/pom.xml)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.3-6DB33F.svg)](knowledge-service-java/pom.xml)
 
 一个本地优先、隐私友好、零付费 API 的个人知识处理系统。它把本地资料转换为可搜索的 Markdown、SQLite、知识树、关系图和静态网站，同时默认阻止私人内容进入公开构建。
 
@@ -16,6 +18,7 @@
 - **可恢复与可审计**：原始资料不可变保存，任务可重试，关键操作有记录。
 - **可扩展分类**：使用严格父子树表达专业归属，关系边表达跨领域联系。
 - **工程化验证**：18 项自动测试覆盖幂等、越界路径、隐私门禁和完整流水线。
+- **双语言演进**：Python 负责稳定的写入流水线，Java 21 提供版本化只读领域 API。
 
 ## 当前目标
 
@@ -64,6 +67,7 @@ knowledge/
 ├── data/                     # 私密原始数据、数据库和缓存
 ├── vault/                    # 可阅读 Markdown 知识树
 ├── src/knowledge_os/         # 核心、网站、运维和发布代码
+├── knowledge-service-java/   # Java 21 + Spring Boot 只读 API
 ├── site/                     # 静态网站资源与构建产物
 ├── exports/                  # 对外导出；只有 public 可上传
 ├── ops/                      # launchd 等可选运维模板
@@ -99,6 +103,29 @@ knowledge/
 ./scripts/backup
 ./scripts/test
 ```
+
+## Java 只读 API
+
+J1 里程碑已经实现。Java 服务读取现有 SQLite，但不会修改 Python 流水线的数据；API 只返回显式标记为 `public` 的知识条目，并省略来源绝对路径。
+
+前置环境：Java 21、Maven 3.6.3 或更高版本。测试和启动均可从项目根目录一条命令完成：
+
+```bash
+./scripts/java-test
+./scripts/java-service
+```
+
+默认监听 `http://127.0.0.1:8080`，接口统一带 `api_version: "v1"`：
+
+| 接口 | 用途 |
+|---|---|
+| `GET /api/v1/health` | 数据库与 schema 健康状态 |
+| `GET /api/v1/taxonomy` | 严格母子分类树 |
+| `GET /api/v1/documents` | 公开知识分页列表 |
+| `GET /api/v1/documents/{id}` | 公开知识详情、来源与关系 |
+| `GET /api/v1/search?q=G1` | 公开知识搜索 |
+
+如数据库位于其他位置，可在启动前设置 `KNOWLEDGE_DB_PATH`。当前 J1 搜索采用安全的参数化查询；基于 FTS5/Lucene 的中文全文检索和基准测试属于 J2。
 
 `ops/launchd/` 提供每15分钟自动执行的模板，但按照“不修改项目外目录”的
 要求，目前没有自动安装。Cloudflare 发布适配器也默认只生成计划；真实上线

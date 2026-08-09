@@ -113,3 +113,15 @@
 - PR #1 已使用普通合并进入 `main`，保留许可证、文档、协作配置、CI 修复等全部中文分步提交。
 - 仓库 `Eascaty/personal-knowledge-os` 已由私有安全暂存切换为 Public。
 - 公开前后检查确认真实知识、SQLite 数据库、私密导出和生成站点均未进入 Git 跟踪范围。
+
+### Java J1 领域模型与只读 API（2026-08-09 19:23 +0800）
+
+- 从 GitHub Issue #5 建立 `agent/java-j1-readonly-api` 功能分支，采用 Java 21、Spring Boot 3.5.3、Maven 和 SQLite JDBC。
+- 增加知识条目、分类节点、脱敏来源和关系边领域模型，以及带 `api_version=v1` 的健康、分类树、列表、详情和搜索接口。
+- SQLite 适配器采用只读连接；知识查询强制过滤 `public`，API 来源结构不包含 `origin`、`raw_path` 或绝对路径。
+- 使用官方 SHA-256/SHA-512 校验临时 Temurin JDK 21.0.12 与 Maven 3.9.11，未替换本机 Java 8 或修改系统级配置。
+- Java 7 项测试全部通过，覆盖 canonical JSON 契约、MockMvc、SQLite 集成、private 过滤、路径脱敏和 SQL 通配符转义。
+- Maven `verify`、JaCoCo 报告和原有 Python 18 项测试全部通过；GitHub Actions 已增加独立 Java 21 任务。
+- 使用打包后的 Spring Boot JAR 在 `127.0.0.1:18080` 完成真实 SQLite HTTP 冒烟：健康 `UP`、schema v1、分类根节点正确；因真实资料均为 private，公开列表为0。
+- 冒烟后正常关闭临时服务；最终 doctor 为 PASS，隐私问题0、密钥匹配0、断链0。
+- 代码审查后将 Spring Boot 默认监听地址固定为 `127.0.0.1`，并为 Maven 增加每月 Dependabot 检查。

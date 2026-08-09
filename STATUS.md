@@ -1,8 +1,8 @@
 # 项目状态
 
 - 更新时间：2026-08-09（Asia/Shanghai）
-- 阶段：GitHub 开源首发完成
-- 总体状态：本地可运行；公开仓库已上线，`main` 分支 CI 全部通过
+- 阶段：Java J1 领域模型与只读 API 已实现
+- 总体状态：Python MVP 保持可运行；Java 21 服务已完成本地构建与隐私边界验证
 
 ## 已实现
 
@@ -25,6 +25,10 @@
 - 原生 HTML/CSS/JS 静态网站、响应式、PWA、private/public 隔离。
 - 项目锁、SQLite 一致性备份、隐私、断链、数据库和发布门禁。
 - `scripts/run-pipeline` 单命令离线全链路。
+- Java 21 + Spring Boot 3.5 领域模型、SQLite 只读仓储与 API v1。
+- 健康检查、分类树、公开知识列表/详情/搜索接口。
+- Java API 结构性排除 private 内容、`origin`、`raw_path` 和绝对路径。
+- Java HTTP 默认仅监听 `127.0.0.1`，外部监听必须显式设置环境变量。
 - launchd 项目内模板，未修改 macOS 系统目录。
 
 ## 已验证环境
@@ -54,10 +58,14 @@
 - 已建立 Java 21 + Spring Boot 增量演进路线；现有 Python MVP 保持可运行，不做无价值重写。
 - 已创建私有安全暂存仓库和草稿 PR #1；首次 CI 暴露测试入口依赖 macOS `zsh`，已改为跨平台 POSIX `sh`。
 - PR #1 已保留全部分步提交并合并；仓库 `Eascaty/personal-knowledge-os` 已切换为 Public。
+- Java J1 使用 Temurin JDK 21.0.12 与 Maven 3.9.11 完成构建；7 项 Java 测试全部通过。
+- Java 与 Python 联合复验通过：Java 7/7、Python 18/18，JaCoCo 报告已生成。
+- Spring Boot 本机 HTTP 冒烟通过：schema v1 状态 `UP`，分类树正确，private 资料未进入公开列表。
+- 最终健康检查 PASS：隐私问题0、密钥匹配0、断链0。
 
 ## 尚需用户以后完成
 
-1. 创建 Java 领域模型与只读 API 的首个 GitHub Issue。
+1. Java J2：将基础搜索升级为 FTS5/Lucene 中文全文搜索并记录基准。
 2. 对大体量、跨子主题的综合笔记增加按标题分块和多知识卡片生成。
 3. 如需持续后台运行，再明确选择是否安装 launchd 模板。
 4. 登录 Cloudflare，创建 Pages 项目并配置 Access 精确邮箱策略。

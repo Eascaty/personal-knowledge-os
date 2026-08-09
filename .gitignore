@@ -6,6 +6,7 @@ models/
 cache/
 .venv/
 node_modules/
+knowledge-service-java/target/
 
 inbox/*
 !inbox/README.md

@@ -14,6 +14,9 @@ knowledge/
 ├── CONTRIBUTING.md                 # 贡献流程与隐私边界
 ├── SECURITY.md                     # 漏洞报告与安全支持范围
 ├── pyproject.toml                  # Python 包和 kb 命令
+├── knowledge-service-java/         # Java 21 + Spring Boot 只读领域 API
+│   ├── pom.xml                     # Maven、Spring Boot、SQLite JDBC、JaCoCo
+│   └── src/                        # API、领域模型、只读仓储与 JUnit 测试
 ├── .github/                        # CI、Dependabot、Issue 与 PR 模板
 │
 ├── config/
@@ -90,3 +93,9 @@ ingest → knowledge → site
 ```
 
 底层模块不能反向依赖网站或发布模块。真实网络发布不属于本地核心的完成条件。
+
+Java 服务只依赖稳定的 SQLite schema，不反向调用 Python，也不拥有写入权：
+
+```text
+Python pipeline → SQLite schema v1 ← Java read-only API
+```

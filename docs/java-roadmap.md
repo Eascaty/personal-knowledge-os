@@ -17,14 +17,17 @@
 
 ### J1：领域模型与只读 API
 
-- 建立 `knowledge-service-java/` Maven 模块。
-- 映射知识条目、分类节点、来源和关系边。
-- 提供健康检查、分类树和知识条目只读 API。
-- 使用契约测试证明 Java API 与现有 canonical JSON 一致。
+- 状态：已完成（2026-08-09）。
+- 已建立 `knowledge-service-java/` Maven 模块。
+- 已映射知识条目、分类节点、脱敏来源和关系边。
+- 已提供健康检查、分类树、知识条目和搜索只读 API。
+- API 只返回 `public` 条目，不返回 `origin`、`raw_path` 或本机绝对路径。
+- 已使用契约测试证明 Java API 的核心字段与现有 canonical JSON 一致。
+- 已通过 JDK 21、JUnit 5、SQLite 集成测试、MockMvc 和 JaCoCo 验证。
 
 ### J2：搜索服务
 
-- 提供中文全文搜索 API。
+- 将 J1 的参数化基础搜索升级为 SQLite FTS5 或 Lucene 中文全文搜索。
 - 为查询、分页、排序和高亮建立集成测试。
 - 记录固定数据集上的基准结果。
 
@@ -42,4 +45,3 @@
 ## 简历验收标准
 
 只有已经实现并验证的内容才写入简历。每个里程碑应具备 Issue、Pull Request、自动测试和 Release 记录，并能解释架构取舍、真实问题与性能数据。
-
