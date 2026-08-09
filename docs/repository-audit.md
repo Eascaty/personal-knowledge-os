@@ -3,6 +3,7 @@
 - 日期：2026-08-09（Asia/Shanghai）
 - 仓库：`Eascaty/personal-knowledge-os`
 - 审计范围：开源元数据、分支策略、安全功能、依赖维护、构建复现、CI、Release 与简历展示
+- 结果：高优先级缺口已在 PR #12 补齐，并随 `v0.3.1` 发布。
 
 ## 已补齐
 
@@ -24,6 +25,7 @@
 - doctor：数据库、隐私、密钥和断链检查 PASS。
 - Git 公开归档不包含真实知识、SQLite、私密导出或生成站点。
 - GitHub Dependabot 安全告警：0。
+- v0.3.1 Release 已包含正式 Java JAR 与 SHA-256 校验文件。
 
 ## 有意留到后续
 

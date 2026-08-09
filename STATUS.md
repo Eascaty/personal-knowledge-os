@@ -1,8 +1,8 @@
 # 项目状态
 
 - 更新时间：2026-08-09（Asia/Shanghai）
-- 阶段：v0.3.1 发布后工程化补漏完成
-- 总体状态：Python MVP 与 Java J1 均可运行；仓库安全、可复现构建和 CI 质量门禁已补齐
+- 阶段：v0.3.1 工程化加固版本已发布
+- 总体状态：Python MVP 与 Java J1 均可运行；仓库安全、可复现构建、CI 质量门禁和可校验 Release 资产已补齐
 
 ## 已实现
 
@@ -69,6 +69,8 @@
 - `main` 已要求 PR 和四项 CI，禁止强推/删除；管理员同样受保护。
 - 已启用 CodeQL、Dependabot 安全更新、Secret Scanning、Push Protection 和私密漏洞报告。
 - 仓库 topics、CODEOWNERS、跨平台行尾策略和 J2 里程碑已补齐。
+- PR #12 已保留4条中文分步提交并合并；`v0.3.1` 已附带正式 JAR 与 SHA-256 发布。
+- 最终 main CI 4/4 通过；CodeQL 三语言、Secret Scanning 和 Dependabot 安全告警均为0。
 
 ## 尚需用户以后完成
 
