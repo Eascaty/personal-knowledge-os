@@ -1,14 +1,15 @@
 # 测试报告
 
-- 日期：2026-08-09（Asia/Shanghai）
+- 日期：2026-08-10（Asia/Shanghai）
 - 运行环境：macOS、Python 3.9.6、SQLite FTS5 trigram、Temurin JDK 21.0.12、Maven 3.9.11
-- 结果：18 项 Python 测试与 7 项 Java 测试全部通过
+- 结果：19 项 Python 测试与 7 项 Java 测试全部通过
 - 正式目录复验：`$HOME/ai/knowledge`
 - 最终健康检查：PASS；隐私问题0；断链0；网络请求0
 - 浏览器验收：桌面1280×720与手机390×844布局正常，分类导航可交互，控制台0错误
 - Java HTTP 冒烟：真实 SQLite 健康状态 `UP`，schema v1、分类树和 public-only 列表响应正确
 - Java 覆盖率：指令88.2%、分支67.5%；CI 最低门槛80%与60%
 - Maven Wrapper：固定 Maven 3.9.11 与 SHA-256，首次下载和完整 `verify` 通过
+- 公开 Demo：仅3份固定虚构资料，独立临时 SQLite，9项任务完成，public 门禁 PASS，网络请求0
 
 ## 自动测试范围
 
@@ -20,6 +21,7 @@
 - 分类节点退休后的自动迁移
 - symlink 输入与 raw 路径越界
 - 收件箱到网站的完整自动化
+- GitHub Pages Demo 仅使用固定虚构资料且不包含用户主目录路径
 - 再次运行不重复建库
 - 项目锁竞争
 - SQLite WAL 一致性快照
@@ -73,4 +75,5 @@ zsh -n scripts/*
 plutil -lint ops/launchd/com.local.knowledge-os.plist.template
 node --check src/knowledge_os/site/assets/app.js
 ./scripts/java-test
+./scripts/build-demo
 ```

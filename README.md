@@ -6,12 +6,19 @@
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB.svg)](pyproject.toml)
 [![Java](https://img.shields.io/badge/Java-21-ED8B00.svg)](knowledge-service-java/pom.xml)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F.svg)](knowledge-service-java/pom.xml)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-2ea44f.svg)](https://eascaty.github.io/personal-knowledge-os/)
 
 把散落在电脑里的 Markdown、文本、代码、HTML、DOCX 和 PDF，离线整理成一个可搜索、可追溯、可浏览的个人知识库。
 
 **本地优先 · 默认私密 · 零付费 API · Python 流水线 + Java 只读 API**
 
 ![Personal Knowledge OS 知识地图效果图](docs/assets/knowledge-map.png)
+
+## 在线体验
+
+访问 **[GitHub Pages 公开 Demo](https://eascaty.github.io/personal-knowledge-os/)**，无需安装即可体验分类树、全文搜索、知识详情和关系地图。
+
+在线 Demo 只使用仓库中三份虚构测试资料，由 GitHub Actions 在隔离临时目录重新构建，并在隐私、密钥、断链、数据库和 public 可见性门禁全部通过后发布。它不会读取或上传维护者本机的真实 `inbox/`、SQLite、Vault 或私密网站。
 
 ## 这个项目能做什么
 
@@ -50,7 +57,6 @@
 - 希望整理 Java、AI、金融或其他专业学习资料的开发者。
 - 希望知识库掌握在自己电脑里，而不是被某个平台绑定的人。
 - 想研究本地优先、知识处理流水线、SQLite、PWA 或 Spring Boot 的开发者。
-- 需要一个可以持续提交、测试和演进的个人开源项目的人。
 
 它目前不是 Notion 的完整替代品，也不是多人协作 SaaS。项目优先保证单机隐私、数据可迁移和处理过程可审计。
 
@@ -253,9 +259,9 @@ personal-knowledge-os/
 
 ## 当前质量状态
 
-- Python：18 项测试，覆盖幂等、分类、隐私门禁、越界路径和网站构建。
+- Python：19 项测试，覆盖幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
 - Java：7 项测试；JaCoCo 指令覆盖率 88.2%、分支覆盖率 67.5%。
-- CI：Python 3.9、3.12、3.13 与 Java 21 均为必需检查。
+- CI：Python 3.9、3.12、3.13、Java 21 与 Public Demo 均为必需检查。
 - 安全：CodeQL、Dependabot、Secret Scanning、Push Protection 已启用。
 - 发布：提供可校验的 Spring Boot JAR 和 SHA-256 文件。
 
@@ -288,7 +294,7 @@ personal-knowledge-os/
 - J2：中文全文搜索、安全高亮和性能基准。
 - J3：Java 幂等导入与事务迁移。
 - J4：OpenAPI、Docker 和可部署服务。
-- 使用虚构公开数据制作可在线访问的演示站。
+- 持续丰富公开 Demo 的虚构知识样例和交互验收。
 - 将大型综合笔记按 Markdown 标题拆成多张知识卡片。
 
 详细计划见 [Java 演进路线](docs/java-roadmap.md)和 [J2 Issue #10](https://github.com/Eascaty/personal-knowledge-os/issues/10)。

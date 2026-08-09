@@ -1,8 +1,8 @@
 # 项目状态
 
-- 更新时间：2026-08-09（Asia/Shanghai）
-- 阶段：v0.3.1 工程化加固版本已发布
-- 总体状态：Python MVP 与 Java J1 均可运行；仓库安全、可复现构建、CI 质量门禁和可校验 Release 资产已补齐
+- 更新时间：2026-08-10（Asia/Shanghai）
+- 阶段：v0.3.1 已发布，GitHub Pages 公开 Demo 实施中
+- 总体状态：Python MVP 与 Java J1 均可运行；仓库安全、可复现构建、CI 质量门禁、Release 资产与隔离公开 Demo 已补齐
 
 ## 已实现
 
@@ -73,11 +73,12 @@
 - 最终 main CI 4/4 通过；CodeQL 三语言、Secret Scanning 和 Dependabot 安全告警均为0。
 - README 已重构为面向首次使用者的中文项目首页，补齐项目用途、适用人群、三分钟体验、日常流程、数据目录、隐私边界、Java API、FAQ 与路线图。
 - README 已加入经过用户确认可公开使用的本地知识地图效果图，并同步 Spring Boot 版本标识至3.5.16。
+- 公开 Demo 构建器只读取3份固定虚构资料，在临时目录生成独立 SQLite 和 public 站点，不访问本机真实知识库。
+- Python 测试增加为19项；新增 Public Demo CI 和 GitHub Pages 自动部署工作流。
 
 ## 尚需用户以后完成
 
 1. Java J2：将基础搜索升级为 FTS5/Lucene 中文全文搜索并记录基准。
-2. 为虚构公开数据制作可在线访问的演示站点或截图，增强简历展示。
-3. 对大体量、跨子主题的综合笔记增加按标题分块和多知识卡片生成。
-4. 如需持续后台运行，再明确选择是否安装 launchd 模板。
-5. 登录 Cloudflare，创建 Pages 项目并配置 Access 精确邮箱策略。
+2. 对大体量、跨子主题的综合笔记增加按标题分块和多知识卡片生成。
+3. 如需持续后台运行，再明确选择是否安装 launchd 模板。
+4. 如需线上访问真实私密知识，再登录 Cloudflare 并配置 Access 精确邮箱策略。

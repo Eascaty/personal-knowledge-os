@@ -1,8 +1,8 @@
 # 个人知识体系总体设计
 
 > 状态：活文档  
-> 版本：0.3.0  
-> 更新时间：2026-07-30（Asia/Shanghai）  
+> 版本：0.3.1
+> 更新时间：2026-08-10（Asia/Shanghai）
 > 项目根目录：`$HOME/ai/knowledge`
 
 ## 1. 目标
@@ -24,7 +24,7 @@
 网站已经发布的版本由云端静态托管，因此 Mac 关机后仍然可以打开；Mac 只负责处理新资料和发布新版本。
 
 实现状态：本地入库、分类、搜索、知识图、静态站、检查和发布适配代码已完成；Java 21 只读领域 API 的 J1 里程碑也已完成。
-真实线上地址仍需用户以后登录 Cloudflare 并启用 Access；当前默认零网络请求。
+虚构公开资料已经通过 GitHub Pages 提供在线 Demo；真实私密知识的线上地址仍需用户以后登录 Cloudflare 并启用 Access。本地默认零网络请求。
 
 ## 2. 当前范围
 
@@ -256,8 +256,8 @@ AI 输出默认不是事实。状态包括：
 | 调度 | macOS launchd |
 | 版本 | Git |
 | 文档导出 | Markdown、JSON、GraphML |
-| 在线托管 | Cloudflare Pages |
-| 私密访问 | Cloudflare Access |
+| 虚构公开 Demo | GitHub Pages + GitHub Actions |
+| 真实私密知识托管 | Cloudflare Pages + Cloudflare Access |
 
 第一版不要求安装任何依赖，也不采用 Docker、n8n、LangChain、Chroma 或 Neo4j。这样即使没有 Ollama、Node 或 Pandoc，仍可完成确定性的全链路；本地模型只是可选增强。
 
@@ -333,7 +333,13 @@ $HOME/ai/knowledge/
 
 ## 7. 在线访问设计
 
-### 7.1 默认方案
+### 7.1 虚构公开 Demo
+
+GitHub Actions 只检出公开仓库，在隔离临时目录导入 `tests/fixtures/` 中3份固定虚构资料，生成独立 SQLite 和 public 静态站点。只有数据库、构建清单、可见性、隐私、密钥和断链门禁全部通过时，产物才会部署到 GitHub Pages。
+
+该工作流不读取维护者电脑，也不能访问真实 `inbox/`、`data/state/`、`vault/` 或 `site/dist/`。
+
+### 7.2 真实私密知识默认方案
 
 采用 Cloudflare Pages 托管纯静态网站，Cloudflare Access 保护访问。
 
@@ -345,7 +351,7 @@ $HOME/ai/knowledge/
 - 可以回滚历史部署。
 - 可使用免费 `*.pages.dev` 地址。
 
-### 7.2 网站数据
+### 7.3 网站数据
 
 线上只上传生成后的站点：
 
@@ -493,8 +499,10 @@ raw_auto_delete: false
 - 手机适配
 - PWA
 
-### 阶段 D：线上私密发布（代码与门禁完成，账号配置待用户）
+### 阶段 D：线上发布（虚构公开 Demo 已完成；真实私密站点待账号配置）
 
+- GitHub Pages 虚构公开 Demo
+- GitHub Actions 隔离构建与门禁
 - Cloudflare Pages
 - Cloudflare Access
 - 自动构建
@@ -539,6 +547,7 @@ raw_auto_delete: false
 - Cloudflare Pages pricing: <https://developers.cloudflare.com/pages/functions/pricing/>
 - Cloudflare Access policies: <https://developers.cloudflare.com/cloudflare-one/access-controls/policies/>
 - Cloudflare Access for `pages.dev`: <https://developers.cloudflare.com/pages/platform/known-issues/#enable-access-on-your-pagesdev-domain>
+- GitHub Pages custom workflows: <https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages>
 - SQLite FTS5: <https://www.sqlite.org/fts5.html>
 - Ollama API: <https://docs.ollama.com/api/introduction>
 - macOS launchd: <https://support.apple.com/guide/terminal/script-management-with-launchd-apdc6c1077b/mac>
