@@ -4,5 +4,6 @@ set -eu
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 PROJECT_ROOT=$(dirname -- "${SCRIPT_DIR}")
 
+"${SCRIPT_DIR}/check-java21"
 cd "${PROJECT_ROOT}/apps/api"
 exec ./mvnw --batch-mode verify

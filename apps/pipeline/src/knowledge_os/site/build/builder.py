@@ -12,6 +12,8 @@ import uuid
 from pathlib import Path
 from typing import Union
 
+from knowledge_os.contracts import validate_canonical_contract
+
 from .model import ASSET_DIR, REQUIRED_ASSETS, SCHEMA_VERSION, BuildResult, SiteDataError
 from .normalize import DataInput, normalize_site_data
 from .payloads import _graph_payload, _search_payload, _taxonomy_payload
@@ -83,6 +85,7 @@ def build_site(
     if visibility == "private" and allow_indexing:
         raise ValueError("private 构建不能允许搜索引擎索引")
     data = normalize_site_data(data_or_path, visibility=visibility)
+    validate_canonical_contract(data)
     output = _safe_output_directory(output_dir)
     output.parent.mkdir(parents=True, exist_ok=True)
 

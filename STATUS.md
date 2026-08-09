@@ -1,7 +1,7 @@
 # 项目状态
 
 - 更新时间：2026-08-10（Asia/Shanghai）
-- 阶段：v0.4.0 结构重构进行中（阶段三完成，准备固化跨应用契约）
+- 阶段：v0.4.0 结构重构进行中（阶段四完成，准备 App-ready 适配与总验收）
 - 总体状态：v0.3.1 与 GitHub Pages 线上基线稳定；在不改变数据和公开行为的前提下重整应用、契约与私密工作区边界
 
 ## 已实现
@@ -42,10 +42,11 @@
 ## 最近验证
 
 - Python 3.9 语法解析通过。
-- 21 项 unittest 全部通过。
+- 24 项 unittest 全部通过。
 - Python 存储、知识处理、检查和网站构建已拆为职责模块；兼容 facade 保留旧导入，架构测试限制实现模块不超过600行。
 - 工程已迁移为 `apps/ + packages/ + workspace/` 单仓库：Python、Java、Web 各自归位，私密输入、SQLite、Vault 与私密构建统一进入 Git 忽略的 `workspace/`。
 - 真实 SQLite 迁移前已完成一致性备份，迁移后完整性检查、现有资料去重、全流水线、发布门禁与健康检查通过。
+- canonical JSON Schema v1 与只读 API OpenAPI v1 已集中到 `packages/contracts/`；Python 建站强制校验，Python/Java 共用虚构契约样例。
 - 三份样例生成9个任务，全部完成。
 - 重复运行不新增资料或任务。
 - 金融、AI、Java/G1 三条路径全部正确。
@@ -83,5 +84,4 @@
 
 ## 尚需用户以后完成
 
-1. 固化 Web/Java/未来 App 共用的数据与 HTTP 契约。
-2. 完成上线构建与 App-ready 适配边界的总体验收。
+1. 完成上线构建与 App-ready 适配边界的总体验收。

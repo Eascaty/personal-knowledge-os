@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-09T00:00:00Z",
+  "site": {
+    "title": "契约示例",
+    "description": "不含真实用户知识的固定示例",
+    "language": "zh-CN",
+    "visibility": "public"
+  },
+  "root": "root",
+  "nodes": [
+    {
+      "id": "root",
+      "parent_id": null,
+      "name": "我的知识体系",
+      "level": 0,
+      "path": ["我的知识体系"],
+      "locked": true,
+      "summary": "",
+      "visibility": "public",
+      "children": ["java-g1"],
+      "direct_document_count": 0,
+      "document_count": 1
+    },
+    {
+      "id": "java-g1",
+      "parent_id": "root",
+      "name": "G1",
+      "level": 1,
+      "path": ["我的知识体系", "G1"],
+      "locked": false,
+      "summary": "",
+      "visibility": "public",
+      "children": [],
+      "direct_document_count": 1,
+      "document_count": 1
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc-public",
+      "source_id": "source-public",
+      "title": "G1 垃圾回收",
+      "summary": "G1 使用 Region 管理堆内存。",
+      "content": "固定的虚构示例正文。",
+      "key_points": ["按 Region 管理"],
+      "tags": ["Java", "G1"],
+      "node_id": "java-g1",
+      "path": ["我的知识体系", "G1"],
+      "visibility": "public",
+      "status": "verified",
+      "source": {
+        "kind": "file",
+        "original_name": "example.md",
+        "origin": "",
+        "sha256": ""
+      },
+      "evidence": [],
+      "updated_at": "2026-08-09T00:00:00Z"
+    }
+  ],
+  "relations": [],
+  "stats": {
+    "node_count": 2,
+    "document_count": 1,
+    "relation_count": 0
+  }
+}

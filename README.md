@@ -202,7 +202,7 @@ flowchart LR
 前置环境：Java 21。项目内 Maven Wrapper 会在首次运行时联网下载并校验固定版本的 Maven，然后下载开源依赖。
 
 ```bash
-# 运行 7 项 Java 测试和覆盖率门禁
+# 运行 Java 契约、接口、仓储测试和覆盖率门禁
 ./scripts/java-test
 
 # 启动只读服务
@@ -259,7 +259,7 @@ personal-knowledge-os/
 
 ## 当前质量状态
 
-- Python：21 项测试，覆盖架构边界、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
+- Python：24 项测试，覆盖架构边界、共享契约、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
 - Java：7 项测试；JaCoCo 指令覆盖率 88.2%、分支覆盖率 67.5%。
 - CI：Python 3.9、3.12、3.13、Java 21 与 Public Demo 均为必需检查。
 - 安全：CodeQL、Dependabot、Secret Scanning、Push Protection 已启用。
@@ -293,7 +293,7 @@ personal-knowledge-os/
 
 - J2：中文全文搜索、安全高亮和性能基准。
 - J3：Java 幂等导入与事务迁移。
-- J4：OpenAPI、Docker 和可部署服务。
+- J4：Docker、可观测性和可部署服务（OpenAPI v1 契约已提前完成）。
 - 持续丰富公开 Demo 的虚构知识样例和交互验收。
 - 将大型综合笔记按 Markdown 标题拆成多张知识卡片。
 

@@ -48,6 +48,7 @@ knowledge/
 - `apps/api/` 只读 SQLite schema v1，不迁移、不建表、不修改任务状态。
 - `apps/web/` 是网站源码唯一位置；`workspace/site/` 只保存可重建产物。
 - `packages/contracts/` 描述跨语言数据/API 边界，不包含用户知识。
+- canonical v1 在静态构建前强制校验；Java 与 Python 使用同一份虚构契约样例，HTTP 端点以 OpenAPI v1 为准。
 - `workspace/` 是真实私密状态；原始资料只追加，不被重构脚本覆盖。
 - `exports/public/` 仍是用户知识唯一允许公开发布的候选目录。
 - GitHub Pages Demo 只使用 `tests/fixtures/` 的固定虚构资料和 `config/runtime.example.json`。

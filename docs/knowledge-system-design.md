@@ -278,7 +278,14 @@ Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
 - 分类树可以读取全部有效分类节点，但不携带用户资料内容。
 - J1 采用参数化 `LIKE` 搜索建立 API 契约；J2 再接入 FTS5/Lucene 并记录性能基准。
 
-### 5.3 SQLite 主要表
+### 5.3 共享数据与 HTTP 契约
+
+- `packages/contracts/canonical.schema.json` 定义 canonical schema v1；网站构建在写入产物前使用标准库校验器强制验证。
+- `packages/contracts/openapi.yaml` 定义 Java 只读 HTTP API v1，作为 Web 联机模式与未来 App 的接口边界。
+- Python 与 Java 契约测试共用 `packages/contracts/examples/canonical-v1.json`，样例只含固定虚构内容。
+- v1 只允许增加可选字段；删除、改名或改变字段语义必须新增契约主版本。
+
+### 5.4 SQLite 主要表
 
 - `taxonomy_nodes`
 - `taxonomy_aliases`
