@@ -1,9 +1,9 @@
 # 个人知识体系总体设计
 
 > 状态：活文档  
-> 版本：0.3.1
+> 版本：0.4.0-dev
 > 更新时间：2026-08-10（Asia/Shanghai）
-> 项目根目录：`$HOME/ai/knowledge`
+> 项目根目录：`$HOME/AI/knowledge`
 
 ## 1. 目标
 
@@ -296,6 +296,37 @@ Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
 
 ## 6. 项目目录
 
+### 6.1 目录治理原则
+
+- 采用单仓库，但应用源码、共享契约、私密运行数据和公开产物必须分区。
+- Python 流水线、Java API 与 Web/PWA 是三个应用边界，不再把网站源码隐藏在 Python 包和生成目录之间。
+- 私密可变数据逐步集中到单一 `workspace/`，`exports/public/` 继续是用户知识唯一允许发布的候选目录。
+- Python 内部按接收、提炼、分类、存储、导出和检查拆包；CLI 只负责参数与调用，不承载业务规则。
+- canonical JSON Schema 与 OpenAPI 放入共享契约目录，供 Python、Java、Web 以及未来 App 共同验证。
+
+目标结构：
+
+```text
+knowledge/
+├── apps/
+│   ├── pipeline/       # Python 唯一写入方
+│   ├── api/            # Java 21 只读 API
+│   └── web/            # 静态网站与 PWA 源码
+├── packages/
+│   └── contracts/      # canonical JSON Schema 与 OpenAPI
+├── config/             # taxonomy 与运行配置模板
+├── workspace/          # 私密输入、状态、Vault 和私密构建；整体忽略
+├── exports/public/     # 用户知识唯一公开候选
+├── docs/
+├── ops/
+├── scripts/
+└── tests/e2e/
+```
+
+迁移采用兼容期：旧脚本入口保持可用，SQLite schema v1、知识 ID、分类 ID、原始资料哈希和公开 Demo 行为不得因目录调整改变。
+
+### 6.2 迁移前目录
+
 ```text
 $HOME/ai/knowledge/
 ├── pyproject.toml
@@ -541,7 +572,7 @@ raw_auto_delete: false
 
 ## 14. 更新规则
 
-本文件是活文档。任何架构、数据边界、技术选型、分类规则或发布策略变更，必须在同一次工作中更新本文件，并在 `logs/operations.md` 与 `logs/decisions.md` 留痕。
+本文件是活文档。任何架构、数据边界、技术选型、分类规则或发布策略变更，必须在同一次工作中更新本文件；只有形成长期取舍时才追加决策，只有部署、迁移、恢复或外部状态变化时才追加操作记录。
 
 ## 15. 参考资料
 

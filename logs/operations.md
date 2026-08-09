@@ -171,3 +171,10 @@
 - 为仓库启用免费的 GitHub Pages Actions 发布源，并将 Public Demo 增加为 `main` 第5项必需检查。
 - 首次部署成功：`https://eascaty.github.io/personal-knowledge-os/` 返回 HTTPS 200；线上搜索、详情、关系地图、桌面和手机布局正常，控制台0错误。
 - 使用线上虚构公开 Demo 生成干净效果图 `docs/assets/pages-demo.jpg`，README 不再使用带系统全屏提示的旧截图。
+
+### v0.4.0 结构重构启动（2026-08-10 02:34:00 +0800）
+
+- 等待 GitHub Pages 任务完成并独立确认 `main` 的 CI、Pages 和 CodeQL 全部成功。
+- 清理9条已合并本地 `agent/*` 分支、4条 GitHub 历史分支及失效远端引用；提交历史仍由 `main` 合并记录和 tag 保留。
+- 从提交 `677023e` 建立唯一重构分支 `codex/architecture-restructure`。
+- 重构期间保持 SQLite schema v1、原始资料、知识 ID、分类 ID、公开门禁和线上 Demo 行为不变。
