@@ -160,3 +160,10 @@
 - 使用用户明确同意公开的本地知识地图截图作为 README 效果图；资源保存为 `docs/assets/knowledge-map.png`，未加入正文、凭据或本地绝对路径。
 - README 的 Spring Boot 版本标识由3.5.3同步为当前 main 使用的3.5.16。
 - 复验 Python 18项测试全部通过；doctor 状态 PASS，隐私问题0、密钥匹配0、断链0、网络请求0。
+
+### GitHub Pages 虚构公开 Demo（2026-08-10）
+
+- 根据用户澄清，仓库保持为独立开源工程，不嵌入维护者身份或外部材料；同步移除工程文档中与项目实现无关的展示性措辞。
+- 新增隔离 Demo 构建器，只读取 `tests/fixtures/` 中3份固定虚构资料，在临时目录创建独立 SQLite 并生成 public 站点。
+- 新增 `scripts/build-demo`、Public Demo CI 和 GitHub Pages 工作流；部署产物必须经过数据库、构建清单、public 可见性、隐私、密钥与断链门禁。
+- 本地 Demo 构建完成：3篇文档、9项任务、0失败、门禁 PASS、网络请求0；Python 测试增加为19项并全部通过。

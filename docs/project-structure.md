@@ -19,7 +19,7 @@ knowledge/
 │   ├── pom.xml                     # Maven、Spring Boot、SQLite JDBC、JaCoCo
 │   ├── mvnw / mvnw.cmd             # 带校验的 Maven 3.9.11 Wrapper
 │   └── src/                        # API、领域模型、只读仓储与 JUnit 测试
-├── .github/                        # CI、Dependabot、Issue 与 PR 模板
+├── .github/                        # CI、Pages、Dependabot、Issue 与 PR 模板
 │
 ├── config/
 │   ├── taxonomy.json               # 唯一权威专业母子树
@@ -38,6 +38,7 @@ knowledge/
 │
 ├── src/knowledge_os/
 │   ├── cli.py                      # kb 命令入口与全链路编排
+│   ├── demo.py                     # 固定虚构资料的隔离公开 Demo 构建器
 │   ├── config/                     # 配置加载和分类树校验
 │   ├── db/                         # SQLite schema、事务与全文搜索
 │   ├── ingest/                     # 文件接收、解析、哈希和去重
@@ -66,13 +67,14 @@ knowledge/
 │   └── public/                     # 仅显式 public 内容的公开构建
 │
 ├── ops/launchd/                    # 只提供模板，不自动改系统设置
-├── scripts/                        # 项目内一键运行、检查、预览脚本
+├── scripts/                        # 项目内一键运行、检查、预览与 Demo 构建脚本
 └── tests/
     ├── fixtures/                   # 固定样本
     ├── test_core.py                # 入库、去重、分类与查询
     ├── test_site.py                # 私密/公开站点和防泄露
     ├── test_operations.py          # 健康检查、备份和发布门禁
-    └── test_e2e.py                 # 从 inbox 到 site/dist 的完整闭环
+    ├── test_e2e.py                 # 从 inbox 到 site/dist 的完整闭环
+    └── test_demo.py                # 虚构 public Demo 的隔离和防泄露验证
 ```
 
 ## 边界与责任
@@ -82,7 +84,7 @@ knowledge/
 - `data/raw/` 是事实来源；程序只追加，不覆盖、不自动删除。
 - `vault/`、`site/dist/` 和 `exports/` 都是派生产物，可从 SQLite 和原始资料重建。
 - `config/taxonomy.json` 是专业树唯一权威配置；网站中的分类 JSON 都由它生成。
-- `exports/public/` 是唯一允许公开上传的内容；私密站点也必须使用 Cloudflare Access 保护。
+- `exports/public/` 是用户知识的唯一公开候选；GitHub Pages 只上传 `scripts/build-demo` 从固定虚构样例生成并通过门禁的临时产物。
 - `ops/launchd/` 只是可审查模板。本项目不会在未明确启用时修改 `~/Library/LaunchAgents`。
 
 ## 模块依赖方向

@@ -21,6 +21,7 @@ data/state/
 site/dist/
 site/data/
 site/.vite/
+demo-dist/
 exports/private/
 
 vault/*
