@@ -3,7 +3,7 @@
 > 状态：活文档  
 > 版本：0.3.0  
 > 更新时间：2026-07-30（Asia/Shanghai）  
-> 项目根目录：`/Users/zhaoxl/ai/knowledge`
+> 项目根目录：`$HOME/ai/knowledge`
 
 ## 1. 目标
 
@@ -279,7 +279,7 @@ AI 输出默认不是事实。状态包括：
 ## 6. 项目目录
 
 ```text
-/Users/zhaoxl/ai/knowledge/
+$HOME/ai/knowledge/
 ├── pyproject.toml
 ├── config/
 ├── docs/
