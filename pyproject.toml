@@ -4,13 +4,26 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "local-knowledge-os"
-version = "0.1.0"
+version = "0.2.0"
 description = "Local-first, zero-paid-API personal knowledge pipeline"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "Private project" }
-authors = [{ name = "LocalKnowledgeOS" }]
+license = { file = "LICENSE" }
+authors = [{ name = "Eascaty" }]
 dependencies = []
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Topic :: Text Processing :: Indexing",
+]
+
+[project.urls]
+Homepage = "https://github.com/Eascaty/personal-knowledge-os"
+Repository = "https://github.com/Eascaty/personal-knowledge-os"
+Issues = "https://github.com/Eascaty/personal-knowledge-os/issues"
 
 [project.scripts]
 knowledge-os = "knowledge_os.cli:main"
