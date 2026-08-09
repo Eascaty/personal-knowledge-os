@@ -1,0 +1,27 @@
+name: Bug 报告
+description: 报告可复现的问题；安全漏洞请使用私密报告。
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 问题描述
+      description: 请描述预期行为和实际行为，不要粘贴私人知识或凭据。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本或提交
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境
+
