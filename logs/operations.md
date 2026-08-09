@@ -125,3 +125,10 @@
 - 使用打包后的 Spring Boot JAR 在 `127.0.0.1:18080` 完成真实 SQLite HTTP 冒烟：健康 `UP`、schema v1、分类根节点正确；因真实资料均为 private，公开列表为0。
 - 冒烟后正常关闭临时服务；最终 doctor 为 PASS，隐私问题0、密钥匹配0、断链0。
 - 代码审查后将 Spring Boot 默认监听地址固定为 `127.0.0.1`，并为 Maven 增加每月 Dependabot 检查。
+
+### Java J1 GitHub 发布完成（2026-08-09）
+
+- 将6条中文分步提交推送至 `agent/java-j1-readonly-api`，创建 PR #6 并通过 `Closes #5` 关联 J1 Issue。
+- PR 与合并后的 `main` 均通过 Java 21、Python 3.9、3.12、3.13 四项 GitHub Actions 检查。
+- PR #6 已使用普通合并进入 `main`，保留服务骨架、API、测试、CI、安全和文档提交；Issue #5 自动关闭。
+- 发布 `v0.3.0：Java J1 只读知识 API`，并创建 J2 中文全文搜索与性能基准 Issue #10。

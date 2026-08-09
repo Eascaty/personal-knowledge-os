@@ -62,6 +62,8 @@
 - Java 与 Python 联合复验通过：Java 7/7、Python 18/18，JaCoCo 报告已生成。
 - Spring Boot 本机 HTTP 冒烟通过：schema v1 状态 `UP`，分类树正确，private 资料未进入公开列表。
 - 最终健康检查 PASS：隐私问题0、密钥匹配0、断链0。
+- Java J1 PR #6 已保留全部分步提交并合并，关联 Issue #5 已自动关闭。
+- `v0.3.0` Java J1 版本已发布；J2 中文全文搜索已建立为 Issue #10。
 
 ## 尚需用户以后完成
 
