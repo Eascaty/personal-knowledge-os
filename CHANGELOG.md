@@ -1,5 +1,12 @@
 # 版本记录
 
+## Unreleased
+
+- 使用 Apache License 2.0 开源。
+- 增加贡献指南、安全策略、Issue/PR 模板、Dependabot 和 GitHub Actions CI。
+- 明确 Python MVP 与 Java 21/Spring Boot 增量演进路线。
+- 公开仓库仍严格排除真实知识、数据库、私密导出和生成站点。
+
 ## 0.2.0 — 2026-07-30
 
 - 完成本地文件到 SQLite、Markdown、全文搜索、知识图和静态网站的闭环。
@@ -11,7 +18,7 @@
 
 ## 0.1.0 — 2026-07-27
 
-- 建立 `/Users/zhaoxl/ai/knowledge` 单一工程根目录。
+- 建立 `$HOME/ai/knowledge` 单一工程根目录。
 - 固化金融、AI、技术三条专业母子链路与 Java 子树。
 - 采用 Python 标准库、SQLite、Markdown/JSON 和纯静态网站的零依赖核心方案。
 - 默认本地运行、默认私密、默认不连接外网和不执行真实发布。

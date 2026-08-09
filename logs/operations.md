@@ -36,8 +36,8 @@
 
 ### 文档初始化
 
-- 确认父目录 `/Users/zhaoxl/ai` 存在且为空。
-- 按用户最终要求将唯一项目根目录确定为 `/Users/zhaoxl/ai/knowledge`。
+- 确认父目录 `$HOME/ai` 存在且为空。
+- 按用户最终要求将唯一项目根目录确定为 `$HOME/ai/knowledge`。
 - 创建总体设计活文档、工作流、分类配置、状态、决策和操作记录。
 - 在项目外的系统依赖保持不变；实现阶段先使用项目内代码和现有 Python/SQLite。
 
@@ -73,7 +73,7 @@
 
 ### 正式目录交付
 
-- 将源码、配置、文档、测试、脚本、launchd 模板和静态站同步到 `/Users/zhaoxl/ai/knowledge`。
+- 将源码、配置、文档、测试、脚本、launchd 模板和静态站同步到 `$HOME/ai/knowledge`。
 - 未复制临时工作区数据库或临时备份；在正式目录重新生成干净 SQLite。
 - 在正式目录执行 `scripts/run-pipeline`：0失败、发布门禁通过、健康状态 PASS、网络请求0。
 - 在正式目录重新执行18项测试：全部通过。
@@ -81,3 +81,28 @@
 - 在 `exports/private/backups/` 生成并验证初始 SQLite 一致性快照。
 - 使用本地浏览器完成桌面与手机响应式验收；技术分类导航正常，PWA资源全部返回成功，控制台0错误。
 - 在正式项目内初始化本地 Git；基线提交为 `a9b0c5a`，未配置远程仓库、未上传内容。
+
+### 首份真实资料演示（2026-07-30 00:54:24 +0800）
+
+- 确认桌面最新项目是 macOS Alias `2025.10.20.md的替身`，实际内容文件为 `$HOME/Desktop/2025.10.20.md`。
+- 只读检查确认其为 Java 综合学习笔记；将副本放入 `inbox/files/`，未移动或修改桌面原文件。
+- 执行 `scripts/run-pipeline`：导入1份、完成3/3个任务、0重试、0失败、网络请求0。
+- 生成1份知识文档；网站构建、private 发布门禁与本地健康检查全部通过。
+- 搜索“泛型”和“hashCode”均可命中。规则分类当前落在 `技术 / 程序员 / Java开发 / JVM / 垃圾回收 / G1`。
+- 识别到综合长文档的分类粒度问题：后续应按 Markdown 标题切分为多张知识卡片，再分别挂入 Java基础、JVM、并发等节点；本次不改写用户原文。
+
+### GitHub 开源准备（2026-08-09 18:06:27 +0800）
+
+- 用户确认公开仓库目标为 `Eascaty/personal-knowledge-os`，许可证为 Apache-2.0，并保留 Python MVP、增加 Java 模块。
+- 审计本地 Git：无远程仓库；真实知识、SQLite 数据库、私密导出和生成站点均未被跟踪。
+- 运行现有测试套件，18/18 通过。
+- 从 GitHub CLI 官方 Release 下载并按官方 SHA-256 校验 `gh 2.97.0`；通过本机 v2rayN SOCKS 代理完成 `Eascaty` 登录。
+- 增加许可证、贡献指南、安全策略、Issue/PR 模板、Dependabot、GitHub Actions CI 与 Java 增量演进路线。
+- 本阶段尚未创建远程仓库或上传代码，等待最终本地验证。
+
+### GitHub Actions 首次 CI 修复（2026-08-09）
+
+- 已创建私有安全暂存仓库 `Eascaty/personal-knowledge-os`，并推送开源候选分支、创建草稿 PR #1。
+- 首次 GitHub Actions 在 Python 3.9、3.12、3.13 三个任务中均于测试入口退出，错误为 `./scripts/test: cannot execute: required file not found`。
+- 根因是测试脚本使用 macOS 自带、Ubuntu Runner 默认不存在的 `/bin/zsh`，并写死系统 Python 路径。
+- 经用户确认，将测试入口改为 POSIX `sh`，使用可移植的项目路径解析和 Actions 已配置的 `python3`。

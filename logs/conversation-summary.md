@@ -99,5 +99,5 @@ Mac 本地处理和构建
 用户指定全部设计、操作与后续工作流保存在：
 
 ```text
-/Users/zhaoxl/ai/knowledge
+$HOME/ai/knowledge
 ```
