@@ -71,6 +71,8 @@
 - 仓库 topics、CODEOWNERS、跨平台行尾策略和 J2 里程碑已补齐。
 - PR #12 已保留4条中文分步提交并合并；`v0.3.1` 已附带正式 JAR 与 SHA-256 发布。
 - 最终 main CI 4/4 通过；CodeQL 三语言、Secret Scanning 和 Dependabot 安全告警均为0。
+- README 已重构为面向首次使用者的中文项目首页，补齐项目用途、适用人群、三分钟体验、日常流程、数据目录、隐私边界、Java API、FAQ 与路线图。
+- README 已加入经过用户确认可公开使用的本地知识地图效果图，并同步 Spring Boot 版本标识至3.5.16。
 
 ## 尚需用户以后完成
 

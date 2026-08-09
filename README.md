@@ -3,135 +3,207 @@
 [![CI](https://github.com/Eascaty/personal-knowledge-os/actions/workflows/ci.yml/badge.svg)](https://github.com/Eascaty/personal-knowledge-os/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Eascaty/personal-knowledge-os)](https://github.com/Eascaty/personal-knowledge-os/releases/latest)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.9%2B-3776AB.svg)](pyproject.toml)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB.svg)](pyproject.toml)
 [![Java](https://img.shields.io/badge/Java-21-ED8B00.svg)](knowledge-service-java/pom.xml)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.3-6DB33F.svg)](knowledge-service-java/pom.xml)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F.svg)](knowledge-service-java/pom.xml)
 
-一个本地优先、隐私友好、零付费 API 的个人知识处理系统。它把本地资料转换为可搜索的 Markdown、SQLite、知识树、关系图和静态网站，同时默认阻止私人内容进入公开构建。
+把散落在电脑里的 Markdown、文本、代码、HTML、DOCX 和 PDF，离线整理成一个可搜索、可追溯、可浏览的个人知识库。
 
-这是项目的统一根目录。设计文档、工作流、配置、操作记录、程序与测试均保存在这里。
+**本地优先 · 默认私密 · 零付费 API · Python 流水线 + Java 只读 API**
 
-## 项目特点
+![Personal Knowledge OS 知识地图效果图](docs/assets/knowledge-map.png)
 
-- **本地优先**：解析、去重、分类、搜索与建站均可离线完成。
-- **隐私默认安全**：资料默认 `private`，公开构建采用显式白名单。
-- **零付费依赖**：核心只使用 Python 标准库和 SQLite，不要求云 API。
-- **可恢复与可审计**：原始资料不可变保存，任务可重试，关键操作有记录。
-- **可扩展分类**：使用严格父子树表达专业归属，关系边表达跨领域联系。
-- **工程化验证**：18 项 Python 与7项 Java 测试覆盖幂等、越界路径、API 契约和隐私门禁。
-- **双语言演进**：Python 负责稳定的写入流水线，Java 21 提供版本化只读领域 API。
+## 这个项目能做什么
 
-## 架构概览
-
-```mermaid
-flowchart LR
-    A["本地文件"] --> B["Python 入库、去重与分类"]
-    B --> C[("SQLite schema v1")]
-    B --> D["Markdown / Vault"]
-    B --> E["静态知识网站"]
-    C --> F["Java 21 只读服务"]
-    F --> G["/api/v1"]
-    C --> H["FTS5 中文搜索"]
-    E --> I["公开/私密发布门禁"]
-```
-
-## 当前目标
-
-建立一套零付费 API、本地优先、自动整理并可在线随时访问的个人知识系统：
+如果你的学习笔记、技术文档和资料长期散落在不同文件夹里，这个项目可以帮助你完成下面这条流水线：
 
 ```text
-投入本地文件
-→ 本地解析与去重
-→ 本地 AI 提炼
-→ 逐级归入专业母子树
-→ 生成 Markdown、搜索索引与知识地图
-→ 自动构建静态网站
-→ 通过发布门禁
-→ 登录云账号后发布为受保护的线上知识库
+把文件放入 inbox/
+        ↓
+扫描、解析和 SHA-256 去重
+        ↓
+提炼摘要、标签和关键点
+        ↓
+归入严格的专业母子分类树
+        ↓
+写入 SQLite + 生成 Markdown Vault
+        ↓
+构建全文搜索、关系图和静态知识网站
+        ↓
+执行隐私、密钥、断链和数据库健康检查
 ```
 
-当前阶段暂不实施 ChatGPT/Gemini 账号接入，也不优先开发批量网页爬虫。
+你最终会得到：
 
-## 快速入口
+| 产物 | 用途 |
+|---|---|
+| SQLite 知识库 | 保存来源、任务、分类、知识条目和关系 |
+| Markdown Vault | 使用编辑器直接阅读或长期归档 |
+| 本地静态网站 | 浏览分类树、搜索知识、查看关系地图 |
+| Java 21 API | 以版本化只读接口访问公开知识 |
+| 健康检查报告 | 检查数据库、隐私、密钥和断链问题 |
 
-- [总体设计](docs/knowledge-system-design.md)
-- [工程目录与模块分工](docs/project-structure.md)
-- [当前状态](STATUS.md)
-- [自动化工作流](workflow/WORKFLOW.md)
-- [专业分类骨架](config/taxonomy.json)
-- [测试报告](docs/test-report.md)
-- [GitHub 发布后缺口审计](docs/repository-audit.md)
-- [代码审查](docs/code-review.md)
-- [Java 演进路线](docs/java-roadmap.md)
-- [设计决策](logs/decisions.md)
-- [操作记录](logs/operations.md)
-- [本次对话摘要](logs/conversation-summary.md)
+整个 Python 核心流程可以离线运行，不调用付费模型 API，也不会上传你的原始资料。
 
-## 目录约定
+## 适合谁
 
-```text
-knowledge/
-├── AGENTS.md                 # 后续 Codex 工作规则
-├── README.md
-├── STATUS.md
-├── pyproject.toml            # Python 包与 kb 命令
-├── config/                   # 分类、运行和发布配置
-├── docs/                     # 活文档与示意资料
-├── workflow/                 # 自动化流程说明
-├── logs/                     # 决策、操作和对话摘要
-├── inbox/                    # 用户投放入口
-├── data/                     # 私密原始数据、数据库和缓存
-├── vault/                    # 可阅读 Markdown 知识树
-├── src/knowledge_os/         # 核心、网站、运维和发布代码
-├── knowledge-service-java/   # Java 21 + Spring Boot 只读 API
-├── site/                     # 静态网站资源与构建产物
-├── exports/                  # 对外导出；只有 public 可上传
-├── ops/                      # launchd 等可选运维模板
-├── scripts/                  # 本地命令与调度脚本
-└── tests/                    # 自动化测试
+- 希望整理 Java、AI、金融或其他专业学习资料的开发者。
+- 希望知识库掌握在自己电脑里，而不是被某个平台绑定的人。
+- 想研究本地优先、知识处理流水线、SQLite、PWA 或 Spring Boot 的开发者。
+- 需要一个可以持续提交、测试和演进的个人开源项目的人。
+
+它目前不是 Notion 的完整替代品，也不是多人协作 SaaS。项目优先保证单机隐私、数据可迁移和处理过程可审计。
+
+## 三分钟体验
+
+### 1. 准备环境
+
+当前推荐环境：
+
+- macOS（主要开发和本机验收环境）
+- Python 3.9 或更高版本
+- Git
+- 浏览器
+
+Python 流水线只使用标准库与系统 SQLite，不需要创建虚拟环境或安装 Python 依赖。
+
+### 2. 克隆项目
+
+```bash
+git clone https://github.com/Eascaty/personal-knowledge-os.git
+cd personal-knowledge-os
 ```
 
-## 日常使用目标
+### 3. 放入一份公开样例
 
-把资料放入 `inbox/files/`，然后运行：
+仓库内已经提供三份虚构测试资料。你可以先复制一份到收件箱：
+
+```bash
+mkdir -p inbox/files
+cp tests/fixtures/java_g1.md inbox/files/
+```
+
+也可以直接把自己的文件复制到 `inbox/files/`。原文件不会被覆盖；系统会把不可变副本、标准化内容和知识条目分别保存。
+
+### 4. 一条命令完成处理
 
 ```bash
 ./scripts/run-pipeline
 ```
 
-这一个命令会离线完成扫描、去重、解析、分类、知识页、搜索、关系图、网站
-构建和发布前检查。无需安装 Python 包，也不会发送网络请求。
+它会自动初始化目录和 SQLite，扫描收件箱，完成去重、解析、分类、知识生成、网站构建以及发布前健康检查。
 
-查看本地网站：
+成功输出中应该看到：
+
+```json
+{
+  "jobs_failed": 0,
+  "gate_allowed": true,
+  "health_status": "PASS",
+  "network_requests": 0,
+  "ok": true
+}
+```
+
+### 5. 打开知识网站
 
 ```bash
 ./scripts/preview-site
 ```
 
-浏览器打开 `http://127.0.0.1:8765`。
+浏览器访问 [http://127.0.0.1:8765](http://127.0.0.1:8765)。按 `Control + C` 停止预览服务。
 
-其他常用命令：
+## 日常怎么使用
+
+最常见的使用方式只有三步：
+
+1. 把新资料放进 `inbox/files/`。
+2. 运行 `./scripts/run-pipeline`。
+3. 打开本地网站，或者使用命令行搜索。
+
+支持的输入包括：
+
+- `.txt`、`.md` 和常见代码文件
+- `.html`、`.htm`
+- `.docx`
+- `.pdf`：需要系统可用的 `pdftotext`，未安装时会给出明确提示
+
+常用命令：
 
 ```bash
+# 查看资料、任务和索引状态
 ./scripts/kb status
+
+# 搜索本地知识
 ./scripts/kb query "G1"
+
+# 直接导入一段文本
+./scripts/kb ingest --text "今天学习了 G1 Mixed GC" --title "G1 学习记录"
+
+# 执行数据库、隐私、密钥和断链检查
 ./scripts/doctor
+
+# 创建 SQLite 一致性备份
 ./scripts/backup
+
+# 运行 Python 测试
 ./scripts/test
 ```
 
-## Java 只读 API
+重复投入同一个文件不会生成重复资料：系统使用 SHA-256 去重，处理任务也可以安全重试。
 
-J1 里程碑已经实现。Java 服务读取现有 SQLite，但不会修改 Python 流水线的数据；API 只返回显式标记为 `public` 的知识条目，并省略来源绝对路径。
+## 数据保存在哪里
 
-前置环境只需要 Java 21。项目内 Maven Wrapper 会下载并校验固定的 Maven 3.9.11；测试和启动均可从项目根目录一条命令完成：
+| 目录 | 内容 | 是否应上传 GitHub |
+|---|---|---|
+| `inbox/` | 等待处理的用户资料 | 否 |
+| `data/raw/` | 不可变原始副本 | 否 |
+| `data/normalized/` | 标准化文本 | 否 |
+| `data/state/` | SQLite 数据库和运行状态 | 否 |
+| `vault/` | 生成的 Markdown 知识页 | 默认否 |
+| `site/dist/` | 私密本地网站 | 否 |
+| `exports/public/` | 通过门禁的公开构建 | 可以 |
+
+这些私密路径已经由 `.gitignore` 排除。新知识默认标记为 `private`；公开构建只接受明确标记为 `public` 的内容。
+
+> 不要为了展示项目而提交自己的真实知识库。建议使用虚构样例制作公开演示。
+
+## 系统架构
+
+```mermaid
+flowchart LR
+    A["本地文件"] --> B["Python 入库、去重与分类"]
+    B --> C[("SQLite schema v1")]
+    B --> D["Markdown Vault"]
+    B --> E["静态知识网站 / PWA"]
+    C --> F["Java 21 只读服务"]
+    F --> G["/api/v1"]
+    C --> H["FTS5 搜索索引"]
+    E --> I["公开 / 私密发布门禁"]
+```
+
+- **Python 写入流水线**：负责导入、去重、任务重试、分类、提炼、建站和运维检查。
+- **SQLite**：保存可审计的结构化状态，并提供 FTS5 搜索能力。
+- **静态网站**：原生 HTML、CSS、JavaScript，无前端运行时依赖。
+- **Java 只读 API**：只读取 Python 已生成的 SQLite，并结构性过滤 private 内容和本地绝对路径。
+
+默认提炼器是确定性的本地规则，不产生网络请求。你也可以在 `config/runtime.json` 中选择本机 Ollama；Ollama 是可选项，不影响零依赖基础流程。
+
+## Java 只读 API（可选）
+
+如果只想整理和浏览知识，不需要启动 Java。Java 模块面向希望进行二次开发或通过 HTTP 读取公开知识的用户。
+
+前置环境：Java 21。项目内 Maven Wrapper 会在首次运行时联网下载并校验固定版本的 Maven，然后下载开源依赖。
 
 ```bash
+# 运行 7 项 Java 测试和覆盖率门禁
 ./scripts/java-test
+
+# 启动只读服务
 ./scripts/java-service
 ```
 
-默认监听 `http://127.0.0.1:8080`，接口统一带 `api_version: "v1"`：
+默认监听 `http://127.0.0.1:8080`：
 
 | 接口 | 用途 |
 |---|---|
@@ -141,28 +213,93 @@ J1 里程碑已经实现。Java 服务读取现有 SQLite，但不会修改 Pyth
 | `GET /api/v1/documents/{id}` | 公开知识详情、来源与关系 |
 | `GET /api/v1/search?q=G1` | 公开知识搜索 |
 
-如数据库位于其他位置，可在启动前设置 `KNOWLEDGE_DB_PATH`。当前 J1 搜索采用安全的参数化查询；基于 FTS5/Lucene 的中文全文检索和基准测试属于 J2。
+数据库不在默认路径时，可以在启动前设置 `KNOWLEDGE_DB_PATH`。服务默认只绑定本机回环地址，不会自动暴露到局域网或公网。
 
-`ops/launchd/` 提供每15分钟自动执行的模板，但按照“不修改项目外目录”的
-要求，目前没有自动安装。Cloudflare 发布适配器也默认只生成计划；真实上线
-仍需用户以后登录自己的 Cloudflare 账号并启用 Access。
+## 公开站点与隐私边界
 
-## 开源边界
+本地私密网站：
 
-公开仓库只包含程序、配置示例、虚构测试资料和文档。真实知识库、SQLite 数据库、收件箱、私密站点、备份和凭据均由 `.gitignore` 排除。请勿把自己的资料放入公开提交。
+```bash
+./scripts/run-pipeline --visibility private
+```
 
-## Java 路线
+公开候选构建：
 
-当前 Python 版本是已验证的零依赖 MVP。后续将在不破坏现有流水线的前提下增加 Java 21 + Spring Boot 服务模块，逐步实现领域 API、全文搜索、幂等导入和容器化部署。具体里程碑见 [Java 演进路线](docs/java-roadmap.md)。
+```bash
+./scripts/run-pipeline --visibility public
+```
+
+公开构建写入 `exports/public/`，并再次执行隐私、密钥和链接门禁。由于所有新知识默认都是 private，没有显式公开资料时，公开站点为空是正常的安全行为。
+
+项目预留了 Cloudflare Pages 适配器，但默认只生成部署计划，不会替你登录、创建收费资源或上传内容。
+
+## 项目目录
+
+```text
+personal-knowledge-os/
+├── config/                   # 分类、运行和发布配置
+├── docs/                     # 设计、路线、测试和审计文档
+├── inbox/                    # 用户资料投放入口（不进入 Git）
+├── data/                     # 原始副本、SQLite 和缓存（不进入 Git）
+├── vault/                    # 生成的 Markdown 知识树
+├── src/knowledge_os/         # Python 核心、网站、运维与发布代码
+├── knowledge-service-java/   # Java 21 + Spring Boot 只读 API
+├── site/                     # 静态网站模板与本地构建产物
+├── exports/                  # 公开和私密导出
+├── ops/                      # launchd 等可选运维模板
+├── scripts/                  # 一键入口
+└── tests/                    # 自动化测试和虚构样例
+```
+
+## 当前质量状态
+
+- Python：18 项测试，覆盖幂等、分类、隐私门禁、越界路径和网站构建。
+- Java：7 项测试；JaCoCo 指令覆盖率 88.2%、分支覆盖率 67.5%。
+- CI：Python 3.9、3.12、3.13 与 Java 21 均为必需检查。
+- 安全：CodeQL、Dependabot、Secret Scanning、Push Protection 已启用。
+- 发布：提供可校验的 Spring Boot JAR 和 SHA-256 文件。
+
+查看 [当前项目状态](STATUS.md)、[测试报告](docs/test-report.md)和 [GitHub 发布后审计](docs/repository-audit.md)。
+
+## 常见问题
+
+### 会把我的文件上传到网络吗？
+
+默认不会。Python 基础流水线使用本地规则和 SQLite，运行结果会报告 `network_requests: 0`。只有你主动配置本地 Ollama之外的扩展或主动执行部署时，网络行为才可能发生。
+
+### 一定要运行 Java 吗？
+
+不用。Python 流水线和静态网站已经构成可独立运行的完整 MVP；Java 服务是可选的只读访问层。
+
+### 能直接把私密站点发布到公网吗？
+
+不建议。应先把可公开内容单独标记为 public，通过发布门禁，再使用 Cloudflare Access 等身份保护。真实原始资料、数据库和 private 构建不得上传。
+
+### 为什么同一个文件再次投入没有新增知识？
+
+这是预期行为。系统按内容哈希去重，保证重复执行的幂等性。
+
+### Windows 能运行吗？
+
+核心 Python 代码是跨平台的，CI 也在 Linux 上验证；当前一键脚本主要按 macOS/zsh 编写。Windows 用户建议使用 WSL，原生 PowerShell 启动脚本仍属于后续工作。
+
+## 路线图
+
+- J2：中文全文搜索、安全高亮和性能基准。
+- J3：Java 幂等导入与事务迁移。
+- J4：OpenAPI、Docker 和可部署服务。
+- 使用虚构公开数据制作可在线访问的演示站。
+- 将大型综合笔记按 Markdown 标题拆成多张知识卡片。
+
+详细计划见 [Java 演进路线](docs/java-roadmap.md)和 [J2 Issue #10](https://github.com/Eascaty/personal-knowledge-os/issues/10)。
 
 ## 参与贡献
 
-请先阅读 [贡献指南](CONTRIBUTING.md) 和 [安全策略](SECURITY.md)。提交前至少运行：
+请先阅读 [贡献指南](CONTRIBUTING.md)和 [安全策略](SECURITY.md)。提交前至少运行：
 
 ```bash
 ./scripts/test
+./scripts/java-test
 ```
 
-本项目采用 [Apache License 2.0](LICENSE) 开源。
-
-仓库已启用 main 分支保护、CodeQL、Dependabot 安全更新、Secret Scanning 和 Push Protection。安全问题请使用 GitHub 的[私密漏洞报告](https://github.com/Eascaty/personal-knowledge-os/security/advisories/new)，不要创建公开 Issue。
+项目采用 [Apache License 2.0](LICENSE) 开源。安全问题请使用 GitHub 的[私密漏洞报告](https://github.com/Eascaty/personal-knowledge-os/security/advisories/new)，不要创建公开 Issue。
