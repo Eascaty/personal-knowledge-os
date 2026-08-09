@@ -1,6 +1,6 @@
 # 工程目录与模块分工
 
-> 项目根目录：`/Users/zhaoxl/ai/knowledge`
+> 项目根目录：`$HOME/ai/knowledge`
 
 本工程把“用户输入、不可变数据、程序代码、网站产物和运维模板”分开，避免后续资料越来越多时互相污染。
 
@@ -10,7 +10,11 @@ knowledge/
 ├── STATUS.md                       # 当前能做什么、最近测试、下一步
 ├── AGENTS.md                       # 后续自动维护本工程时必须遵守的规则
 ├── CHANGELOG.md                    # 面向用户的版本变化
+├── LICENSE                         # Apache License 2.0
+├── CONTRIBUTING.md                 # 贡献流程与隐私边界
+├── SECURITY.md                     # 漏洞报告与安全支持范围
 ├── pyproject.toml                  # Python 包和 kb 命令
+├── .github/                        # CI、Dependabot、Issue 与 PR 模板
 │
 ├── config/
 │   ├── taxonomy.json               # 唯一权威专业母子树
@@ -18,6 +22,7 @@ knowledge/
 │
 ├── docs/
 │   ├── knowledge-system-design.md  # 总体架构活文档
+│   ├── java-roadmap.md             # Java 21/Spring Boot 增量演进路线
 │   └── project-structure.md        # 本文件
 ├── workflow/
 │   └── WORKFLOW.md                 # 输入到发布的状态机
