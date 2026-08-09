@@ -7,6 +7,8 @@
 - 最终健康检查：PASS；隐私问题0；断链0；网络请求0
 - 浏览器验收：桌面1280×720与手机390×844布局正常，分类导航可交互，控制台0错误
 - Java HTTP 冒烟：真实 SQLite 健康状态 `UP`，schema v1、分类树和 public-only 列表响应正确
+- Java 覆盖率：指令88.2%、分支67.5%；CI 最低门槛80%与60%
+- Maven Wrapper：固定 Maven 3.9.11 与 SHA-256，首次下载和完整 `verify` 通过
 
 ## 自动测试范围
 
@@ -33,6 +35,7 @@
 - Java API 过滤 private 条目并删除来源绝对路径
 - Java 搜索对 SQL 通配符进行转义
 - Maven `verify` 构建与 JaCoCo 覆盖率报告
+- Maven Wrapper 下载校验、CI 覆盖率失败门禁、10分钟任务超时
 - Spring Boot 实际启动、真实 SQLite 只读连接与 HTTP 响应
 
 ## 端到端结果

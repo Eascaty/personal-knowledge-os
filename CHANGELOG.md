@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 0.3.1 — 2026-08-09
+
+- 增加带 SHA-256 校验的 Maven Wrapper，不再要求预装 Maven。
+- 增加 `.gitattributes` 与 CODEOWNERS，固定跨平台脚本行尾和代码所有权。
+- CI 升级 Actions 与 JaCoCo，增加并发取消、超时和覆盖率硬门槛。
+- Dependabot 保留 Spring Boot 3 主线，不再自动提交 4.x 跨大版本升级。
+- Python 包与 Java JAR 统一为正式 `0.3.1` 版本。
+- 启用 main 分支保护、Secret Scanning、Push Protection、Dependabot 安全更新、私密漏洞报告与 CodeQL。
+
 ## 0.3.0 — 2026-08-09
 
 - 增加 Java 21 + Spring Boot 3.5 的只读知识服务。
