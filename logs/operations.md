@@ -185,3 +185,9 @@
 - 迁移前创建 SQLite 一致性备份 `workspace/exports/private/backups/knowledge-20260810-033357-f9f2ba1d54b9.sqlite3`，SHA-256 为 `f9f2ba1d54b92000f35f3c93f145d84397229c6793f352c3f5638027a7c24b0b`。
 - 在单一事务中更新数据库内的原始资料与标准化文档路径；`PRAGMA integrity_check` 返回 `ok`，现有1份资料和25个分类节点均可读取。
 - 迁移后完整运行 `scripts/run-pipeline`：既有资料正确判定为重复，未新增任务；站点生成、发布门禁和健康检查均通过，网络请求为0。
+
+### v0.4.0 重构分支与草稿 PR（2026-08-10 05:39:59 +0800）
+
+- 将五阶段重构分支 `codex/architecture-restructure` 推送到 `Eascaty/personal-knowledge-os`，工作区提交范围干净且未包含真实资料、SQLite、私密构建或本机运行配置。
+- 创建草稿 PR #18 `架构：完成 v0.4.0 五阶段工程重构`，目标为受保护的 `main`。
+- 首轮远端验证全部通过：Python 3.9/3.12/3.13、Java 21、Public Demo、CodeQL Java/Python/JavaScript 均成功。
