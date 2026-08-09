@@ -1,8 +1,8 @@
 # 项目状态
 
 - 更新时间：2026-08-10（Asia/Shanghai）
-- 阶段：v0.4.0 结构重构进行中（阶段四完成，准备 App-ready 适配与总验收）
-- 总体状态：v0.3.1 与 GitHub Pages 线上基线稳定；在不改变数据和公开行为的前提下重整应用、契约与私密工作区边界
+- 阶段：v0.4.0 五阶段结构重构已完成，等待 PR/CI 验证
+- 总体状态：v0.3.1 与 GitHub Pages 线上基线稳定；新架构已在本地完成全栈、真实数据和桌面/手机浏览器验收
 
 ## 已实现
 
@@ -42,11 +42,14 @@
 ## 最近验证
 
 - Python 3.9 语法解析通过。
-- 24 项 unittest 全部通过。
+- 25 项 Python unittest 全部通过。
 - Python 存储、知识处理、检查和网站构建已拆为职责模块；兼容 facade 保留旧导入，架构测试限制实现模块不超过600行。
 - 工程已迁移为 `apps/ + packages/ + workspace/` 单仓库：Python、Java、Web 各自归位，私密输入、SQLite、Vault 与私密构建统一进入 Git 忽略的 `workspace/`。
 - 真实 SQLite 迁移前已完成一致性备份，迁移后完整性检查、现有资料去重、全流水线、发布门禁与健康检查通过。
 - canonical JSON Schema v1 与只读 API OpenAPI v1 已集中到 `packages/contracts/`；Python 建站强制校验，Python/Java 共用虚构契约样例。
+- Web 已通过数据源接口解耦静态包与 API v1；Java 控制器通过应用服务访问仓储，未来 App 无需读取 SQLite 或依赖页面内部状态。
+- Web 静态/API 两种适配器场景2/2通过；Java 9/9通过，JaCoCo 指令88.3%、分支67.5%，覆盖率门禁通过。
+- 重构后的公开 Demo 在实际浏览器完成搜索、详情、关系地图和390×844手机布局验收，控制台0错误。
 - 三份样例生成9个任务，全部完成。
 - 重复运行不新增资料或任务。
 - 金融、AI、Java/G1 三条路径全部正确。
@@ -82,6 +85,8 @@
 - PR #16 已保留3条中文分步提交并合并；GitHub Pages 公开 Demo 已上线：`https://eascaty.github.io/personal-knowledge-os/`。
 - 线上桌面与手机浏览器验收通过：分类、搜索、知识详情和关系地图正常，控制台0错误；HTTPS 响应200。
 
-## 尚需用户以后完成
+## 后续里程碑
 
-1. 完成上线构建与 App-ready 适配边界的总体验收。
+1. 通过受保护分支 PR 将 v0.4.0 重构合入 `main`，由 CI 与 Pages 再验一次公开构建。
+2. 用户准备发布真实私密站点时，再配置 Cloudflare Pages + Access；默认仍不上传 private 数据。
+3. 确认原生 App 的目标平台与离线/同步需求后，再创建移动端应用；现阶段直接复用 OpenAPI v1。

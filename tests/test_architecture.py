@@ -31,6 +31,25 @@ class ArchitectureBoundaryTests(unittest.TestCase):
                 oversized.append(f"{path.relative_to(source_root)}:{lines}")
         self.assertEqual(oversized, [], "模块超过600行，应按职责继续拆分")
 
+    def test_http_controller_depends_on_application_service(self):
+        root = Path(__file__).resolve().parents[1]
+        controller = (
+            root
+            / "apps"
+            / "api"
+            / "src"
+            / "main"
+            / "java"
+            / "io"
+            / "github"
+            / "eascaty"
+            / "knowledge"
+            / "api"
+            / "KnowledgeController.java"
+        ).read_text(encoding="utf-8")
+        self.assertIn("KnowledgeQueryService", controller)
+        self.assertNotIn("KnowledgeQueryRepository", controller)
+
 
 if __name__ == "__main__":
     unittest.main()

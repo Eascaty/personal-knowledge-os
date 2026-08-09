@@ -5,6 +5,7 @@
 实现原则：
 
 - 原生 HTML、CSS、JavaScript，无需 Node 或外部依赖
+- `data-source.js` 隔离数据访问：默认读取静态构建，也可切换到同源 API v1
 - 严格专业母子目录
 - 浏览器本地全文搜索
 - 可点击辅助知识图
@@ -12,3 +13,5 @@
 - 源码位于 `apps/web/src/`
 - 私密构建结果位于 `workspace/site/dist/`
 - 只部署经过隐私和断链测试的产物
+
+页面通过 `knowledge-data-source` meta 选择 `static` 或 `api`；API 模式遵循 `packages/contracts/openapi.yaml`。默认静态模式保持离线优先和零在线服务成本。

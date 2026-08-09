@@ -87,6 +87,7 @@ def check_json_document(
 _SITE_BUNDLE_FILES = {
     "_headers",
     "assets/app.js",
+    "assets/data-source.js",
     "assets/styles.css",
     "build-meta.json",
     "data/graph.json",
@@ -218,5 +219,4 @@ def check_site_bundle(
         metrics,
         _duration_ms(started),
     )
-
 

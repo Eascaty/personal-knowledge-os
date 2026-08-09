@@ -47,12 +47,6 @@ function clear(node) {
   return node;
 }
 
-async function fetchJson(path) {
-  const response = await fetch(path, { credentials: "same-origin", cache: "no-store" });
-  if (!response.ok) throw new Error(`${path} 返回 ${response.status}`);
-  return response.json();
-}
-
 function formatDate(value) {
   if (!value) return "尚未记录更新时间";
   const date = new Date(value);
@@ -987,11 +981,8 @@ function showFatalError(error) {
 async function start() {
   bindUi();
   try {
-    const [data, search, graph] = await Promise.all([
-      fetchJson("./data/site-data.json"),
-      fetchJson("./data/search-index.json"),
-      fetchJson("./data/graph.json"),
-    ]);
+    const dataSource = window.KnowledgeDataSources.fromDocument(document);
+    const { data, search, graph } = await dataSource.loadWorkspace();
     state.data = data;
     state.search = search;
     state.graph = graph;

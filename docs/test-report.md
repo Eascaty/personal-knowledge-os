@@ -2,12 +2,12 @@
 
 - 日期：2026-08-10（Asia/Shanghai）
 - 运行环境：macOS、Python 3.9.6、SQLite FTS5 trigram、Temurin JDK 21.0.12、Maven 3.9.11
-- 结果：19 项 Python 测试与 7 项 Java 测试全部通过
-- 正式目录复验：`$HOME/ai/knowledge`
+- 结果：25 项 Python 测试、9 项 Java 测试与2个 Web 数据源场景全部通过
+- 正式目录复验：`$HOME/AI/knowledge`
 - 最终健康检查：PASS；隐私问题0；断链0；网络请求0
 - 浏览器验收：桌面1280×720与手机390×844布局正常，分类导航可交互，控制台0错误
 - Java HTTP 冒烟：真实 SQLite 健康状态 `UP`，schema v1、分类树和 public-only 列表响应正确
-- Java 覆盖率：指令88.2%、分支67.5%；CI 最低门槛80%与60%
+- Java 覆盖率：指令88.3%、分支67.5%；CI 最低门槛80%与60%
 - Maven Wrapper：固定 Maven 3.9.11 与 SHA-256，首次下载和完整 `verify` 通过
 - 公开 Demo：仅3份固定虚构资料，独立临时 SQLite，9项任务完成，public 门禁 PASS，网络请求0
 - Pages 验收：HTTPS 200；线上桌面与手机布局正常，搜索、详情和关系地图可交互，控制台0错误
@@ -34,6 +34,9 @@
 - 坏 canonical 不替换上一正常站点
 - Java API v1 响应契约与分页参数
 - Java DTO 与 canonical JSON 核心字段一致性
+- canonical JSON Schema 强制校验与 OpenAPI v1 路由契约
+- Web 静态包/API v1 数据源适配器与生成产物加载顺序
+- Java 控制器、应用服务和只读仓储分层边界
 - Java SQLite schema v1 只读查询和分类树构建
 - Java API 过滤 private 条目并删除来源绝对路径
 - Java 搜索对 SQL 通配符进行转义
@@ -74,7 +77,7 @@ python3 -B -m unittest discover -s tests -v
 
 zsh -n scripts/*
 plutil -lint ops/launchd/com.local.knowledge-os.plist.template
-node --check apps/web/src/app.js
+./scripts/test-web
 ./scripts/java-test
 ./scripts/build-demo
 ```

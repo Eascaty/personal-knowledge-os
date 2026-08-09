@@ -23,6 +23,7 @@ def _validate_build(directory: Path) -> None:
     required = [
         "index.html",
         "offline.html",
+        "assets/data-source.js",
         "assets/app.js",
         "assets/styles.css",
         "manifest.webmanifest",
@@ -109,6 +110,9 @@ def build_site(
         noindex = visibility == "private" or not allow_indexing
         (temp / "index.html").write_text(
             _render_index(template, data, noindex), encoding="utf-8"
+        )
+        shutil.copyfile(
+            ASSET_DIR / "data-source.js", temp / "assets" / "data-source.js"
         )
         shutil.copyfile(ASSET_DIR / "app.js", temp / "assets" / "app.js")
         shutil.copyfile(ASSET_DIR / "styles.css", temp / "assets" / "styles.css")

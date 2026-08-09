@@ -5,7 +5,7 @@ import io.github.eascaty.knowledge.domain.KnowledgeDocument;
 import io.github.eascaty.knowledge.domain.KnowledgeDocumentSummary;
 import io.github.eascaty.knowledge.domain.PageResult;
 import io.github.eascaty.knowledge.domain.TaxonomyNode;
-import io.github.eascaty.knowledge.repository.KnowledgeQueryRepository;
+import io.github.eascaty.knowledge.service.KnowledgeQueryService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,20 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class KnowledgeController {
 
-    private final KnowledgeQueryRepository repository;
+    private final KnowledgeQueryService service;
 
-    public KnowledgeController(KnowledgeQueryRepository repository) {
-        this.repository = repository;
+    public KnowledgeController(KnowledgeQueryService service) {
+        this.service = service;
     }
 
     @GetMapping("/health")
     public ApiResponse<HealthStatus> health() {
-        return ApiResponse.of(repository.health());
+        return ApiResponse.of(service.health());
     }
 
     @GetMapping("/taxonomy")
     public ApiResponse<List<TaxonomyNode>> taxonomy() {
-        return ApiResponse.of(repository.findTaxonomy());
+        return ApiResponse.of(service.taxonomy());
     }
 
     @GetMapping("/documents")
@@ -43,13 +43,12 @@ public class KnowledgeController {
             @RequestParam(defaultValue = "") String query,
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
-        return ApiResponse.of(repository.findDocuments(query, page, size));
+        return ApiResponse.of(service.documents(query, page, size));
     }
 
     @GetMapping("/documents/{id}")
     public ApiResponse<KnowledgeDocument> document(@PathVariable @NotBlank String id) {
-        return ApiResponse.of(repository.findDocument(id)
-                .orElseThrow(() -> new KnowledgeNotFoundException(id)));
+        return ApiResponse.of(service.document(id));
     }
 
     @GetMapping("/search")
@@ -57,6 +56,6 @@ public class KnowledgeController {
             @RequestParam @NotBlank String q,
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
-        return ApiResponse.of(repository.findDocuments(q, page, size));
+        return ApiResponse.of(service.documents(q, page, size));
     }
 }

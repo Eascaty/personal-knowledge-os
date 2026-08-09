@@ -18,14 +18,14 @@
 
 访问 **[GitHub Pages 公开 Demo](https://eascaty.github.io/personal-knowledge-os/)**，无需安装即可体验分类树、全文搜索、知识详情和关系地图。
 
-在线 Demo 只使用仓库中三份虚构测试资料，由 GitHub Actions 在隔离临时目录重新构建，并在隐私、密钥、断链、数据库和 public 可见性门禁全部通过后发布。它不会读取或上传维护者本机的真实 `inbox/`、SQLite、Vault 或私密网站。
+在线 Demo 只使用仓库中三份虚构测试资料，由 GitHub Actions 在隔离临时目录重新构建，并在隐私、密钥、断链、数据库和 public 可见性门禁全部通过后发布。它不会读取或上传维护者本机的真实 `workspace/`、SQLite、Vault 或私密网站。
 
 ## 这个项目能做什么
 
 如果你的学习笔记、技术文档和资料长期散落在不同文件夹里，这个项目可以帮助你完成下面这条流水线：
 
 ```text
-把文件放入 inbox/
+把文件放入 workspace/inbox/
         ↓
 扫描、解析和 SHA-256 去重
         ↓
@@ -192,6 +192,7 @@ flowchart LR
 - **SQLite**：保存可审计的结构化状态，并提供 FTS5 搜索能力。
 - **静态网站**：原生 HTML、CSS、JavaScript，无前端运行时依赖。
 - **Java 只读 API**：只读取 Python 已生成的 SQLite，并结构性过滤 private 内容和本地绝对路径。
+- **共享适配边界**：Web 可从静态包或 API v1 加载；未来 App 复用 OpenAPI，不直接读取 SQLite。
 
 默认提炼器是确定性的本地规则，不产生网络请求。你也可以在 `config/runtime.json` 中选择本机 Ollama；Ollama 是可选项，不影响零依赖基础流程。
 
@@ -259,8 +260,9 @@ personal-knowledge-os/
 
 ## 当前质量状态
 
-- Python：24 项测试，覆盖架构边界、共享契约、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
-- Java：7 项测试；JaCoCo 指令覆盖率 88.2%、分支覆盖率 67.5%。
+- Python：25 项测试，覆盖架构边界、共享契约、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
+- Java：9 项测试；JaCoCo 指令覆盖率 88.3%、分支覆盖率 67.5%。
+- Web：静态包/API v1 两种数据源适配器测试，并完成桌面与390×844手机浏览器验收。
 - CI：Python 3.9、3.12、3.13、Java 21 与 Public Demo 均为必需检查。
 - 安全：CodeQL、Dependabot、Secret Scanning、Push Protection 已启用。
 - 发布：提供可校验的 Spring Boot JAR 和 SHA-256 文件。

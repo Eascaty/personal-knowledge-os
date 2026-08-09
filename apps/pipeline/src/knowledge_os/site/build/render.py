@@ -133,6 +133,7 @@ def _service_worker(cache_version: str, private: bool) -> str:
         "./",
         "./index.html",
         "./assets/styles.css",
+        "./assets/data-source.js",
         "./assets/app.js",
         "./manifest.webmanifest",
         "./offline.html",
@@ -215,6 +216,5 @@ def _manifest(data: Mapping[str, Any]) -> dict[str, Any]:
             },
         ],
     }
-
 
 

@@ -39,7 +39,8 @@ knowledge/
 ├── scripts/                        # 跨应用稳定入口
 └── tests/
     ├── fixtures/                   # 固定虚构样例
-    └── e2e/                        # 跨应用完整闭环
+    ├── e2e/                        # 跨应用完整闭环
+    └── web/                        # 静态/API 数据源适配器测试
 ```
 
 ## 边界与责任
@@ -47,6 +48,7 @@ knowledge/
 - `apps/pipeline/` 是唯一写入方；它拥有 SQLite schema、任务队列、分类和导出。
 - `apps/api/` 只读 SQLite schema v1，不迁移、不建表、不修改任务状态。
 - `apps/web/` 是网站源码唯一位置；`workspace/site/` 只保存可重建产物。
+- Web 数据源适配器支持静态构建和同源 API v1；Java HTTP 控制器经应用服务访问仓储，UI 与 API 都不直接拥有数据库写入权。
 - `packages/contracts/` 描述跨语言数据/API 边界，不包含用户知识。
 - canonical v1 在静态构建前强制校验；Java 与 Python 使用同一份虚构契约样例，HTTP 端点以 OpenAPI v1 为准。
 - `workspace/` 是真实私密状态；原始资料只追加，不被重构脚本覆盖。
@@ -64,3 +66,5 @@ apps/pipeline ──生成──> SQLite + canonical JSON
 ```
 
 Python 顶层兼容 facade 暂时保留 `knowledge_os.db`、`knowledge_os.knowledge` 和站点 builder 的旧导入，避免目录迁移破坏现有脚本；新实现直接使用职责子包。
+
+暂不创建空的 `apps/mobile/`。确定 iOS/Android 技术栈与同步需求后，原生客户端应从 OpenAPI v1 生成或实现客户端，并把离线缓存放在 App 自己的适配层。

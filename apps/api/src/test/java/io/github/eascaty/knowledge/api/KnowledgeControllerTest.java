@@ -6,12 +6,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.eascaty.knowledge.domain.HealthStatus;
-import io.github.eascaty.knowledge.domain.KnowledgeDocument;
 import io.github.eascaty.knowledge.domain.KnowledgeDocumentSummary;
 import io.github.eascaty.knowledge.domain.PageResult;
-import io.github.eascaty.knowledge.repository.KnowledgeQueryRepository;
+import io.github.eascaty.knowledge.service.KnowledgeQueryService;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,11 +23,11 @@ class KnowledgeControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private KnowledgeQueryRepository repository;
+    private KnowledgeQueryService service;
 
     @Test
     void exposesVersionedHealthContract() throws Exception {
-        when(repository.health()).thenReturn(
+        when(service.health()).thenReturn(
                 new HealthStatus("UP", "personal-knowledge-service", "available", 1));
 
         mockMvc.perform(get("/api/v1/health"))
@@ -45,7 +43,7 @@ class KnowledgeControllerTest {
                 "doc-public", "G1 垃圾回收", "摘要", List.of("G1"),
                 "java-g1", List.of("技术", "Java开发", "JVM", "G1"),
                 "2026-08-09T00:00:00Z");
-        when(repository.findDocuments("G1", 0, 20))
+        when(service.documents("G1", 0, 20))
                 .thenReturn(new PageResult<>(0, 20, 1, List.of(summary)));
 
         mockMvc.perform(get("/api/v1/search").param("q", "G1"))
@@ -56,7 +54,7 @@ class KnowledgeControllerTest {
 
     @Test
     void returnsStableNotFoundError() throws Exception {
-        when(repository.findDocument("missing")).thenReturn(Optional.<KnowledgeDocument>empty());
+        when(service.document("missing")).thenThrow(new KnowledgeNotFoundException("missing"));
 
         mockMvc.perform(get("/api/v1/documents/missing"))
                 .andExpect(status().isNotFound())

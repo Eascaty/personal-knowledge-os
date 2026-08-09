@@ -251,7 +251,9 @@ def build_parser() -> argparse.ArgumentParser:
     init_parser.set_defaults(handler=_command_init)
 
     ingest_parser = commands.add_parser("ingest", help="导入文件、目录或一段文本")
-    ingest_parser.add_argument("inputs", nargs="*", help="文件或目录；省略时扫描 inbox/")
+    ingest_parser.add_argument(
+        "inputs", nargs="*", help="文件或目录；省略时扫描 workspace/inbox/"
+    )
     ingest_parser.add_argument("--text", help="直接导入一段 UTF-8 文本")
     ingest_parser.add_argument("--title", help="--text 的标题")
     ingest_parser.add_argument(

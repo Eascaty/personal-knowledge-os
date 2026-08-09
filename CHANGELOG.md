@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- 将 Python、Java、Web 重整为 `apps/`，共享契约集中到 `packages/contracts/`，真实私密运行状态统一到 Git 忽略的 `workspace/`。
+- 按存储、处理、运维检查和网站构建职责拆分 Python 大模块，并保留旧导入兼容 facade。
+- 增加 canonical JSON Schema v1、OpenAPI v1、标准库契约校验和 Python/Java 共用虚构样例。
+- Web 增加静态包与 API v1 数据源适配器；Java 增加控制器与只读仓储之间的应用服务层。
+- CI 增加 Web 适配器测试；本地通过 Python 25项、Java 9项、Web 2场景、Demo、健康门禁和桌面/手机浏览器验收。
+- 精简分支与文档治理规则，本机运行配置不再进入 Git，保留可复制的 `runtime.example.json`。
+
 ## 0.3.1 — 2026-08-09
 
 - 增加带 SHA-256 校验的 Maven Wrapper，不再要求预装 Maven。
