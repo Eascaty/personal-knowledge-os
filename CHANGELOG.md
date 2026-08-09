@@ -2,13 +2,20 @@
 
 ## Unreleased
 
+## 0.3.0 — 2026-08-09
+
+- 增加 Java 21 + Spring Boot 3.5 的只读知识服务。
+- 增加健康检查、分类树、知识列表、详情与基础搜索 API v1。
+- Java API 仅返回公开知识，并对来源绝对路径进行结构性裁剪。
+- 增加 7 项 JUnit、SQLite 集成、MockMvc 和 canonical JSON 契约测试。
+- GitHub Actions 增加 Java 21 Maven 构建与 JaCoCo 覆盖率报告。
+
+## 0.2.0 — 2026-08-09
+
 - 使用 Apache License 2.0 开源。
 - 增加贡献指南、安全策略、Issue/PR 模板、Dependabot 和 GitHub Actions CI。
 - 明确 Python MVP 与 Java 21/Spring Boot 增量演进路线。
 - 公开仓库仍严格排除真实知识、数据库、私密导出和生成站点。
-
-## 0.2.0 — 2026-07-30
-
 - 完成本地文件到 SQLite、Markdown、全文搜索、知识图和静态网站的闭环。
 - 新增 `scripts/run-pipeline` 单命令自动化和项目锁。
 - 新增 private/public 构建、PWA、安全响应头与 Cloudflare 发布适配。

@@ -23,7 +23,7 @@
 
 网站已经发布的版本由云端静态托管，因此 Mac 关机后仍然可以打开；Mac 只负责处理新资料和发布新版本。
 
-实现状态：本地入库、分类、搜索、知识图、静态站、检查和发布适配代码已完成。
+实现状态：本地入库、分类、搜索、知识图、静态站、检查和发布适配代码已完成；Java 21 只读领域 API 的 J1 里程碑也已完成。
 真实线上地址仍需用户以后登录 Cloudflare 并启用 Access；当前默认零网络请求。
 
 ## 2. 当前范围
@@ -245,6 +245,7 @@ AI 输出默认不是事实。状态包括：
 | 模块 | 默认工具 |
 |---|---|
 | 运行环境 | macOS 自带 Python 3.9+；仅使用标准库即可运行 |
+| 只读领域 API | Java 21、Spring Boot 3.5、Maven |
 | 状态与知识关系 | SQLite |
 | 中文全文检索 | SQLite FTS5 trigram |
 | 本地模型 | 可选 Ollama + Qwen3 8B；不可用时规则引擎自动降级 |
@@ -260,7 +261,24 @@ AI 输出默认不是事实。状态包括：
 
 第一版不要求安装任何依赖，也不采用 Docker、n8n、LangChain、Chroma 或 Neo4j。这样即使没有 Ollama、Node 或 Pandoc，仍可完成确定性的全链路；本地模型只是可选增强。
 
-### 5.2 SQLite 主要表
+### 5.2 Java 只读服务边界
+
+`knowledge-service-java/` 是现有 Python MVP 的增量消费者，不参与写入：
+
+```text
+Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
+                                ↓
+                         仅查询 public 内容
+```
+
+- Java 服务使用 SQLite 只读连接，不迁移、不建表、不修改任务状态。
+- `/api/v1` 响应显式携带 API 版本。
+- 知识列表、详情和搜索统一增加 `visibility='public'` 数据库过滤。
+- 来源响应只包含类型、文件名和 SHA-256，不返回 `origin`、`raw_path` 或绝对路径。
+- 分类树可以读取全部有效分类节点，但不携带用户资料内容。
+- J1 采用参数化 `LIKE` 搜索建立 API 契约；J2 再接入 FTS5/Lucene 并记录性能基准。
+
+### 5.3 SQLite 主要表
 
 - `taxonomy_nodes`
 - `taxonomy_aliases`

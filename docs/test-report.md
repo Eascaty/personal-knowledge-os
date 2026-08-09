@@ -1,11 +1,12 @@
 # 测试报告
 
-- 日期：2026-07-30（Asia/Shanghai）
-- 运行环境：macOS、Python 3.9.6、SQLite FTS5 trigram
-- 结果：18 项测试全部通过
+- 日期：2026-08-09（Asia/Shanghai）
+- 运行环境：macOS、Python 3.9.6、SQLite FTS5 trigram、Temurin JDK 21.0.12、Maven 3.9.11
+- 结果：18 项 Python 测试与 7 项 Java 测试全部通过
 - 正式目录复验：`$HOME/ai/knowledge`
 - 最终健康检查：PASS；隐私问题0；断链0；网络请求0
 - 浏览器验收：桌面1280×720与手机390×844布局正常，分类导航可交互，控制台0错误
+- Java HTTP 冒烟：真实 SQLite 健康状态 `UP`，schema v1、分类树和 public-only 列表响应正确
 
 ## 自动测试范围
 
@@ -26,6 +27,13 @@
 - public 构建剔除 private 内容和 URL 查询参数
 - private noindex、JSON no-store 和 PWA 不缓存知识数据
 - 坏 canonical 不替换上一正常站点
+- Java API v1 响应契约与分页参数
+- Java DTO 与 canonical JSON 核心字段一致性
+- Java SQLite schema v1 只读查询和分类树构建
+- Java API 过滤 private 条目并删除来源绝对路径
+- Java 搜索对 SQL 通配符进行转义
+- Maven `verify` 构建与 JaCoCo 覆盖率报告
+- Spring Boot 实际启动、真实 SQLite 只读连接与 HTTP 响应
 
 ## 端到端结果
 
@@ -61,4 +69,5 @@ python3 -B -m unittest discover -s tests -v
 zsh -n scripts/*
 plutil -lint ops/launchd/com.local.knowledge-os.plist.template
 node --check src/knowledge_os/site/assets/app.js
+./scripts/java-test
 ```
