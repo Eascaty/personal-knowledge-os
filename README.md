@@ -1,6 +1,7 @@
 # Personal Knowledge OS
 
 [![CI](https://github.com/Eascaty/personal-knowledge-os/actions/workflows/ci.yml/badge.svg)](https://github.com/Eascaty/personal-knowledge-os/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Eascaty/personal-knowledge-os)](https://github.com/Eascaty/personal-knowledge-os/releases/latest)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-3776AB.svg)](pyproject.toml)
 [![Java](https://img.shields.io/badge/Java-21-ED8B00.svg)](knowledge-service-java/pom.xml)
@@ -17,8 +18,22 @@
 - **零付费依赖**：核心只使用 Python 标准库和 SQLite，不要求云 API。
 - **可恢复与可审计**：原始资料不可变保存，任务可重试，关键操作有记录。
 - **可扩展分类**：使用严格父子树表达专业归属，关系边表达跨领域联系。
-- **工程化验证**：18 项自动测试覆盖幂等、越界路径、隐私门禁和完整流水线。
+- **工程化验证**：18 项 Python 与7项 Java 测试覆盖幂等、越界路径、API 契约和隐私门禁。
 - **双语言演进**：Python 负责稳定的写入流水线，Java 21 提供版本化只读领域 API。
+
+## 架构概览
+
+```mermaid
+flowchart LR
+    A["本地文件"] --> B["Python 入库、去重与分类"]
+    B --> C[("SQLite schema v1")]
+    B --> D["Markdown / Vault"]
+    B --> E["静态知识网站"]
+    C --> F["Java 21 只读服务"]
+    F --> G["/api/v1"]
+    C --> H["FTS5 中文搜索"]
+    E --> I["公开/私密发布门禁"]
+```
 
 ## 当前目标
 
@@ -45,6 +60,7 @@
 - [自动化工作流](workflow/WORKFLOW.md)
 - [专业分类骨架](config/taxonomy.json)
 - [测试报告](docs/test-report.md)
+- [GitHub 发布后缺口审计](docs/repository-audit.md)
 - [代码审查](docs/code-review.md)
 - [Java 演进路线](docs/java-roadmap.md)
 - [设计决策](logs/decisions.md)
@@ -108,7 +124,7 @@ knowledge/
 
 J1 里程碑已经实现。Java 服务读取现有 SQLite，但不会修改 Python 流水线的数据；API 只返回显式标记为 `public` 的知识条目，并省略来源绝对路径。
 
-前置环境：Java 21、Maven 3.6.3 或更高版本。测试和启动均可从项目根目录一条命令完成：
+前置环境只需要 Java 21。项目内 Maven Wrapper 会下载并校验固定的 Maven 3.9.11；测试和启动均可从项目根目录一条命令完成：
 
 ```bash
 ./scripts/java-test
@@ -148,3 +164,5 @@ J1 里程碑已经实现。Java 服务读取现有 SQLite，但不会修改 Pyth
 ```
 
 本项目采用 [Apache License 2.0](LICENSE) 开源。
+
+仓库已启用 main 分支保护、CodeQL、Dependabot 安全更新、Secret Scanning 和 Push Protection。安全问题请使用 GitHub 的[私密漏洞报告](https://github.com/Eascaty/personal-knowledge-os/security/advisories/new)，不要创建公开 Issue。

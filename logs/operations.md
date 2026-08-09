@@ -132,3 +132,15 @@
 - PR 与合并后的 `main` 均通过 Java 21、Python 3.9、3.12、3.13 四项 GitHub Actions 检查。
 - PR #6 已使用普通合并进入 `main`，保留服务骨架、API、测试、CI、安全和文档提交；Issue #5 自动关闭。
 - 发布 `v0.3.0：Java J1 只读知识 API`，并创建 J2 中文全文搜索与性能基准 Issue #10。
+
+### 发布后缺口审计与 v0.3.1 加固（2026-08-09）
+
+- 审计仓库设置、开放 PR/Issue、Release、社区健康、依赖图、代码扫描、版本、构建入口和 JaCoCo 报告。
+- 确认 Git 历史与公开归档未包含真实知识、SQLite、私密导出或生成站点；依赖安全告警为0。
+- 为 `main` 启用 PR、四项必需 CI、管理员保护、禁止强推/删除和会话解决要求；仅保留普通合并并启用合并后删分支。
+- 启用 Dependabot 安全更新、Secret Scanning、Push Protection、私密漏洞报告和 CodeQL 默认扫描。
+- 增加9个仓库 topics、CODEOWNERS 和 Java J2 里程碑；Issue #10 已增加 `java`、`enhancement` 标签。
+- 使用 Maven Central 官方 Wrapper 3.3.4 脚本和 Apache Maven 3.9.11；官方 SHA-512 校验通过，并固定分发 SHA-256。
+- Maven Wrapper 首次下载验证成功；Java 7项与 Python 18项测试通过，JaCoCo 指令88.2%、分支67.5%。
+- CI 升级 checkout v7、setup-python v7、setup-java v5、JaCoCo 0.8.15，增加并发取消、10分钟超时和覆盖率硬门槛。
+- Dependabot 忽略 Spring Boot 跨主版本升级，项目版本统一为 `0.3.1`。

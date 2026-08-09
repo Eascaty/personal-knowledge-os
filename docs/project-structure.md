@@ -11,11 +11,13 @@ knowledge/
 ├── AGENTS.md                       # 后续自动维护本工程时必须遵守的规则
 ├── CHANGELOG.md                    # 面向用户的版本变化
 ├── LICENSE                         # Apache License 2.0
+├── .gitattributes                  # 跨平台文本与脚本行尾规则
 ├── CONTRIBUTING.md                 # 贡献流程与隐私边界
 ├── SECURITY.md                     # 漏洞报告与安全支持范围
 ├── pyproject.toml                  # Python 包和 kb 命令
 ├── knowledge-service-java/         # Java 21 + Spring Boot 只读领域 API
 │   ├── pom.xml                     # Maven、Spring Boot、SQLite JDBC、JaCoCo
+│   ├── mvnw / mvnw.cmd             # 带校验的 Maven 3.9.11 Wrapper
 │   └── src/                        # API、领域模型、只读仓储与 JUnit 测试
 ├── .github/                        # CI、Dependabot、Issue 与 PR 模板
 │

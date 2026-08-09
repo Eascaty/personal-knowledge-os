@@ -18,6 +18,14 @@
 ./scripts/doctor
 ```
 
+涉及 Java 服务时还需要 Java 21，并运行：
+
+```bash
+./scripts/java-test
+```
+
+无需预装 Maven；项目内 Wrapper 会下载并校验 Maven 3.9.11。Java 构建必须保持至少80%指令覆盖率和60%分支覆盖率。
+
 涉及完整流水线时再运行：
 
 ```bash
@@ -28,7 +36,7 @@
 
 - 分支命名：`feature/<topic>`、`fix/<topic>` 或 `docs/<topic>`。
 - 一个提交只解决一个明确问题。
-- 推荐提交前缀：`feat:`、`fix:`、`test:`、`docs:`、`refactor:`、`ci:`。
+- 推荐使用中文、单一职责提交，例如 `Java：增加只读查询`、`测试：补充隐私边界`、`文档：更新运行说明`。
 - Pull Request 必须说明变更原因、影响和验证方式。
 
 ## 隐私与样例
@@ -36,4 +44,3 @@
 - 测试只能使用 `tests/fixtures/` 中的虚构样例。
 - `inbox/`、`data/`、生成的 `vault/` 和私密导出不得进入提交。
 - 新增发布能力时，必须证明默认仍然离线、私密并且不会自动上传。
-
