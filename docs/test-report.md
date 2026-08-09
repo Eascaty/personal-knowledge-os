@@ -69,12 +69,12 @@ Java G1 垃圾回收器排障笔记
 验证命令：
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src \
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=apps/pipeline/src \
 python3 -B -m unittest discover -s tests -v
 
 zsh -n scripts/*
 plutil -lint ops/launchd/com.local.knowledge-os.plist.template
-node --check src/knowledge_os/site/assets/app.js
+node --check apps/web/src/app.js
 ./scripts/java-test
 ./scripts/build-demo
 ```

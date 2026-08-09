@@ -1,105 +1,65 @@
 # 工程目录与模块分工
 
-> 项目根目录：`$HOME/ai/knowledge`
+> 项目根目录：`$HOME/AI/knowledge`
 
-本工程把“用户输入、不可变数据、程序代码、网站产物和运维模板”分开，避免后续资料越来越多时互相污染。
+项目采用模块化单仓库：源码按可部署应用分开，共享契约集中管理，所有真实私密数据集中在一个被 Git 忽略的工作区。
 
 ```text
 knowledge/
-├── README.md                       # 总入口与最短使用说明
-├── STATUS.md                       # 当前能做什么、最近测试、下一步
-├── AGENTS.md                       # 后续自动维护本工程时必须遵守的规则
-├── CHANGELOG.md                    # 面向用户的版本变化
-├── LICENSE                         # Apache License 2.0
-├── .gitattributes                  # 跨平台文本与脚本行尾规则
-├── CONTRIBUTING.md                 # 贡献流程与隐私边界
-├── SECURITY.md                     # 漏洞报告与安全支持范围
-├── pyproject.toml                  # Python 包和 kb 命令
-├── knowledge-service-java/         # Java 21 + Spring Boot 只读领域 API
-│   ├── pom.xml                     # Maven、Spring Boot、SQLite JDBC、JaCoCo
-│   ├── mvnw / mvnw.cmd             # 带校验的 Maven 3.9.11 Wrapper
-│   └── src/                        # API、领域模型、只读仓储与 JUnit 测试
-├── .github/                        # CI、Pages、Dependabot、Issue 与 PR 模板
-│
+├── apps/
+│   ├── pipeline/
+│   │   └── src/knowledge_os/
+│   │       ├── processing/         # 提取、分类、任务处理、导出
+│   │       ├── storage/            # schema、记录、队列、taxonomy、搜索
+│   │       ├── operations/checks/  # 数据库、隐私、链接、站点和网络检查
+│   │       ├── site/build/         # 规范化、payload、PWA 渲染与原子构建
+│   │       ├── publish/            # 可选发布适配器
+│   │       └── cli.py              # 命令行入口
+│   ├── api/                        # Java 21 + Spring Boot 只读 API
+│   └── web/
+│       └── src/                    # HTML、CSS、JavaScript、离线页
+├── packages/
+│   └── contracts/                  # canonical JSON Schema 与 OpenAPI
 ├── config/
-│   ├── taxonomy.json               # 唯一权威专业母子树
-│   └── settings.example.json       # 无密钥运行配置示例
-│
-├── docs/
-│   ├── knowledge-system-design.md  # 总体架构活文档
-│   ├── java-roadmap.md             # Java 21/Spring Boot 增量演进路线
-│   └── project-structure.md        # 本文件
-├── workflow/
-│   └── WORKFLOW.md                 # 输入到发布的状态机
-├── logs/
-│   ├── decisions.md                # 长期设计取舍
-│   ├── operations.md               # 实质操作审计
-│   └── conversation-summary.md     # 需求来历与边界
-│
-├── src/knowledge_os/
-│   ├── cli.py                      # kb 命令入口与全链路编排
-│   ├── demo.py                     # 固定虚构资料的隔离公开 Demo 构建器
-│   ├── config/                     # 配置加载和分类树校验
-│   ├── db/                         # SQLite schema、事务与全文搜索
-│   ├── ingest/                     # 文件接收、解析、哈希和去重
-│   ├── knowledge/                  # 摘要、逐级分类、Markdown 与图数据
-│   ├── ai/                         # 规则引擎和可选 Ollama 适配器
-│   ├── site/                       # 纯静态网站生成器
-│   ├── operations/                 # 锁、健康检查、备份和隐私检查
-│   └── publish/                    # 发布门禁和 Cloudflare 可选适配
-│
-├── inbox/
-│   ├── files/                      # 日常只需把文件扔到这里
-│   └── urls.txt                    # 后续手工网址入口
-├── data/
-│   ├── raw/                        # 按哈希保存的不可变原始资料
-│   ├── normalized/                 # 统一后的 Markdown/文本
-│   ├── state/                      # SQLite 状态与项目锁
-│   ├── cache/                      # 可安全重建的临时缓存
-│   └── quarantine/                 # 失败且需要查看的输入
-├── vault/                          # 按专业母子树生成的人类可读 Markdown
-│
-├── site/
-│   ├── static/                     # 手写静态资源
-│   └── dist/                       # 每次重新生成的私密站点
-├── exports/
-│   ├── private/                    # 私密快照/导出，禁止对外同步
-│   └── public/                     # 仅显式 public 内容的公开构建
-│
-├── ops/launchd/                    # 只提供模板，不自动改系统设置
-├── scripts/                        # 项目内一键运行、检查、预览与 Demo 构建脚本
+│   ├── taxonomy.json               # 用户专业树唯一权威
+│   ├── runtime.example.json        # 可提交运行配置模板
+│   └── runtime.json                # 本机配置，自动创建且不进 Git
+├── workspace/                      # 除 README 外整体忽略
+│   ├── inbox/files/                # 唯一日常投入入口
+│   ├── data/raw/                   # 不可变原始副本
+│   ├── data/normalized/            # 标准化文本
+│   ├── data/state/                 # SQLite 与项目锁
+│   ├── data/quarantine/            # 失败隔离
+│   ├── vault/                      # 人类可读知识树
+│   ├── site/                       # 私密站点数据与构建
+│   └── exports/private/            # 健康报告与一致性备份
+├── exports/public/                 # 用户知识唯一公开候选
+├── docs/                           # 权威设计、ADR、运行手册和历史报告
+├── ops/                            # 可选系统运维模板
+├── scripts/                        # 跨应用稳定入口
 └── tests/
-    ├── fixtures/                   # 固定样本
-    ├── test_core.py                # 入库、去重、分类与查询
-    ├── test_site.py                # 私密/公开站点和防泄露
-    ├── test_operations.py          # 健康检查、备份和发布门禁
-    ├── test_e2e.py                 # 从 inbox 到 site/dist 的完整闭环
-    └── test_demo.py                # 虚构 public Demo 的隔离和防泄露验证
+    ├── fixtures/                   # 固定虚构样例
+    └── e2e/                        # 跨应用完整闭环
 ```
 
 ## 边界与责任
 
-- `src/` 是程序；不能在这里保存用户资料。
-- `inbox/` 是唯一日常入口；成功处理后原文件仍保留，重复运行不会重复入库。
-- `data/raw/` 是事实来源；程序只追加，不覆盖、不自动删除。
-- `vault/`、`site/dist/` 和 `exports/` 都是派生产物，可从 SQLite 和原始资料重建。
-- `config/taxonomy.json` 是专业树唯一权威配置；网站中的分类 JSON 都由它生成。
-- `exports/public/` 是用户知识的唯一公开候选；GitHub Pages 只上传 `scripts/build-demo` 从固定虚构样例生成并通过门禁的临时产物。
-- `ops/launchd/` 只是可审查模板。本项目不会在未明确启用时修改 `~/Library/LaunchAgents`。
+- `apps/pipeline/` 是唯一写入方；它拥有 SQLite schema、任务队列、分类和导出。
+- `apps/api/` 只读 SQLite schema v1，不迁移、不建表、不修改任务状态。
+- `apps/web/` 是网站源码唯一位置；`workspace/site/` 只保存可重建产物。
+- `packages/contracts/` 描述跨语言数据/API 边界，不包含用户知识。
+- `workspace/` 是真实私密状态；原始资料只追加，不被重构脚本覆盖。
+- `exports/public/` 仍是用户知识唯一允许公开发布的候选目录。
+- GitHub Pages Demo 只使用 `tests/fixtures/` 的固定虚构资料和 `config/runtime.example.json`。
 
-## 模块依赖方向
-
-```text
-config + db
-   ↑       ↑
-ingest → knowledge → site
-                 ↘ operations → publish
-```
-
-底层模块不能反向依赖网站或发布模块。真实网络发布不属于本地核心的完成条件。
-
-Java 服务只依赖稳定的 SQLite schema，不反向调用 Python，也不拥有写入权：
+## 依赖方向
 
 ```text
-Python pipeline → SQLite schema v1 ← Java read-only API
+apps/pipeline ──生成──> SQLite + canonical JSON
+       │                       │
+       ├──使用──> apps/web/src │
+       │                       └──读取──> apps/api
+       └──校验──> packages/contracts <──消费── Web / future App
 ```
+
+Python 顶层兼容 facade 暂时保留 `knowledge_os.db`、`knowledge_os.knowledge` 和站点 builder 的旧导入，避免目录迁移破坏现有脚本；新实现直接使用职责子包。

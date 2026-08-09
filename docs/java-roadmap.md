@@ -18,7 +18,7 @@
 ### J1：领域模型与只读 API
 
 - 状态：已完成（2026-08-09）。
-- 已建立 `knowledge-service-java/` Maven 模块。
+- 已建立 `apps/api/` Maven 模块。
 - 已映射知识条目、分类节点、脱敏来源和关系边。
 - 已提供健康检查、分类树、知识条目和搜索只读 API。
 - API 只返回 `public` 条目，不返回 `origin`、`raw_path` 或本机绝对路径。

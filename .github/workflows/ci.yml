@@ -62,7 +62,7 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
-          cache-dependency-path: knowledge-service-java/pom.xml
+          cache-dependency-path: apps/api/pom.xml
       - name: Build and test Java service
-        working-directory: knowledge-service-java
+        working-directory: apps/api
         run: ./mvnw --batch-mode verify

@@ -144,8 +144,8 @@ PUBLISHED
 
 第一阶段只支持明确输入：
 
-- `inbox/files/` 中的本地文件
-- `inbox/urls.txt` 中的手工网址
+- `workspace/inbox/files/` 中的本地文件
+- `workspace/inbox/urls.txt` 中的手工网址
 
 不执行无限递归爬取。
 
@@ -263,7 +263,7 @@ AI 输出默认不是事实。状态包括：
 
 ### 5.2 Java 只读服务边界
 
-`knowledge-service-java/` 是现有 Python MVP 的增量消费者，不参与写入：
+`apps/api/` 是现有 Python 流水线的增量消费者，不参与写入：
 
 ```text
 Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
@@ -296,16 +296,7 @@ Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
 
 ## 6. 项目目录
 
-### 6.1 目录治理原则
-
-- 采用单仓库，但应用源码、共享契约、私密运行数据和公开产物必须分区。
-- Python 流水线、Java API 与 Web/PWA 是三个应用边界，不再把网站源码隐藏在 Python 包和生成目录之间。
-- 私密可变数据逐步集中到单一 `workspace/`，`exports/public/` 继续是用户知识唯一允许发布的候选目录。
-- Python 内部按接收、提炼、分类、存储、导出和检查拆包；CLI 只负责参数与调用，不承载业务规则。
-- canonical JSON Schema 与 OpenAPI 放入共享契约目录，供 Python、Java、Web 以及未来 App 共同验证。
-- 旧版 `knowledge_os.db`、`knowledge_os.knowledge` 和站点 builder 导入由兼容 facade 保留；实现模块以600行为审查上限并由架构测试约束。
-
-目标结构：
+项目已经迁移为模块化单仓库：
 
 ```text
 knowledge/
@@ -313,10 +304,9 @@ knowledge/
 │   ├── pipeline/       # Python 唯一写入方
 │   ├── api/            # Java 21 只读 API
 │   └── web/            # 静态网站与 PWA 源码
-├── packages/
-│   └── contracts/      # canonical JSON Schema 与 OpenAPI
-├── config/             # taxonomy 与运行配置模板
-├── workspace/          # 私密输入、状态、Vault 和私密构建；整体忽略
+├── packages/contracts/ # canonical JSON Schema 与 OpenAPI
+├── config/             # taxonomy、运行配置模板和本机配置
+├── workspace/          # 私密输入、原始资料、SQLite、Vault、私密构建
 ├── exports/public/     # 用户知识唯一公开候选
 ├── docs/
 ├── ops/
@@ -324,45 +314,13 @@ knowledge/
 └── tests/e2e/
 ```
 
-迁移采用兼容期：旧脚本入口保持可用，SQLite schema v1、知识 ID、分类 ID、原始资料哈希和公开 Demo 行为不得因目录调整改变。
+约束：
 
-### 6.2 迁移前目录
-
-```text
-$HOME/ai/knowledge/
-├── pyproject.toml
-├── config/
-├── docs/
-├── workflow/
-├── logs/
-├── inbox/
-│   ├── files/
-│   └── urls.txt
-├── data/
-│   ├── raw/
-│   ├── normalized/
-│   ├── state/
-│   ├── cache/
-│   └── quarantine/
-├── vault/
-├── site/
-├── src/knowledge_os/
-├── exports/
-│   ├── private/
-│   └── public/
-├── ops/
-├── scripts/
-└── tests/
-```
-
-说明：
-
-- `data/raw/`：私密、不可变原始资料。
-- `data/state/`：SQLite 数据库。
-- `vault/`：人可直接阅读的 Markdown 专业树。
-- `site/`：在线知识库源代码与构建产物。
-- `exports/public/`：唯一允许公开同步的目录。
-
+- 旧脚本入口保持可用，SQLite schema v1、知识 ID、分类 ID 和原始资料哈希不变。
+- `workspace/` 除说明文件外整体忽略；原始资料只追加。
+- `apps/web/src/` 是手写网站源码唯一位置，`workspace/site/` 只是派生产物。
+- Python 顶层旧导入由兼容 facade 保留；实现模块以600行为审查上限。
+- 详细边界以 `docs/project-structure.md` 为准。
 ## 7. 在线访问设计
 
 ### 7.1 虚构公开 Demo
@@ -371,7 +329,7 @@ GitHub Actions 只检出公开仓库，在隔离临时目录导入 `tests/fixtur
 
 公开地址：<https://eascaty.github.io/personal-knowledge-os/>
 
-该工作流不读取维护者电脑，也不能访问真实 `inbox/`、`data/state/`、`vault/` 或 `site/dist/`。
+该工作流不读取维护者电脑，也不能访问真实 `workspace/inbox/`、`workspace/data/state/`、`workspace/vault/` 或 `workspace/site/dist/`。
 
 ### 7.2 真实私密知识默认方案
 
@@ -390,7 +348,7 @@ GitHub Actions 只检出公开仓库，在隔离临时目录导入 `tests/fixtur
 线上只上传生成后的站点：
 
 ```text
-site/dist/
+exports/public/
 ├── index.html
 ├── assets/
 ├── data/

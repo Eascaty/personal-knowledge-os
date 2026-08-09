@@ -1,6 +1,8 @@
 * @Eascaty
 
 /.github/ @Eascaty
-/knowledge-service-java/ @Eascaty
-/src/knowledge_os/ @Eascaty
+/apps/api/ @Eascaty
+/apps/pipeline/ @Eascaty
+/apps/web/ @Eascaty
+/packages/contracts/ @Eascaty
 /config/ @Eascaty

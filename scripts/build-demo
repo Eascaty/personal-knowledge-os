@@ -6,7 +6,7 @@ PROJECT_ROOT=$(dirname -- "${SCRIPT_DIR}")
 OUTPUT_DIR=${1:-"${PROJECT_ROOT}/demo-dist"}
 
 export PYTHONDONTWRITEBYTECODE=1
-export PYTHONPATH="${PROJECT_ROOT}/src"
+export PYTHONPATH="${PROJECT_ROOT}/apps/pipeline/src"
 exec python3 -B -m knowledge_os.demo \
   --repository-root "${PROJECT_ROOT}" \
   --output "${OUTPUT_DIR}"

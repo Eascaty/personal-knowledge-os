@@ -5,8 +5,8 @@
 第一阶段只保留两个明确入口：
 
 ```text
-inbox/files/       放入本地文件
-inbox/urls.txt     一行一个手工网址
+workspace/inbox/files/       放入本地文件
+workspace/inbox/urls.txt     一行一个手工网址
 ```
 
 不进行全网递归抓取。
@@ -77,7 +77,7 @@ SQLite + vault Markdown
 → 生成关系图数据
 → 生成报告
 → Python 标准库生成原生 HTML/CSS/JavaScript
-→ site/dist/
+→ workspace/site/dist/
 ```
 
 数据包接近5MiB时继续按子树拆分，避免形成过大的线上文件。

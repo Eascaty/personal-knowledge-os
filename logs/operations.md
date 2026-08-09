@@ -178,3 +178,10 @@
 - 清理9条已合并本地 `agent/*` 分支、4条 GitHub 历史分支及失效远端引用；提交历史仍由 `main` 合并记录和 tag 保留。
 - 从提交 `677023e` 建立唯一重构分支 `codex/architecture-restructure`。
 - 重构期间保持 SQLite schema v1、原始资料、知识 ID、分类 ID、公开门禁和线上 Demo 行为不变。
+
+### 私密工作区与 SQLite 路径迁移（2026-08-10 04:16:04 +0800）
+
+- 将本机私密运行目录从根级 `inbox/`、`data/`、`vault/`、`site/` 和 `exports/private/` 迁移到统一的 `workspace/`，公开候选 `exports/public/` 保持不变。
+- 迁移前创建 SQLite 一致性备份 `workspace/exports/private/backups/knowledge-20260810-033357-f9f2ba1d54b9.sqlite3`，SHA-256 为 `f9f2ba1d54b92000f35f3c93f145d84397229c6793f352c3f5638027a7c24b0b`。
+- 在单一事务中更新数据库内的原始资料与标准化文档路径；`PRAGMA integrity_check` 返回 `ok`，现有1份资料和25个分类节点均可读取。
+- 迁移后完整运行 `scripts/run-pipeline`：既有资料正确判定为重复，未新增任务；站点生成、发布门禁和健康检查均通过，网络请求为0。

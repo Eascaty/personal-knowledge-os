@@ -17,7 +17,13 @@ class ArchitectureBoundaryTests(unittest.TestCase):
         self.assertIs(site_builder.build_site, site_build_impl.build_site)
 
     def test_python_implementation_modules_stay_reviewable(self):
-        source_root = Path(__file__).resolve().parents[1] / "src" / "knowledge_os"
+        source_root = (
+            Path(__file__).resolve().parents[1]
+            / "apps"
+            / "pipeline"
+            / "src"
+            / "knowledge_os"
+        )
         oversized = []
         for path in source_root.rglob("*.py"):
             lines = path.read_text(encoding="utf-8").count("\n") + 1

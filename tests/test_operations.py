@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest import mock
 
 from knowledge_os import db
+from knowledge_os.config import ProjectPaths
 from knowledge_os.operations import (
     LockUnavailable,
     ProjectLock,
@@ -27,17 +28,18 @@ from knowledge_os.site import build_site
 
 class OperationsTests(unittest.TestCase):
     def _project(self, root: Path) -> None:
-        (root / "data" / "state").mkdir(parents=True)
-        (root / "site" / "data").mkdir(parents=True)
-        (root / "site" / "dist").mkdir(parents=True)
+        paths = ProjectPaths.from_root(root)
+        paths.state_dir.mkdir(parents=True)
+        paths.site_data_dir.mkdir(parents=True)
+        (paths.site_dir / "dist").mkdir(parents=True)
         (root / "exports" / "public").mkdir(parents=True)
-        (root / "vault").mkdir(parents=True)
-        connection = db.connect(root / "data" / "state" / "knowledge.sqlite3")
+        paths.vault_dir.mkdir(parents=True)
+        connection = db.connect(paths.database_file)
         try:
             db.initialize_database(connection)
         finally:
             connection.close()
-        (root / "site" / "data" / "site-data.json").write_text(
+        (paths.site_data_dir / "site-data.json").write_text(
             json.dumps(
                 {
                     "schema_version": 1,
@@ -74,7 +76,7 @@ class OperationsTests(unittest.TestCase):
                 "documents": [],
                 "relations": [],
             },
-            root / "site" / "dist",
+            paths.site_dir / "dist",
             visibility="private",
         )
 

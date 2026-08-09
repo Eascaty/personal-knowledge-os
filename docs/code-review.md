@@ -12,7 +12,7 @@
 | 高 | 删除分类节点后文档引用 inactive 节点 | 已自动迁入“待归类”、清除旧索引并重新排队 |
 | 中 | inbox symlink 可读取项目外文件 | 已拒绝显式 symlink，并跳过扫描目录中的 symlink |
 | 中 | 核心写链路未使用统一项目锁 | CLI、网站、自动化、doctor、gate 和 backup 已使用同一锁 |
-| 中 | raw_path 被篡改后可能越界 | 每次读取前强制验证位于 `data/raw/` |
+| 中 | raw_path 被篡改后可能越界 | 每次读取前强制验证位于 `workspace/data/raw/` |
 | 中 | URL 敏感参数依赖黑名单 | 静态站来源 URL 现在默认删除全部 query 和 fragment |
 | 中 | 缺少单一全链路入口 | 已增加 `scripts/run-pipeline` |
 | 低 | 静态资源一年 immutable 但无哈希文件名 | 改为短缓存并强制重新验证 |
