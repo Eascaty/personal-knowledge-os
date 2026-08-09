@@ -144,3 +144,11 @@
 - Maven Wrapper 首次下载验证成功；Java 7项与 Python 18项测试通过，JaCoCo 指令88.2%、分支67.5%。
 - CI 升级 checkout v7、setup-python v7、setup-java v5、JaCoCo 0.8.15，增加并发取消、10分钟超时和覆盖率硬门槛。
 - Dependabot 忽略 Spring Boot 跨主版本升级，项目版本统一为 `0.3.1`。
+
+### v0.3.1 GitHub 发布完成（2026-08-09）
+
+- PR #12 的 Java 21、Python 3.9/3.12/3.13 与 CodeQL Java/Python/JavaScript 检查全部通过，并使用普通合并进入受保护 `main`。
+- CodeQL 三语言结果0条，Secret Scanning 0条，Dependabot 安全告警0条。
+- 关闭已由 PR #12 取代的 Dependabot PR #2、#3、#7、#8；Spring Boot 4 PR #9 已按跨主版本忽略策略自动关闭。
+- 从合并后的 `main` 使用 Maven Wrapper 构建 `personal-knowledge-service-0.3.1.jar`，Java 7项测试和覆盖率门禁通过。
+- 发布 `v0.3.1：可复现构建与仓库安全加固`，附带正式 JAR 与 SHA-256 `edc3e9d4775ca01a66a8c9af6d47335164843fb119b1d3a46bb5d9f081bebc25`。
