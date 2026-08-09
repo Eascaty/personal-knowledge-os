@@ -303,6 +303,7 @@ Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
 - 私密可变数据逐步集中到单一 `workspace/`，`exports/public/` 继续是用户知识唯一允许发布的候选目录。
 - Python 内部按接收、提炼、分类、存储、导出和检查拆包；CLI 只负责参数与调用，不承载业务规则。
 - canonical JSON Schema 与 OpenAPI 放入共享契约目录，供 Python、Java、Web 以及未来 App 共同验证。
+- 旧版 `knowledge_os.db`、`knowledge_os.knowledge` 和站点 builder 导入由兼容 facade 保留；实现模块以600行为审查上限并由架构测试约束。
 
 目标结构：
 

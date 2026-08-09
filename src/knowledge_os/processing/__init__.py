@@ -1,25 +1,19 @@
-"""Compatibility facade for knowledge processing use cases."""
+"""Knowledge extraction, classification and build orchestration."""
 
-from .processing.service import (
+from .service import (
     Classification,
-    ExtractionError,
-    NeedsExternalTool,
     RunSummary,
     build_site_data,
     classify_document,
     extract_source,
     process_jobs,
-    rebuild_vault_indexes,
 )
 
 __all__ = [
     "Classification",
-    "ExtractionError",
-    "NeedsExternalTool",
     "RunSummary",
     "build_site_data",
     "classify_document",
     "extract_source",
     "process_jobs",
-    "rebuild_vault_indexes",
 ]
