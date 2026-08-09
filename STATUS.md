@@ -1,8 +1,8 @@
 # 项目状态
 
 - 更新时间：2026-08-09（Asia/Shanghai）
-- 阶段：GitHub 开源首发候选版本验证中
-- 总体状态：可本地运行；开源候选分支和草稿 PR 已推送，正在修复并复验 CI
+- 阶段：GitHub 开源首发完成
+- 总体状态：本地可运行；公开仓库已上线，`main` 分支 CI 全部通过
 
 ## 已实现
 
@@ -53,11 +53,11 @@
 - 已选择 `Eascaty/personal-knowledge-os`、Public 与 Apache-2.0，并完成许可证、贡献指南、安全策略、Issue/PR 模板、Dependabot 和 CI 的本地准备。
 - 已建立 Java 21 + Spring Boot 增量演进路线；现有 Python MVP 保持可运行，不做无价值重写。
 - 已创建私有安全暂存仓库和草稿 PR #1；首次 CI 暴露测试入口依赖 macOS `zsh`，已改为跨平台 POSIX `sh`。
+- PR #1 已保留全部分步提交并合并；仓库 `Eascaty/personal-knowledge-os` 已切换为 Public。
 
 ## 尚需用户以后完成
 
-1. 完成 PR #1 的线上 CI 复验、合并，并将仓库切换为 Public。
-2. 创建 Java 领域模型与只读 API 的首个 GitHub Issue。
-3. 对大体量、跨子主题的综合笔记增加按标题分块和多知识卡片生成。
-4. 如需持续后台运行，再明确选择是否安装 launchd 模板。
-5. 登录 Cloudflare，创建 Pages 项目并配置 Access 精确邮箱策略。
+1. 创建 Java 领域模型与只读 API 的首个 GitHub Issue。
+2. 对大体量、跨子主题的综合笔记增加按标题分块和多知识卡片生成。
+3. 如需持续后台运行，再明确选择是否安装 launchd 模板。
+4. 登录 Cloudflare，创建 Pages 项目并配置 Access 精确邮箱策略。

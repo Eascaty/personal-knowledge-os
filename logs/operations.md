@@ -106,3 +106,10 @@
 - 首次 GitHub Actions 在 Python 3.9、3.12、3.13 三个任务中均于测试入口退出，错误为 `./scripts/test: cannot execute: required file not found`。
 - 根因是测试脚本使用 macOS 自带、Ubuntu Runner 默认不存在的 `/bin/zsh`，并写死系统 Python 路径。
 - 经用户确认，将测试入口改为 POSIX `sh`，使用可移植的项目路径解析和 Actions 已配置的 `python3`。
+
+### GitHub 开源首发完成（2026-08-09）
+
+- CI 修复提交 `2ffc6de` 已推送，GitHub Actions 的 Python 3.9、3.12、3.13 三个任务全部通过。
+- PR #1 已使用普通合并进入 `main`，保留许可证、文档、协作配置、CI 修复等全部中文分步提交。
+- 仓库 `Eascaty/personal-knowledge-os` 已由私有安全暂存切换为 Public。
+- 公开前后检查确认真实知识、SQLite 数据库、私密导出和生成站点均未进入 Git 跟踪范围。
