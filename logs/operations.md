@@ -152,3 +152,11 @@
 - 关闭已由 PR #12 取代的 Dependabot PR #2、#3、#7、#8；Spring Boot 4 PR #9 已按跨主版本忽略策略自动关闭。
 - 从合并后的 `main` 使用 Maven Wrapper 构建 `personal-knowledge-service-0.3.1.jar`，Java 7项测试和覆盖率门禁通过。
 - 发布 `v0.3.1：可复现构建与仓库安全加固`，附带正式 JAR 与 SHA-256 `edc3e9d4775ca01a66a8c9af6d47335164843fb119b1d3a46bb5d9f081bebc25`。
+
+### README 使用指南与效果图优化（2026-08-09 22:57 +0800）
+
+- 将 README 从工程索引重构为面向用户的项目首页，明确项目用途、适用人群、输入输出、三分钟体验和日常使用流程。
+- 补充数据保存位置、默认私密策略、公开构建边界、Java 可选服务、常见问题与跨平台现状，避免首次使用者误解网络和隐私行为。
+- 使用用户明确同意公开的本地知识地图截图作为 README 效果图；资源保存为 `docs/assets/knowledge-map.png`，未加入正文、凭据或本地绝对路径。
+- README 的 Spring Boot 版本标识由3.5.3同步为当前 main 使用的3.5.16。
+- 复验 Python 18项测试全部通过；doctor 状态 PASS，隐私问题0、密钥匹配0、断链0、网络请求0。
