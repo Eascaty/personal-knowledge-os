@@ -1,7 +1,7 @@
 # 项目状态
 
 - 更新时间：2026-08-10（Asia/Shanghai）
-- 阶段：v0.3.1 已发布，GitHub Pages 公开 Demo 实施中
+- 阶段：v0.3.1 已发布，GitHub Pages 公开 Demo 已上线
 - 总体状态：Python MVP 与 Java J1 均可运行；仓库安全、可复现构建、CI 质量门禁、Release 资产与隔离公开 Demo 已补齐
 
 ## 已实现
@@ -42,7 +42,7 @@
 ## 最近验证
 
 - Python 3.9 语法解析通过。
-- 18 项 unittest 全部通过。
+- 19 项 unittest 全部通过。
 - 三份样例生成9个任务，全部完成。
 - 重复运行不新增资料或任务。
 - 金融、AI、Java/G1 三条路径全部正确。
@@ -66,7 +66,7 @@
 - `v0.3.0` Java J1 版本已发布；J2 中文全文搜索已建立为 Issue #10。
 - Maven Wrapper 3.9.11 已固定下载地址与 SHA-256，克隆后无需预装 Maven。
 - Java 覆盖率为指令88.2%、分支67.5%，CI 门槛分别为80%和60%。
-- `main` 已要求 PR 和四项 CI，禁止强推/删除；管理员同样受保护。
+- `main` 已要求 PR、Java/Python四项 CI 与 Public Demo 构建，禁止强推/删除；管理员同样受保护。
 - 已启用 CodeQL、Dependabot 安全更新、Secret Scanning、Push Protection 和私密漏洞报告。
 - 仓库 topics、CODEOWNERS、跨平台行尾策略和 J2 里程碑已补齐。
 - PR #12 已保留4条中文分步提交并合并；`v0.3.1` 已附带正式 JAR 与 SHA-256 发布。
@@ -75,6 +75,8 @@
 - README 已加入经过用户确认可公开使用的本地知识地图效果图，并同步 Spring Boot 版本标识至3.5.16。
 - 公开 Demo 构建器只读取3份固定虚构资料，在临时目录生成独立 SQLite 和 public 站点，不访问本机真实知识库。
 - Python 测试增加为19项；新增 Public Demo CI 和 GitHub Pages 自动部署工作流。
+- PR #16 已保留3条中文分步提交并合并；GitHub Pages 公开 Demo 已上线：`https://eascaty.github.io/personal-knowledge-os/`。
+- 线上桌面与手机浏览器验收通过：分类、搜索、知识详情和关系地图正常，控制台0错误；HTTPS 响应200。
 
 ## 尚需用户以后完成
 

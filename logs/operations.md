@@ -167,3 +167,7 @@
 - 新增隔离 Demo 构建器，只读取 `tests/fixtures/` 中3份固定虚构资料，在临时目录创建独立 SQLite 并生成 public 站点。
 - 新增 `scripts/build-demo`、Public Demo CI 和 GitHub Pages 工作流；部署产物必须经过数据库、构建清单、public 可见性、隐私、密钥与断链门禁。
 - 本地 Demo 构建完成：3篇文档、9项任务、0失败、门禁 PASS、网络请求0；Python 测试增加为19项并全部通过。
+- PR #16 的 Java、Python、Public Demo 与 CodeQL 共9项检查全部通过，并使用普通合并进入受保护 `main`。
+- 为仓库启用免费的 GitHub Pages Actions 发布源，并将 Public Demo 增加为 `main` 第5项必需检查。
+- 首次部署成功：`https://eascaty.github.io/personal-knowledge-os/` 返回 HTTPS 200；线上搜索、详情、关系地图、桌面和手机布局正常，控制台0错误。
+- 使用线上虚构公开 Demo 生成干净效果图 `docs/assets/pages-demo.jpg`，README 不再使用带系统全屏提示的旧截图。
