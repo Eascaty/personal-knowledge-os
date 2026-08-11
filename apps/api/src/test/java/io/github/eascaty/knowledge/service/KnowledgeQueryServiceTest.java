@@ -8,6 +8,7 @@ import io.github.eascaty.knowledge.api.KnowledgeNotFoundException;
 import io.github.eascaty.knowledge.domain.HealthStatus;
 import io.github.eascaty.knowledge.domain.KnowledgeDocument;
 import io.github.eascaty.knowledge.domain.KnowledgeDocumentSummary;
+import io.github.eascaty.knowledge.domain.KnowledgeSearchHit;
 import io.github.eascaty.knowledge.domain.PageResult;
 import io.github.eascaty.knowledge.repository.KnowledgeQueryRepository;
 import java.util.List;
@@ -31,13 +32,16 @@ class KnowledgeQueryServiceTest {
     void delegatesReadModelsToRepository() {
         HealthStatus health = new HealthStatus("UP", "knowledge", "available", 1);
         PageResult<KnowledgeDocumentSummary> page = new PageResult<>(0, 20, 0, List.of());
+        PageResult<KnowledgeSearchHit> searchPage = new PageResult<>(0, 20, 0, List.of());
         when(repository.health()).thenReturn(health);
         when(repository.findTaxonomy()).thenReturn(List.of());
         when(repository.findDocuments("G1", 0, 20)).thenReturn(page);
+        when(repository.searchDocuments("G1", 0, 20)).thenReturn(searchPage);
 
         assertThat(service.health()).isSameAs(health);
         assertThat(service.taxonomy()).isEmpty();
         assertThat(service.documents("G1", 0, 20)).isSameAs(page);
+        assertThat(service.search("G1", 0, 20)).isSameAs(searchPage);
     }
 
     @Test

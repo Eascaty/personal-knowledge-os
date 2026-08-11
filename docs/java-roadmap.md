@@ -9,7 +9,7 @@
 - Maven
 - Spring Web 与 Bean Validation
 - SQLite/PostgreSQL 可替换持久层
-- Apache Lucene 或数据库全文检索
+- SQLite FTS5；数据规模或分词需求超过单机 SQLite 边界后再评估 Lucene
 - JUnit 5、Testcontainers、JaCoCo
 - OpenAPI、Docker、GitHub Actions
 
@@ -28,9 +28,13 @@
 
 ### J2：搜索服务
 
-- 将 J1 的参数化基础搜索升级为 SQLite FTS5 或 Lucene 中文全文搜索。
-- 为查询、分页、排序和高亮建立集成测试。
-- 记录固定数据集上的基准结果。
+- 状态：已完成（2026-08-12），待 PR 合并。
+- 已将独立搜索接口升级为 SQLite FTS5 trigram，并使用 BM25 对标题、标签、分类路径、摘要和正文加权排序。
+- 低于3个字符的查询、包含 FTS 语法字符的查询及无 FTS 命中的查询自动降级为参数化 LIKE。
+- 搜索结果提供 `[[...]]` 纯文本高亮标记、分页、稳定排序和可见命中片段；数据库查询始终过滤 private 内容。
+- 查询上限固定为200字符，通配符按普通字符处理，返回片段进行 HTML 转义。
+- 查询、分页、排序、高亮、隐私、特殊字符和降级路径均有集成测试。
+- 固定2,000条中文资料的本机基准见 [`benchmarks/java-search.md`](benchmarks/java-search.md)。
 
 ### J3：导入与幂等
 

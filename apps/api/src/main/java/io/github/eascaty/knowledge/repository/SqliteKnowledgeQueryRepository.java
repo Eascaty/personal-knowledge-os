@@ -8,6 +8,7 @@ import io.github.eascaty.knowledge.config.KnowledgeProperties;
 import io.github.eascaty.knowledge.domain.HealthStatus;
 import io.github.eascaty.knowledge.domain.KnowledgeDocument;
 import io.github.eascaty.knowledge.domain.KnowledgeDocumentSummary;
+import io.github.eascaty.knowledge.domain.KnowledgeSearchHit;
 import io.github.eascaty.knowledge.domain.KnowledgeSource;
 import io.github.eascaty.knowledge.domain.PageResult;
 import io.github.eascaty.knowledge.domain.RelationEdge;
@@ -140,6 +141,26 @@ public class SqliteKnowledgeQueryRepository implements KnowledgeQueryRepository 
     }
 
     @Override
+    public PageResult<KnowledgeSearchHit> searchDocuments(String query, int page, int size) {
+        String normalizedQuery = query == null ? "" : query.strip();
+        if (normalizedQuery.isEmpty()) {
+            return new PageResult<>(page, size, 0, List.of());
+        }
+        try (Connection connection = openReadOnly()) {
+            if (supportsTrigramSearch(connection, normalizedQuery)) {
+                PageResult<KnowledgeSearchHit> result = searchWithFts(
+                        connection, normalizedQuery, page, size);
+                if (result.total() > 0) {
+                    return result;
+                }
+            }
+            return searchWithLike(connection, normalizedQuery, page, size);
+        } catch (SQLException exception) {
+            throw storeFailure(exception);
+        }
+    }
+
+    @Override
     public Optional<KnowledgeDocument> findDocument(String id) {
         String sql = """
                 SELECT d.id, d.title, d.body, d.summary, d.tags_json, p.node_id,
@@ -188,6 +209,129 @@ public class SqliteKnowledgeQueryRepository implements KnowledgeQueryRepository 
         return DriverManager.getConnection("jdbc:sqlite:" + databasePath, properties);
     }
 
+    private boolean supportsTrigramSearch(Connection connection, String query)
+            throws SQLException {
+        if (query.codePointCount(0, query.length()) < 3 || query.contains("\"")) {
+            return false;
+        }
+        try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT value FROM metadata WHERE key = 'fts_tokenizer'");
+             ResultSet result = statement.executeQuery()) {
+            return result.next() && "trigram".equals(result.getString(1));
+        }
+    }
+
+    private PageResult<KnowledgeSearchHit> searchWithFts(
+            Connection connection, String query, int page, int size) throws SQLException {
+        String expression = "\"" + query.replace("\"", "\"\"") + "\"";
+        String countSql = """
+                SELECT COUNT(*)
+                FROM documents_fts
+                JOIN documents d ON d.id = documents_fts.document_id
+                JOIN placements p ON p.document_id = d.id
+                JOIN nodes n ON n.id = p.node_id AND n.active = 1
+                WHERE documents_fts MATCH ? AND %s
+                """.formatted(PUBLIC_DOCUMENT_FILTER);
+        long total;
+        try (PreparedStatement count = connection.prepareStatement(countSql)) {
+            count.setString(1, expression);
+            try (ResultSet result = count.executeQuery()) {
+                total = result.next() ? result.getLong(1) : 0;
+            }
+        }
+        if (total == 0) {
+            return new PageResult<>(page, size, 0, List.of());
+        }
+        String dataSql = """
+                SELECT d.id, d.title, d.body, d.summary, d.tags_json, p.node_id,
+                       n.path_json, d.updated_at,
+                       bm25(documents_fts, 0.0, 8.0, 1.0, 4.0, 2.0) AS rank
+                FROM documents_fts
+                JOIN documents d ON d.id = documents_fts.document_id
+                JOIN placements p ON p.document_id = d.id
+                JOIN nodes n ON n.id = p.node_id AND n.active = 1
+                WHERE documents_fts MATCH ? AND %s
+                ORDER BY rank, d.updated_at DESC, d.id
+                LIMIT ? OFFSET ?
+                """.formatted(PUBLIC_DOCUMENT_FILTER);
+        List<KnowledgeSearchHit> items = new ArrayList<>();
+        try (PreparedStatement data = connection.prepareStatement(dataSql)) {
+            data.setString(1, expression);
+            data.setInt(2, size);
+            data.setLong(3, (long) page * size);
+            try (ResultSet result = data.executeQuery()) {
+                while (result.next()) {
+                    items.add(toSearchHit(result, query));
+                }
+            }
+        }
+        return new PageResult<>(page, size, total, List.copyOf(items));
+    }
+
+    private PageResult<KnowledgeSearchHit> searchWithLike(
+            Connection connection, String query, int page, int size) throws SQLException {
+        String pattern = "%" + escapeLike(query) + "%";
+        String filter = """
+                 AND (d.title LIKE ? ESCAPE '\\' OR d.summary LIKE ? ESCAPE '\\'
+                      OR d.body LIKE ? ESCAPE '\\' OR d.tags_json LIKE ? ESCAPE '\\'
+                      OR n.path_json LIKE ? ESCAPE '\\')
+                """;
+        String countSql = """
+                SELECT COUNT(*)
+                FROM documents d
+                JOIN placements p ON p.document_id = d.id
+                JOIN nodes n ON n.id = p.node_id AND n.active = 1
+                WHERE %s%s
+                """.formatted(PUBLIC_DOCUMENT_FILTER, filter);
+        long total;
+        try (PreparedStatement count = connection.prepareStatement(countSql)) {
+            bindLikePattern(count, pattern, 1, 5);
+            try (ResultSet result = count.executeQuery()) {
+                total = result.next() ? result.getLong(1) : 0;
+            }
+        }
+        String dataSql = """
+                SELECT d.id, d.title, d.body, d.summary, d.tags_json, p.node_id,
+                       n.path_json, d.updated_at,
+                       CASE
+                         WHEN d.title LIKE ? ESCAPE '\\' THEN 0.0
+                         WHEN d.tags_json LIKE ? ESCAPE '\\' THEN 1.0
+                         WHEN n.path_json LIKE ? ESCAPE '\\' THEN 2.0
+                         WHEN d.summary LIKE ? ESCAPE '\\' THEN 3.0
+                         ELSE 4.0
+                       END AS rank
+                FROM documents d
+                JOIN placements p ON p.document_id = d.id
+                JOIN nodes n ON n.id = p.node_id AND n.active = 1
+                WHERE %s%s
+                ORDER BY rank, d.updated_at DESC, d.id
+                LIMIT ? OFFSET ?
+                """.formatted(PUBLIC_DOCUMENT_FILTER, filter);
+        List<KnowledgeSearchHit> items = new ArrayList<>();
+        try (PreparedStatement data = connection.prepareStatement(dataSql)) {
+            int index = bindLikePattern(data, pattern, 1, 4);
+            index = bindLikePattern(data, pattern, index, 5);
+            data.setInt(index++, size);
+            data.setLong(index, (long) page * size);
+            try (ResultSet result = data.executeQuery()) {
+                while (result.next()) {
+                    items.add(toSearchHit(result, query));
+                }
+            }
+        }
+        return new PageResult<>(page, size, total, List.copyOf(items));
+    }
+
+    private int bindLikePattern(
+            PreparedStatement statement, String pattern, int startIndex, int count)
+            throws SQLException {
+        int index = startIndex;
+        for (int field = 0; field < count; field++) {
+            statement.setString(index++, pattern);
+        }
+        return index;
+    }
+
     private List<RelationEdge> findRelations(Connection connection, String documentId)
             throws SQLException {
         String sql = """
@@ -232,6 +376,83 @@ public class SqliteKnowledgeQueryRepository implements KnowledgeQueryRepository 
                 result.getString("node_id"),
                 readStringList(result.getString("path_json")),
                 result.getString("updated_at"));
+    }
+
+    private KnowledgeSearchHit toSearchHit(ResultSet result, String query) throws SQLException {
+        String title = result.getString("title");
+        String body = result.getString("body");
+        String summary = result.getString("summary");
+        List<String> tags = readStringList(result.getString("tags_json"));
+        List<String> path = readStringList(result.getString("path_json"));
+        return new KnowledgeSearchHit(
+                result.getString("id"),
+                title,
+                highlightedFragment(title, query, 160),
+                summary,
+                highlightedFragment(firstMatchingText(query, body, summary,
+                        String.join(" / ", tags), String.join(" / ", path)), query, 220),
+                tags,
+                result.getString("node_id"),
+                path,
+                result.getDouble("rank"),
+                result.getString("updated_at"));
+    }
+
+    private String firstMatchingText(String query, String... candidates) {
+        for (String candidate : candidates) {
+            if (indexOfIgnoreCase(candidate, query) >= 0) {
+                return candidate;
+            }
+        }
+        return candidates.length == 0 ? "" : candidates[0];
+    }
+
+    private String highlightedFragment(String text, String query, int maximumLength) {
+        String compact = text == null ? "" : text.replaceAll("\\s+", " ").strip();
+        if (compact.isEmpty()) {
+            return "";
+        }
+        int match = indexOfIgnoreCase(compact, query);
+        int context = Math.max(20, (maximumLength - query.length()) / 2);
+        int start = match < 0 ? 0 : Math.max(0, match - context);
+        int end = Math.min(compact.length(), start + maximumLength);
+        if (match >= 0 && match + query.length() > end) {
+            end = Math.min(compact.length(), match + query.length() + context);
+        }
+        String fragment = compact.substring(start, end);
+        String prefix = start > 0 ? "…" : "";
+        String suffix = end < compact.length() ? "…" : "";
+        int localMatch = match < 0 ? -1 : match - start;
+        if (localMatch < 0 || localMatch + query.length() > fragment.length()) {
+            return prefix + escapeHtml(fragment) + suffix;
+        }
+        return prefix
+                + escapeHtml(fragment.substring(0, localMatch))
+                + "[["
+                + escapeHtml(fragment.substring(localMatch, localMatch + query.length()))
+                + "]]"
+                + escapeHtml(fragment.substring(localMatch + query.length()))
+                + suffix;
+    }
+
+    private int indexOfIgnoreCase(String text, String query) {
+        if (text == null || query == null || query.length() > text.length()) {
+            return -1;
+        }
+        for (int index = 0; index <= text.length() - query.length(); index++) {
+            if (text.regionMatches(true, index, query, 0, query.length())) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    private String escapeHtml(String value) {
+        return value.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 
     private int bindSearch(

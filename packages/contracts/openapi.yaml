@@ -70,6 +70,7 @@ paths:
           schema:
             type: string
             minLength: 1
+            maxLength: 200
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Size'
       responses:
@@ -78,7 +79,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DocumentPageResponse'
+                $ref: '#/components/schemas/SearchPageResponse'
 components:
   parameters:
     Query:
@@ -88,6 +89,7 @@ components:
       schema:
         type: string
         default: ''
+        maxLength: 200
     Page:
       name: page
       in: query
@@ -139,6 +141,12 @@ components:
       properties:
         api_version: { type: string, const: v1 }
         data: { $ref: '#/components/schemas/KnowledgeDocument' }
+    SearchPageResponse:
+      type: object
+      required: [api_version, data]
+      properties:
+        api_version: { type: string, const: v1 }
+        data: { $ref: '#/components/schemas/SearchPage' }
     ApiError:
       type: object
       required: [api_version, error]
@@ -190,6 +198,26 @@ components:
             relations:
               type: array
               items: { $ref: '#/components/schemas/RelationEdge' }
+    KnowledgeSearchHit:
+      type: object
+      required: [id, title, highlighted_title, summary, snippet, tags, node_id, path, rank, updated_at]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        highlighted_title:
+          type: string
+          description: 匹配内容用纯文本 [[...]] 标记，不包含 HTML
+        summary: { type: string }
+        snippet:
+          type: string
+          description: 搜索摘要，匹配内容用纯文本 [[...]] 标记
+        tags: { type: array, items: { type: string } }
+        node_id: { type: string }
+        path: { type: array, items: { type: string } }
+        rank:
+          type: number
+          description: 相关度排序值，数值越小越相关
+        updated_at: { type: string }
     KnowledgeSource:
       type: object
       required: [kind, original_name, sha256]
@@ -217,3 +245,13 @@ components:
         items:
           type: array
           items: { $ref: '#/components/schemas/KnowledgeDocumentSummary' }
+    SearchPage:
+      type: object
+      required: [page, size, total, items]
+      properties:
+        page: { type: integer, minimum: 0 }
+        size: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/KnowledgeSearchHit' }

@@ -4,6 +4,7 @@ import io.github.eascaty.knowledge.api.KnowledgeNotFoundException;
 import io.github.eascaty.knowledge.domain.HealthStatus;
 import io.github.eascaty.knowledge.domain.KnowledgeDocument;
 import io.github.eascaty.knowledge.domain.KnowledgeDocumentSummary;
+import io.github.eascaty.knowledge.domain.KnowledgeSearchHit;
 import io.github.eascaty.knowledge.domain.PageResult;
 import io.github.eascaty.knowledge.domain.TaxonomyNode;
 import io.github.eascaty.knowledge.repository.KnowledgeQueryRepository;
@@ -29,6 +30,10 @@ public class KnowledgeQueryService {
 
     public PageResult<KnowledgeDocumentSummary> documents(String query, int page, int size) {
         return repository.findDocuments(query, page, size);
+    }
+
+    public PageResult<KnowledgeSearchHit> search(String query, int page, int size) {
+        return repository.searchDocuments(query, page, size);
     }
 
     public KnowledgeDocument document(String id) {

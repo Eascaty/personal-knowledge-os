@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.eascaty.knowledge.domain.HealthStatus;
-import io.github.eascaty.knowledge.domain.KnowledgeDocumentSummary;
+import io.github.eascaty.knowledge.domain.KnowledgeSearchHit;
 import io.github.eascaty.knowledge.domain.PageResult;
 import io.github.eascaty.knowledge.service.KnowledgeQueryService;
 import java.util.List;
@@ -39,17 +39,24 @@ class KnowledgeControllerTest {
 
     @Test
     void searchesWithBoundedPagination() throws Exception {
-        KnowledgeDocumentSummary summary = new KnowledgeDocumentSummary(
-                "doc-public", "G1 垃圾回收", "摘要", List.of("G1"),
+        KnowledgeSearchHit hit = new KnowledgeSearchHit(
+                "doc-public", "G1 垃圾回收", "[[G1]] 垃圾回收", "摘要", "[[G1]] 使用 Region",
+                List.of("G1"),
                 "java-g1", List.of("技术", "Java开发", "JVM", "G1"),
+                -2.5,
                 "2026-08-09T00:00:00Z");
-        when(service.documents("G1", 0, 20))
-                .thenReturn(new PageResult<>(0, 20, 1, List.of(summary)));
+        when(service.search("G1", 0, 20))
+                .thenReturn(new PageResult<>(0, 20, 1, List.of(hit)));
 
         mockMvc.perform(get("/api/v1/search").param("q", "G1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.total").value(1))
-                .andExpect(jsonPath("$.data.items[0].node_id").value("java-g1"));
+                .andExpect(jsonPath("$.data.items[0].node_id").value("java-g1"))
+                .andExpect(jsonPath("$.data.items[0].highlighted_title")
+                        .value("[[G1]] 垃圾回收"))
+                .andExpect(jsonPath("$.data.items[0].snippet")
+                        .value("[[G1]] 使用 Region"))
+                .andExpect(jsonPath("$.data.items[0].rank").value(-2.5));
     }
 
     @Test
@@ -60,5 +67,14 @@ class KnowledgeControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.api_version").value("v1"))
                 .andExpect(jsonPath("$.data.code").value("knowledge_not_found"));
+    }
+
+    @Test
+    void rejectsOversizedSearchTermsBeforeTheyReachTheStore() throws Exception {
+        mockMvc.perform(get("/api/v1/search").param("q", "x".repeat(201)))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/api/v1/documents").param("query", "x".repeat(201)))
+                .andExpect(status().isBadRequest());
     }
 }
