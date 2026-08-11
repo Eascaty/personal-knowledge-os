@@ -191,3 +191,12 @@
 - 将五阶段重构分支 `codex/architecture-restructure` 推送到 `Eascaty/personal-knowledge-os`，工作区提交范围干净且未包含真实资料、SQLite、私密构建或本机运行配置。
 - 创建草稿 PR #18 `架构：完成 v0.4.0 五阶段工程重构`，目标为受保护的 `main`。
 - 首轮远端验证全部通过：Python 3.9/3.12/3.13、Java 21、Public Demo、CodeQL Java/Python/JavaScript 均成功。
+
+### v0.4.0 合并与线上验收（2026-08-11 21:26:30 +0800）
+
+- 最终审阅发现并清理19个拆分模块的文件末尾多余空行；新增架构门禁首次运行又清理3个历史入口文件，并持续阻止 Python 源码行尾空白和不稳定的文件末尾换行。
+- PR #18 转为 Ready 后，全部必需检查通过并以普通合并进入受保护的 `main`；合并提交为 `b1f60f93783325749725ffe4638b263f0a72f299`。
+- `codex/architecture-restructure` 已从本地与远端删除，本地 `main` 已快进同步至远端。
+- 合并后的 Python、Java、Public Demo、CodeQL 与 GitHub Pages 工作流全部成功；公开站点继续返回 HTTPS 200。
+- 实际浏览器复验首页、`G1` 搜索、知识详情、关系地图和390×844移动端布局均正常，页面控制台0错误。
+- 关闭 Dependabot PR #19 并删除其远端分支：该变更为 `actions/configure-pages` 跨主版本自动升级，不符合“升级前先运行固定样本测试”的项目规则；现网继续使用已验证版本。

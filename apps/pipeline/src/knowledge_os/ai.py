@@ -284,4 +284,3 @@ def adapter_from_runtime(runtime: Mapping[str, Any]) -> Adapter:
             timeout_seconds=int(ollama.get("timeout_seconds", 120)),
         )
     raise AIAdapterError(f"unsupported model provider: {provider}")
-
