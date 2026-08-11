@@ -244,6 +244,3 @@ _SECRET_PATTERNS = (
         re.compile(r"\bgh[pousr]_[A-Za-z0-9]{20,}\b"),
     ),
 )
-
-
-

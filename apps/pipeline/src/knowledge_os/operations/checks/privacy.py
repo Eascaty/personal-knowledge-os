@@ -188,5 +188,3 @@ _EXTERNAL_SCHEMES = {
     "sms",
     "tel",
 }
-
-

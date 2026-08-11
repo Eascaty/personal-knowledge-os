@@ -60,6 +60,3 @@ def _label(path: Path, project_root: Optional[Path]) -> str:
         except (OSError, ValueError):
             pass
     return path.name
-
-
-

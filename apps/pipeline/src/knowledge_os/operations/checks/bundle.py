@@ -219,4 +219,3 @@ def check_site_bundle(
         metrics,
         _duration_ms(started),
     )
-

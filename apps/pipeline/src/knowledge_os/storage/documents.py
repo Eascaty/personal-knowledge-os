@@ -251,4 +251,3 @@ def status_summary(connection: sqlite3.Connection) -> Dict[str, Any]:
             "SELECT MAX(happened_at) FROM events"
         ).fetchone()[0],
     }
-

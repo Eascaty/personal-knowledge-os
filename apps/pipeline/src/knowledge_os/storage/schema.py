@@ -192,6 +192,3 @@ def initialize_database(connection: sqlite3.Connection) -> None:
         (tokenizer,),
     )
     connection.commit()
-
-
-

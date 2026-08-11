@@ -94,6 +94,3 @@ def insert_source(
         )
     connection.commit()
     return inserted
-
-
-

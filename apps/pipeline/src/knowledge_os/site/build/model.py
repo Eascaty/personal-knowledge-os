@@ -28,4 +28,3 @@ class BuildResult:
     document_count: int
     relation_count: int
     content_digest: str
-

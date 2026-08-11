@@ -241,6 +241,3 @@ def _normalized_markdown(
         )
     lines.extend(["---", "", f"# {title}", "", body.strip(), ""])
     return "\n".join(lines)
-
-
-

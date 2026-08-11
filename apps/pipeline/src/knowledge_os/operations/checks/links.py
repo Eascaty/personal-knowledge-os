@@ -196,5 +196,3 @@ def check_broken_links(
         metrics,
         _duration_ms(started),
     )
-
-

@@ -549,6 +549,3 @@ def normalize_site_data(
         }
     )
     return result
-
-
-

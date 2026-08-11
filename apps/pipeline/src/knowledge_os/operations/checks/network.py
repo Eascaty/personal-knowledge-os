@@ -24,4 +24,3 @@ def offline_network_check() -> CheckResult:
         "默认离线：未执行网络请求或线上健康检查",
         metrics={"network_requests": 0},
     )
-

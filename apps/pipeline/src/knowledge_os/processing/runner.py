@@ -210,6 +210,3 @@ def process_jobs(
     return RunSummary(
         claimed=claimed, completed=completed, retried=retried, failed=failed
     )
-
-
-

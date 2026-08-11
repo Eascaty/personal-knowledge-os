@@ -119,6 +119,3 @@ def _graph_payload(data: Mapping[str, Any]) -> dict[str, Any]:
         "tree_edges": tree_edges,
         "relation_edges": relation_edges,
     }
-
-
-

@@ -154,5 +154,3 @@ def classify_document(
         confidence=min(confidences) if confidences else 0.0,
         method="rules-stepwise",
     )
-
-

@@ -216,5 +216,3 @@ def _manifest(data: Mapping[str, Any]) -> dict[str, Any]:
             },
         ],
     }
-
-

@@ -446,4 +446,3 @@ def build_site_data(
             },
         )
     return canonical
-

@@ -104,6 +104,3 @@ def sync_taxonomy(
             details={"destination": uncertain_id},
         )
     connection.commit()
-
-
-

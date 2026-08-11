@@ -141,6 +141,3 @@ def fail_job(
     )
     connection.commit()
     return status
-
-
-
