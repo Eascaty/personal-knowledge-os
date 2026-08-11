@@ -1,9 +1,9 @@
 # 个人知识体系总体设计
 
 > 状态：活文档  
-> 版本：0.3.1
+> 版本：0.4.0-dev
 > 更新时间：2026-08-10（Asia/Shanghai）
-> 项目根目录：`$HOME/ai/knowledge`
+> 项目根目录：`$HOME/AI/knowledge`
 
 ## 1. 目标
 
@@ -144,8 +144,8 @@ PUBLISHED
 
 第一阶段只支持明确输入：
 
-- `inbox/files/` 中的本地文件
-- `inbox/urls.txt` 中的手工网址
+- `workspace/inbox/files/` 中的本地文件
+- `workspace/inbox/urls.txt` 中的手工网址
 
 不执行无限递归爬取。
 
@@ -263,7 +263,7 @@ AI 输出默认不是事实。状态包括：
 
 ### 5.2 Java 只读服务边界
 
-`knowledge-service-java/` 是现有 Python MVP 的增量消费者，不参与写入：
+`apps/api/` 是现有 Python 流水线的增量消费者，不参与写入：
 
 ```text
 Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
@@ -278,7 +278,14 @@ Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
 - 分类树可以读取全部有效分类节点，但不携带用户资料内容。
 - J1 采用参数化 `LIKE` 搜索建立 API 契约；J2 再接入 FTS5/Lucene 并记录性能基准。
 
-### 5.3 SQLite 主要表
+### 5.3 共享数据与 HTTP 契约
+
+- `packages/contracts/canonical.schema.json` 定义 canonical schema v1；网站构建在写入产物前使用标准库校验器强制验证。
+- `packages/contracts/openapi.yaml` 定义 Java 只读 HTTP API v1，作为 Web 联机模式与未来 App 的接口边界。
+- Python 与 Java 契约测试共用 `packages/contracts/examples/canonical-v1.json`，样例只含固定虚构内容。
+- v1 只允许增加可选字段；删除、改名或改变字段语义必须新增契约主版本。
+
+### 5.4 SQLite 主要表
 
 - `taxonomy_nodes`
 - `taxonomy_aliases`
@@ -294,43 +301,40 @@ Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
 - `artifacts`
 - `deployments`
 
+### 5.5 Web 与未来 App 适配边界
+
+- `apps/web/src/data-source.js` 提供静态构建和 HTTP API v1 两种读取适配器；现有 PWA 默认使用静态模式，保持离线优先和零在线服务成本。
+- Java HTTP 控制器只依赖应用服务，应用服务再调用只读仓储；客户端不得直接绑定 SQLite schema。
+- 未来原生 App 复用 OpenAPI v1，并在客户端适配层实现鉴权、缓存和同步，不复制 Python 处理逻辑。
+- 在目标平台、离线编辑和同步策略明确前不创建空移动端工程，以免过早锁定技术栈。
+
 ## 6. 项目目录
 
+项目已经迁移为模块化单仓库：
+
 ```text
-$HOME/ai/knowledge/
-├── pyproject.toml
-├── config/
+knowledge/
+├── apps/
+│   ├── pipeline/       # Python 唯一写入方
+│   ├── api/            # Java 21 只读 API
+│   └── web/            # 静态网站与 PWA 源码
+├── packages/contracts/ # canonical JSON Schema 与 OpenAPI
+├── config/             # taxonomy、运行配置模板和本机配置
+├── workspace/          # 私密输入、原始资料、SQLite、Vault、私密构建
+├── exports/public/     # 用户知识唯一公开候选
 ├── docs/
-├── workflow/
-├── logs/
-├── inbox/
-│   ├── files/
-│   └── urls.txt
-├── data/
-│   ├── raw/
-│   ├── normalized/
-│   ├── state/
-│   ├── cache/
-│   └── quarantine/
-├── vault/
-├── site/
-├── src/knowledge_os/
-├── exports/
-│   ├── private/
-│   └── public/
 ├── ops/
 ├── scripts/
-└── tests/
+└── tests/e2e/
 ```
 
-说明：
+约束：
 
-- `data/raw/`：私密、不可变原始资料。
-- `data/state/`：SQLite 数据库。
-- `vault/`：人可直接阅读的 Markdown 专业树。
-- `site/`：在线知识库源代码与构建产物。
-- `exports/public/`：唯一允许公开同步的目录。
-
+- 旧脚本入口保持可用，SQLite schema v1、知识 ID、分类 ID 和原始资料哈希不变。
+- `workspace/` 除说明文件外整体忽略；原始资料只追加。
+- `apps/web/src/` 是手写网站源码唯一位置，`workspace/site/` 只是派生产物。
+- Python 顶层旧导入由兼容 facade 保留；实现模块以600行为审查上限。
+- 详细边界以 `docs/project-structure.md` 为准。
 ## 7. 在线访问设计
 
 ### 7.1 虚构公开 Demo
@@ -339,7 +343,7 @@ GitHub Actions 只检出公开仓库，在隔离临时目录导入 `tests/fixtur
 
 公开地址：<https://eascaty.github.io/personal-knowledge-os/>
 
-该工作流不读取维护者电脑，也不能访问真实 `inbox/`、`data/state/`、`vault/` 或 `site/dist/`。
+该工作流不读取维护者电脑，也不能访问真实 `workspace/inbox/`、`workspace/data/state/`、`workspace/vault/` 或 `workspace/site/dist/`。
 
 ### 7.2 真实私密知识默认方案
 
@@ -358,7 +362,7 @@ GitHub Actions 只检出公开仓库，在隔离临时目录导入 `tests/fixtur
 线上只上传生成后的站点：
 
 ```text
-site/dist/
+exports/public/
 ├── index.html
 ├── assets/
 ├── data/
@@ -530,7 +534,7 @@ raw_auto_delete: false
 7. Mac 关机后线上已发布版本仍可访问。
 8. 未标记 `public` 的内容不进入公开构建。
 9. 任务中断后可以继续。
-10. 每次实质操作都更新状态和日志。
+10. 里程碑更新状态；真实部署、迁移和恢复写入操作日志。
 
 ## 13. 已知边界
 
@@ -541,7 +545,7 @@ raw_auto_delete: false
 
 ## 14. 更新规则
 
-本文件是活文档。任何架构、数据边界、技术选型、分类规则或发布策略变更，必须在同一次工作中更新本文件，并在 `logs/operations.md` 与 `logs/decisions.md` 留痕。
+本文件是活文档。任何架构、数据边界、技术选型、分类规则或发布策略变更，必须在同一次工作中更新本文件；只有形成长期取舍时才追加决策，只有部署、迁移、恢复或外部状态变化时才追加操作记录。
 
 ## 15. 参考资料
 

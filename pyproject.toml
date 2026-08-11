@@ -31,14 +31,14 @@ knowledge-os-site = "knowledge_os.site.__main__:main"
 knowledge-os-ops = "knowledge_os.operations.__main__:main"
 
 [tool.setuptools]
-package-dir = { "" = "src" }
+package-dir = { "" = "apps/pipeline/src" }
 include-package-data = true
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["apps/pipeline/src"]
 
 [tool.setuptools.package-data]
-knowledge_os = ["default_taxonomy.json", "site/assets/*"]
+knowledge_os = ["default_taxonomy.json"]
 
 [tool.unittest]
 start-directory = "tests"

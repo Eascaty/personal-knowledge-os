@@ -18,11 +18,12 @@
 ### J1：领域模型与只读 API
 
 - 状态：已完成（2026-08-09）。
-- 已建立 `knowledge-service-java/` Maven 模块。
+- 已建立 `apps/api/` Maven 模块。
 - 已映射知识条目、分类节点、脱敏来源和关系边。
 - 已提供健康检查、分类树、知识条目和搜索只读 API。
 - API 只返回 `public` 条目，不返回 `origin`、`raw_path` 或本机绝对路径。
 - 已使用契约测试证明 Java API 的核心字段与现有 canonical JSON 一致。
+- 已将 `packages/contracts/openapi.yaml` 和 canonical JSON Schema 固化为跨应用 v1 契约，Java 与 Python 共用同一份虚构样例。
 - 已通过 JDK 21、JUnit 5、SQLite 集成测试、MockMvc 和 JaCoCo 验证。
 
 ### J2：搜索服务
@@ -39,7 +40,7 @@
 ### J4：可部署服务
 
 - 提供 Docker Compose 开发环境。
-- 增加 OpenAPI 文档、可观测性和发布流水线。
+- 基于现有 OpenAPI v1 契约增加可观测性和发布流水线。
 - 保留完全本地、无账号、无付费 API 的默认运行模式。
 
 ## 工程验收标准

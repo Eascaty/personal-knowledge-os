@@ -47,6 +47,8 @@ jobs:
           python-version: "3.12"
       - name: Build synthetic public demo
         run: ./scripts/build-demo "${RUNNER_TEMP}/personal-knowledge-os-demo"
+      - name: Test Web data-source adapters
+        run: ./scripts/test-web
 
   java-test:
     name: Java 21
@@ -62,7 +64,7 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
-          cache-dependency-path: knowledge-service-java/pom.xml
+          cache-dependency-path: apps/api/pom.xml
       - name: Build and test Java service
-        working-directory: knowledge-service-java
+        working-directory: apps/api
         run: ./mvnw --batch-mode verify

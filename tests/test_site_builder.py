@@ -85,10 +85,14 @@ class SiteBuilderTests(unittest.TestCase):
             build_site(sample_data(), output, visibility="private")
             headers = (output / "_headers").read_text(encoding="utf-8")
             worker = (output / "service-worker.js").read_text(encoding="utf-8")
+            index = (output / "index.html").read_text(encoding="utf-8")
             self.assertIn("X-Robots-Tag: noindex", headers)
             self.assertIn("private, no-store", headers)
             self.assertNotIn("./data/site-data.json", worker)
             self.assertIn('cache: "no-store"', worker)
+            self.assertIn("./assets/data-source.js", worker)
+            self.assertLess(index.index("data-source.js"), index.index("app.js"))
+            self.assertTrue((output / "assets" / "data-source.js").is_file())
 
     def test_bad_canonical_does_not_replace_old_site(self):
         with tempfile.TemporaryDirectory() as temporary:

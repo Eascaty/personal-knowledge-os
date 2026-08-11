@@ -6,26 +6,12 @@ models/
 cache/
 .venv/
 node_modules/
-knowledge-service-java/target/
+apps/api/target/
+config/runtime.json
 
-inbox/*
-!inbox/README.md
-
-data/raw/
-data/normalized/
-data/cache/
-data/quarantine/
-data/logs/
-data/state/
-
-site/dist/
-site/data/
-site/.vite/
+workspace/*
+!workspace/README.md
 demo-dist/
-exports/private/
-
-vault/*
-!vault/README.md
 
 *.zip
 *.tgz

@@ -4,8 +4,8 @@
 [![Release](https://img.shields.io/github/v/release/Eascaty/personal-knowledge-os)](https://github.com/Eascaty/personal-knowledge-os/releases/latest)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB.svg)](pyproject.toml)
-[![Java](https://img.shields.io/badge/Java-21-ED8B00.svg)](knowledge-service-java/pom.xml)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F.svg)](knowledge-service-java/pom.xml)
+[![Java](https://img.shields.io/badge/Java-21-ED8B00.svg)](apps/api/pom.xml)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.16-6DB33F.svg)](apps/api/pom.xml)
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-2ea44f.svg)](https://eascaty.github.io/personal-knowledge-os/)
 
 把散落在电脑里的 Markdown、文本、代码、HTML、DOCX 和 PDF，离线整理成一个可搜索、可追溯、可浏览的个人知识库。
@@ -18,14 +18,14 @@
 
 访问 **[GitHub Pages 公开 Demo](https://eascaty.github.io/personal-knowledge-os/)**，无需安装即可体验分类树、全文搜索、知识详情和关系地图。
 
-在线 Demo 只使用仓库中三份虚构测试资料，由 GitHub Actions 在隔离临时目录重新构建，并在隐私、密钥、断链、数据库和 public 可见性门禁全部通过后发布。它不会读取或上传维护者本机的真实 `inbox/`、SQLite、Vault 或私密网站。
+在线 Demo 只使用仓库中三份虚构测试资料，由 GitHub Actions 在隔离临时目录重新构建，并在隐私、密钥、断链、数据库和 public 可见性门禁全部通过后发布。它不会读取或上传维护者本机的真实 `workspace/`、SQLite、Vault 或私密网站。
 
 ## 这个项目能做什么
 
 如果你的学习笔记、技术文档和资料长期散落在不同文件夹里，这个项目可以帮助你完成下面这条流水线：
 
 ```text
-把文件放入 inbox/
+把文件放入 workspace/inbox/
         ↓
 扫描、解析和 SHA-256 去重
         ↓
@@ -85,11 +85,11 @@ cd personal-knowledge-os
 仓库内已经提供三份虚构测试资料。你可以先复制一份到收件箱：
 
 ```bash
-mkdir -p inbox/files
-cp tests/fixtures/java_g1.md inbox/files/
+mkdir -p workspace/inbox/files
+cp tests/fixtures/java_g1.md workspace/inbox/files/
 ```
 
-也可以直接把自己的文件复制到 `inbox/files/`。原文件不会被覆盖；系统会把不可变副本、标准化内容和知识条目分别保存。
+也可以直接把自己的文件复制到 `workspace/inbox/files/`。原文件不会被覆盖；系统会把不可变副本、标准化内容和知识条目分别保存。
 
 ### 4. 一条命令完成处理
 
@@ -123,7 +123,7 @@ cp tests/fixtures/java_g1.md inbox/files/
 
 最常见的使用方式只有三步：
 
-1. 把新资料放进 `inbox/files/`。
+1. 把新资料放进 `workspace/inbox/files/`。
 2. 运行 `./scripts/run-pipeline`。
 3. 打开本地网站，或者使用命令行搜索。
 
@@ -162,12 +162,12 @@ cp tests/fixtures/java_g1.md inbox/files/
 
 | 目录 | 内容 | 是否应上传 GitHub |
 |---|---|---|
-| `inbox/` | 等待处理的用户资料 | 否 |
-| `data/raw/` | 不可变原始副本 | 否 |
-| `data/normalized/` | 标准化文本 | 否 |
-| `data/state/` | SQLite 数据库和运行状态 | 否 |
-| `vault/` | 生成的 Markdown 知识页 | 默认否 |
-| `site/dist/` | 私密本地网站 | 否 |
+| `workspace/inbox/` | 等待处理的用户资料 | 否 |
+| `workspace/data/raw/` | 不可变原始副本 | 否 |
+| `workspace/data/normalized/` | 标准化文本 | 否 |
+| `workspace/data/state/` | SQLite 数据库和运行状态 | 否 |
+| `workspace/vault/` | 生成的 Markdown 知识页 | 默认否 |
+| `workspace/site/dist/` | 私密本地网站 | 否 |
 | `exports/public/` | 通过门禁的公开构建 | 可以 |
 
 这些私密路径已经由 `.gitignore` 排除。新知识默认标记为 `private`；公开构建只接受明确标记为 `public` 的内容。
@@ -192,6 +192,7 @@ flowchart LR
 - **SQLite**：保存可审计的结构化状态，并提供 FTS5 搜索能力。
 - **静态网站**：原生 HTML、CSS、JavaScript，无前端运行时依赖。
 - **Java 只读 API**：只读取 Python 已生成的 SQLite，并结构性过滤 private 内容和本地绝对路径。
+- **共享适配边界**：Web 可从静态包或 API v1 加载；未来 App 复用 OpenAPI，不直接读取 SQLite。
 
 默认提炼器是确定性的本地规则，不产生网络请求。你也可以在 `config/runtime.json` 中选择本机 Ollama；Ollama 是可选项，不影响零依赖基础流程。
 
@@ -202,7 +203,7 @@ flowchart LR
 前置环境：Java 21。项目内 Maven Wrapper 会在首次运行时联网下载并校验固定版本的 Maven，然后下载开源依赖。
 
 ```bash
-# 运行 7 项 Java 测试和覆盖率门禁
+# 运行 Java 契约、接口、仓储测试和覆盖率门禁
 ./scripts/java-test
 
 # 启动只读服务
@@ -243,24 +244,25 @@ flowchart LR
 
 ```text
 personal-knowledge-os/
-├── config/                   # 分类、运行和发布配置
-├── docs/                     # 设计、路线、测试和审计文档
-├── inbox/                    # 用户资料投放入口（不进入 Git）
-├── data/                     # 原始副本、SQLite 和缓存（不进入 Git）
-├── vault/                    # 生成的 Markdown 知识树
-├── src/knowledge_os/         # Python 核心、网站、运维与发布代码
-├── knowledge-service-java/   # Java 21 + Spring Boot 只读 API
-├── site/                     # 静态网站模板与本地构建产物
-├── exports/                  # 公开和私密导出
+├── apps/
+│   ├── pipeline/             # Python 唯一写入流水线
+│   ├── api/                  # Java 21 + Spring Boot 只读 API
+│   └── web/                  # 静态网站与 PWA 源码
+├── packages/contracts/       # Web、API 与未来 App 的共享契约
+├── config/                   # taxonomy 与运行配置模板
+├── workspace/                # 私密输入、SQLite、Vault 和私密构建
+├── exports/public/           # 用户知识唯一公开候选
+├── docs/                     # 设计、路线、测试和运行手册
 ├── ops/                      # launchd 等可选运维模板
-├── scripts/                  # 一键入口
-└── tests/                    # 自动化测试和虚构样例
+├── scripts/                  # 稳定的一键入口
+└── tests/                    # 跨应用测试和虚构样例
 ```
 
 ## 当前质量状态
 
-- Python：19 项测试，覆盖幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
-- Java：7 项测试；JaCoCo 指令覆盖率 88.2%、分支覆盖率 67.5%。
+- Python：25 项测试，覆盖架构边界、共享契约、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
+- Java：9 项测试；JaCoCo 指令覆盖率 88.3%、分支覆盖率 67.5%。
+- Web：静态包/API v1 两种数据源适配器测试，并完成桌面与390×844手机浏览器验收。
 - CI：Python 3.9、3.12、3.13、Java 21 与 Public Demo 均为必需检查。
 - 安全：CodeQL、Dependabot、Secret Scanning、Push Protection 已启用。
 - 发布：提供可校验的 Spring Boot JAR 和 SHA-256 文件。
@@ -293,7 +295,7 @@ personal-knowledge-os/
 
 - J2：中文全文搜索、安全高亮和性能基准。
 - J3：Java 幂等导入与事务迁移。
-- J4：OpenAPI、Docker 和可部署服务。
+- J4：Docker、可观测性和可部署服务（OpenAPI v1 契约已提前完成）。
 - 持续丰富公开 Demo 的虚构知识样例和交互验收。
 - 将大型综合笔记按 Markdown 标题拆成多张知识卡片。
 
