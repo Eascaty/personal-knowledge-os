@@ -200,3 +200,11 @@
 - 合并后的 Python、Java、Public Demo、CodeQL 与 GitHub Pages 工作流全部成功；公开站点继续返回 HTTPS 200。
 - 实际浏览器复验首页、`G1` 搜索、知识详情、关系地图和390×844移动端布局均正常，页面控制台0错误。
 - 关闭 Dependabot PR #19 并删除其远端分支：该变更为 `actions/configure-pages` 跨主版本自动升级，不符合“升级前先运行固定样本测试”的项目规则；现网继续使用已验证版本。
+
+### Java J2 中文全文搜索交付候选（2026-08-12 19:42:22 +0800）
+
+- 从 Issue #10 建立唯一功能分支 `codex/j2-fts-search` 和草稿 PR #21，`main` 未被直接修改。
+- Java API 复用现有 SQLite FTS5 trigram 索引，通过 BM25 排序；短查询、特殊语法和无 FTS 命中安全降级为参数化 LIKE。
+- 公开搜索结果增加纯文本高亮标题、命中片段和相关度；FTS 与 LIKE 查询均强制过滤 private 内容，未扩大 Java 只读边界。
+- 固定2,000条虚构 public 中文资料完成10次预热和50次测量，中位数1.325ms、p95 2.260ms；测试不读取真实个人知识。
+- PR #21 首轮 Python 3.9/3.12/3.13、Java 21、Public Demo 与 CodeQL 三语言检查全部成功。
