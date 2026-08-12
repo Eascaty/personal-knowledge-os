@@ -29,9 +29,9 @@ class ArchitectureBoundaryTests(unittest.TestCase):
         changelog = (root / "CHANGELOG.md").read_text(encoding="utf-8")
         self.assertIn(f"## {python_version} —", changelog)
         java_import = (root / "scripts" / "java-import").read_text(encoding="utf-8")
-        self.assertIn(
-            f"personal-knowledge-service-{python_version}.jar", java_import
-        )
+        self.assertIn("-DskipTests clean package", java_import)
+        self.assertIn("personal-knowledge-service-*.jar", java_import)
+        self.assertIn("! -name '*.jar.original'", java_import)
 
     def test_legacy_facades_keep_public_entrypoints(self):
         self.assertIs(db.connect, sqlite_storage.connect)

@@ -265,7 +265,7 @@ personal-knowledge-os/
 ## 当前质量状态
 
 - Python：持续覆盖架构边界、共享契约、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
-- Java：26 项测试，覆盖只读 API、全文搜索与受限离线导入；JaCoCo 指令/分支覆盖率由 CI 门禁持续要求不低于80%/60%。
+- Java：27 项测试，覆盖只读 API、全文搜索、受限离线导入与跨 Python/Java 项目锁；JaCoCo 指令/分支覆盖率由 CI 门禁持续要求不低于80%/60%。
 - Web：静态包/API v1 两种数据源适配器测试，并完成桌面与390×844手机浏览器验收。
 - CI：Python 3.9、3.12、3.13、Java 21 与 Public Demo 均为必需检查。
 - 安全：CodeQL、Dependabot、Secret Scanning、Push Protection 已启用。
