@@ -114,6 +114,8 @@ class ArchitectureBoundaryTests(unittest.TestCase):
         self.assertIn("no-new-privileges:true", compose)
         self.assertIn("internal: true", compose)
         self.assertIn("pids_limit: 256", compose)
+        self.assertIn("-Dorg.sqlite.tmpdir=/sqlite-native", dockerfile)
+        self.assertIn("/sqlite-native:size=16m,uid=10001,gid=10001", compose)
         self.assertIn("mem_limit:", compose)
         self.assertIn("cpus:", compose)
         self.assertIn("KNOWLEDGE_DB_FILE:?", compose)

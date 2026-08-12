@@ -98,6 +98,7 @@ jobs:
           before=$(sha256sum "${SMOKE_DB}" | cut -d ' ' -f 1)
           docker run --detach --name knowledge-api-smoke \
             --read-only --tmpfs /tmp:size=64m,mode=1777 \
+            --tmpfs /sqlite-native:size=16m,uid=10001,gid=10001,mode=0700,exec,nosuid,nodev \
             --cap-drop ALL --security-opt no-new-privileges \
             --publish 127.0.0.1:18080:8080 \
             --volume "${SMOKE_DB}:/data/knowledge.sqlite3:ro" \

@@ -24,7 +24,7 @@ COPY --from=build --chown=10001:10001 /workspace/service.jar /app/service.jar
 ENV SERVER_ADDRESS=0.0.0.0 \
     PORT=8080 \
     KNOWLEDGE_DB_PATH=/data/knowledge.sqlite3 \
-    JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75.0 -Djava.io.tmpdir=/tmp"
+    JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75.0 -Djava.io.tmpdir=/tmp -Dorg.sqlite.tmpdir=/sqlite-native"
 
 USER 10001:10001
 EXPOSE 8080
