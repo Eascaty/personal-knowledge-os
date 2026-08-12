@@ -113,6 +113,12 @@ jobs:
             fi
             sleep 2
           done
+          if test "${ready:-false}" != "true"; then
+            curl --silent http://127.0.0.1:18080/actuator/health/readiness || true
+            docker exec knowledge-api-smoke sh -c \
+              'id; ls -ldn /data /data/knowledge.sqlite3 /sqlite-native; test -r /data/knowledge.sqlite3'
+            docker logs knowledge-api-smoke
+          fi
           test "${ready:-false}" = "true"
           curl --fail --silent http://127.0.0.1:18080/actuator/health/liveness \
             | grep --quiet '"status":"UP"'

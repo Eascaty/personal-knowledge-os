@@ -319,6 +319,7 @@ Python 主流水线 ───────→ SQLite schema v1 ← Java 21 只读
 - `.dockerignore` 从构建上下文排除 `workspace/`、导出物、站点生成物和 SQLite 文件；真实知识不得进入镜像层。
 - Compose 要求显式提供经过一致性验证的 SQLite 快照，只读挂载；容器根文件系统只读、移除全部 Linux capabilities，并启用 `no-new-privileges`。SQLite JDBC 原生库只允许解压到16MB、归 UID 10001 独占的临时挂载，普通 `/tmp` 不放宽执行权限。
 - `/actuator/health/liveness` 只表示进程可响应；`/actuator/health/readiness` 额外检查 SQLite 可读且 schema 为 v1。除 health 外不暴露管理端点，也不展示健康详情。
+- 数据库健康失败只在服务端记录脱敏原因类别、SQL state 与错误码，不记录数据库路径、查询内容或知识数据。
 - 默认端口只绑定 `127.0.0.1`。容器化只是可重复部署单元，不等于公网安全方案；远程访问前必须另行设计 TLS、认证、授权和同步冲突策略。
 
 ## 6. 项目目录
