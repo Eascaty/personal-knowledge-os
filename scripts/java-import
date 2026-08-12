@@ -1,0 +1,26 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PROJECT_ROOT=$(dirname -- "${SCRIPT_DIR}")
+
+if [ "$#" -eq 0 ]; then
+  echo "用法：./scripts/java-import <文件> [更多文件...]" >&2
+  exit 2
+fi
+
+"${SCRIPT_DIR}/check-java21"
+cd "${PROJECT_ROOT}/apps/api"
+./mvnw --batch-mode -q -DskipTests clean package
+
+set -- "${PROJECT_ROOT}"/apps/api/target/personal-knowledge-service-*.jar "$@"
+JAR_PATH=$1
+shift
+exec java \
+  -Dloader.main=io.github.eascaty.knowledge.importer.KnowledgeImportCommand \
+  -cp "${JAR_PATH}" \
+  org.springframework.boot.loader.launch.PropertiesLauncher \
+  --project-root "${PROJECT_ROOT}" \
+  --database "${PROJECT_ROOT}/workspace/data/state/knowledge.sqlite3" \
+  --raw-root "${PROJECT_ROOT}/workspace/data/raw" \
+  "$@"

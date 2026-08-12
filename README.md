@@ -10,7 +10,7 @@
 
 把散落在电脑里的 Markdown、文本、代码、HTML、DOCX 和 PDF，离线整理成一个可搜索、可追溯、可浏览的个人知识库。
 
-**本地优先 · 默认私密 · 零付费 API · Python 流水线 + Java 只读 API**
+**本地优先 · 默认私密 · 零付费 API · Python 流水线 + Java 只读 API/离线导入 CLI**
 
 ![Personal Knowledge OS GitHub Pages 公开 Demo](docs/assets/pages-demo.jpg)
 
@@ -188,7 +188,7 @@ flowchart LR
     E --> I["公开 / 私密发布门禁"]
 ```
 
-- **Python 写入流水线**：负责导入、去重、任务重试、分类、提炼、建站和运维检查。
+- **Python 主流水线**：拥有 schema、任务处理、分类、提炼、建站和运维检查；Java 可选 CLI 仅负责兼容的离线文件入队。
 - **SQLite**：保存可审计的结构化状态，并提供 FTS5 搜索能力。
 - **静态网站**：原生 HTML、CSS、JavaScript，无前端运行时依赖。
 - **Java 只读 API**：只读取 Python 已生成的 SQLite，并结构性过滤 private 内容和本地绝对路径。
@@ -208,6 +208,10 @@ flowchart LR
 
 # 启动只读服务
 ./scripts/java-service
+
+# 可选：使用 Java 将本地文件幂等入队，后续仍由 Python 流水线处理
+./scripts/java-import /absolute/path/to/note.md
+./scripts/run-pipeline
 ```
 
 默认监听 `http://127.0.0.1:8080`：
@@ -245,8 +249,8 @@ flowchart LR
 ```text
 personal-knowledge-os/
 ├── apps/
-│   ├── pipeline/             # Python 唯一写入流水线
-│   ├── api/                  # Java 21 + Spring Boot 只读 API
+│   ├── pipeline/             # Python 主流水线与唯一任务处理方
+│   ├── api/                  # Java 21 只读 API + 受限离线导入 CLI
 │   └── web/                  # 静态网站与 PWA 源码
 ├── packages/contracts/       # Web、API 与未来 App 的共享契约
 ├── config/                   # taxonomy 与运行配置模板
@@ -260,8 +264,8 @@ personal-knowledge-os/
 
 ## 当前质量状态
 
-- Python：25 项测试，覆盖架构边界、共享契约、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
-- Java：9 项测试；JaCoCo 指令覆盖率 88.3%、分支覆盖率 67.5%。
+- Python：持续覆盖架构边界、共享契约、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
+- Java：26 项测试，覆盖只读 API、全文搜索与受限离线导入；JaCoCo 指令/分支覆盖率由 CI 门禁持续要求不低于80%/60%。
 - Web：静态包/API v1 两种数据源适配器测试，并完成桌面与390×844手机浏览器验收。
 - CI：Python 3.9、3.12、3.13、Java 21 与 Public Demo 均为必需检查。
 - 安全：CodeQL、Dependabot、Secret Scanning、Push Protection 已启用。
@@ -277,7 +281,7 @@ personal-knowledge-os/
 
 ### 一定要运行 Java 吗？
 
-不用。Python 流水线和静态网站已经构成可独立运行的完整 MVP；Java 服务是可选的只读访问层。
+不用。Python 流水线和静态网站已经构成可独立运行的完整 MVP；Java 服务和离线导入 CLI 都是可选增强。
 
 ### 能直接把私密站点发布到公网吗？
 
@@ -293,13 +297,13 @@ personal-knowledge-os/
 
 ## 路线图
 
-- J2：中文全文搜索、安全高亮和性能基准。
-- J3：Java 幂等导入与事务迁移。
+- J2：中文全文搜索、安全高亮和性能基准已完成。
+- J3：受限 Java 离线导入 CLI；复用 schema v1，通过跨运行时项目锁和单事务保证幂等，不开放 HTTP 写入。
 - J4：Docker、可观测性和可部署服务（OpenAPI v1 契约已提前完成）。
 - 持续丰富公开 Demo 的虚构知识样例和交互验收。
 - 将大型综合笔记按 Markdown 标题拆成多张知识卡片。
 
-详细计划见 [Java 演进路线](docs/java-roadmap.md)和 [J2 Issue #10](https://github.com/Eascaty/personal-knowledge-os/issues/10)。
+详细计划见 [Java 演进路线](docs/java-roadmap.md)和 [J2 搜索基准](docs/benchmarks/java-search.md)。
 
 ## 参与贡献
 

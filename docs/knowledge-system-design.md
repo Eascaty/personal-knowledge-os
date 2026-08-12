@@ -1,7 +1,7 @@
 # 个人知识体系总体设计
 
 > 状态：活文档  
-> 版本：0.4.0-dev
+> 版本：0.4.0
 > 更新时间：2026-08-10（Asia/Shanghai）
 > 项目根目录：`$HOME/AI/knowledge`
 
@@ -261,17 +261,19 @@ AI 输出默认不是事实。状态包括：
 
 第一版不要求安装任何依赖，也不采用 Docker、n8n、LangChain、Chroma 或 Neo4j。这样即使没有 Ollama、Node 或 Pandoc，仍可完成确定性的全链路；本地模型只是可选增强。
 
-### 5.2 Java 只读服务边界
+### 5.2 Java 服务与离线导入边界
 
-`apps/api/` 是现有 Python 流水线的增量消费者，不参与写入：
+`apps/api/` 的 HTTP 服务是现有 Python 流水线的增量消费者；可选 Java CLI 只承担受限的离线文件入队：
 
 ```text
-Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
-                                ↓
-                         仅查询 public 内容
+Python 主流水线 ───────→ SQLite schema v1 ← Java 21 只读 API
+       ↑                         ↑                ↓
+       └──任务处理/分类/发布      └── Java 离线导入  仅查询 public
 ```
 
-- Java 服务使用 SQLite 只读连接，不迁移、不建表、不修改任务状态。
+- Java HTTP 服务使用 SQLite 只读连接，不迁移、不建表、不修改任务状态。
+- Java 离线导入只创建 source、初始 extract 任务和审计事件；不执行后续任务，不开放网络写接口。
+- Python 与 Java 写入使用同一个 POSIX 项目锁；Java 单文件导入失败时回滚 SQLite 并清理本次创建的 raw。
 - `/api/v1` 响应显式携带 API 版本。
 - 知识列表、详情和搜索统一增加 `visibility='public'` 数据库过滤。
 - 来源响应只包含类型、文件名和 SHA-256，不返回 `origin`、`raw_path` 或绝对路径。
@@ -318,8 +320,8 @@ Python 入库/分类/构建 → SQLite schema v1 ← Java 21 只读 API
 ```text
 knowledge/
 ├── apps/
-│   ├── pipeline/       # Python 唯一写入方
-│   ├── api/            # Java 21 只读 API
+│   ├── pipeline/       # Python 主写入与唯一任务处理方
+│   ├── api/            # Java 21 只读 API + 受限离线导入 CLI
 │   └── web/            # 静态网站与 PWA 源码
 ├── packages/contracts/ # canonical JSON Schema 与 OpenAPI
 ├── config/             # taxonomy、运行配置模板和本机配置

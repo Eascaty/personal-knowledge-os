@@ -2,12 +2,19 @@
 
 ## Unreleased
 
+- 暂无。
+
+## 0.4.0 — 2026-08-12
+
 - 将 Python、Java、Web 重整为 `apps/`，共享契约集中到 `packages/contracts/`，真实私密运行状态统一到 Git 忽略的 `workspace/`。
 - 按存储、处理、运维检查和网站构建职责拆分 Python 大模块，并保留旧导入兼容 facade。
 - 增加 canonical JSON Schema v1、OpenAPI v1、标准库契约校验和 Python/Java 共用虚构样例。
 - Web 增加静态包与 API v1 数据源适配器；Java 增加控制器与只读仓储之间的应用服务层。
-- CI 增加 Web 适配器测试；本地通过 Python 25项、Java 9项、Web 2场景、Demo、健康门禁和桌面/手机浏览器验收。
+- CI 增加 Web 适配器测试；覆盖 Python 27项、Java 26项、Web 2场景、Demo、健康门禁和桌面/手机浏览器验收。
 - 精简分支与文档治理规则，本机运行配置不再进入 Git，保留可复制的 `runtime.example.json`。
+- Java 搜索升级为 SQLite FTS5 trigram、BM25 排序、安全高亮和参数化 LIKE 降级，并增加固定中文数据性能基准。
+- 增加受限 Java 离线文件导入 CLI、跨 Python/Java 的 POSIX 项目锁以及 raw/SQLite 回滚和幂等测试；HTTP API 保持只读。
+- Python 包、Java JAR 与运行时版本统一为 `0.4.0`，自动测试阻止跨模块版本再次漂移。
 
 ## 0.3.1 — 2026-08-09
 

@@ -1,8 +1,8 @@
 # 项目状态
 
 - 更新时间：2026-08-12（Asia/Shanghai）
-- 阶段：Java J2 中文全文搜索交付候选已完成，PR #21 首轮 CI 与 CodeQL 全部通过
-- 总体状态：J2 已完成本地和远端验证；受保护的 `main` 未被直接修改，仍保持可发布
+- 阶段：v0.4.0 架构重构与 Java J2 中文全文搜索已完成，版本元数据进入发布候选验收
+- 总体状态：J2 已合入受保护的 `main`，CI、CodeQL 与 Pages 全部成功；项目保持可发布
 
 ## 已实现
 
@@ -28,6 +28,7 @@
 - Java 21 + Spring Boot 3.5 领域模型、SQLite 只读仓储与 API v1。
 - 健康检查、分类树、公开知识列表/详情/搜索接口。
 - Java 搜索使用 SQLite FTS5 trigram 与 BM25 排序，短查询和特殊语法自动降级为参数化 LIKE；结果携带纯文本高亮片段且始终过滤 private 内容。
+- Java J3 提供受限离线文件导入 CLI：内容哈希幂等、不可变 raw、单事务入队，与 Python 共用跨运行时项目锁；HTTP API 仍保持只读。
 - Java API 结构性排除 private 内容、`origin`、`raw_path` 和绝对路径。
 - Java HTTP 默认仅监听 `127.0.0.1`，外部监听必须显式设置环境变量。
 - launchd 项目内模板，未修改 macOS 系统目录。
@@ -43,14 +44,15 @@
 ## 最近验证
 
 - Python 3.9 语法解析通过。
-- 26 项 Python unittest 全部通过。
+- 27 项 Python unittest 全部通过。
 - Python 存储、知识处理、检查和网站构建已拆为职责模块；兼容 facade 保留旧导入，架构测试限制实现模块不超过600行。
 - 工程已迁移为 `apps/ + packages/ + workspace/` 单仓库：Python、Java、Web 各自归位，私密输入、SQLite、Vault 与私密构建统一进入 Git 忽略的 `workspace/`。
 - 真实 SQLite 迁移前已完成一致性备份，迁移后完整性检查、现有资料去重、全流水线、发布门禁与健康检查通过。
 - canonical JSON Schema v1 与只读 API OpenAPI v1 已集中到 `packages/contracts/`；Python 建站强制校验，Python/Java 共用虚构契约样例。
 - Web 已通过数据源接口解耦静态包与 API v1；Java 控制器通过应用服务访问仓储，未来 App 无需读取 SQLite 或依赖页面内部状态。
-- Web 静态/API 两种适配器场景2/2通过；Java J2 13/13通过，JaCoCo 指令91.3%、分支71.7%，覆盖率门禁通过。
+- Web 静态/API 两种适配器场景2/2通过；Java J3 26/26通过，JaCoCo 指令89.4%、分支74.1%，门禁通过。
 - Java J2 固定2,000条中文资料基准完成：50次测量中位数1.325ms、p95 2.260ms；1秒回归门禁通过。
+- Python 包、Java JAR 与运行时版本统一为0.4.0，并由架构测试阻止版本漂移。
 - 重构后的公开 Demo 在实际浏览器完成搜索、详情、关系地图和390×844手机布局验收，控制台0错误。
 - PR #18 经最终审阅转为 Ready，并以普通合并进入受保护的 `main`；重构分支已从本地和远端删除。
 - 合并后的 Python 3.9/3.12/3.13、Java 21、Public Demo、CodeQL 三语言和 GitHub Pages 部署全部成功。

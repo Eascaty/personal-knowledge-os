@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import re
 import unittest
+import xml.etree.ElementTree as ElementTree
 from pathlib import Path
 
-from knowledge_os import db, knowledge
+from knowledge_os import __version__, db, knowledge
 from knowledge_os.processing import service as processing_service
 from knowledge_os.site import builder as site_builder
 from knowledge_os.site.build import builder as site_build_impl
@@ -11,6 +13,26 @@ from knowledge_os.storage import sqlite as sqlite_storage
 
 
 class ArchitectureBoundaryTests(unittest.TestCase):
+    def test_project_versions_stay_aligned(self):
+        root = Path(__file__).resolve().parents[1]
+        pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
+        match = re.search(r'^version = "([^"]+)"$', pyproject, re.MULTILINE)
+        self.assertIsNotNone(match, "pyproject.toml 缺少项目版本")
+        python_version = match.group(1)
+
+        pom_root = ElementTree.parse(root / "apps" / "api" / "pom.xml").getroot()
+        namespace = {"m": "http://maven.apache.org/POM/4.0.0"}
+        java_version = pom_root.findtext("m:version", namespaces=namespace)
+
+        self.assertEqual(__version__, python_version)
+        self.assertEqual(java_version, python_version)
+        changelog = (root / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertIn(f"## {python_version} —", changelog)
+        java_import = (root / "scripts" / "java-import").read_text(encoding="utf-8")
+        self.assertIn(
+            f"personal-knowledge-service-{python_version}.jar", java_import
+        )
+
     def test_legacy_facades_keep_public_entrypoints(self):
         self.assertIs(db.connect, sqlite_storage.connect)
         self.assertIs(knowledge.process_jobs, processing_service.process_jobs)
