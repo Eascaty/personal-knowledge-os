@@ -26,11 +26,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class SqliteKnowledgeQueryRepository implements KnowledgeQueryRepository {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            SqliteKnowledgeQueryRepository.class);
     private static final TypeReference<List<String>> STRING_LIST = new TypeReference<>() { };
     private static final String PUBLIC_DOCUMENT_FILTER = "d.visibility = 'public'";
 
@@ -45,6 +49,7 @@ public class SqliteKnowledgeQueryRepository implements KnowledgeQueryRepository 
     @Override
     public HealthStatus health() {
         if (!Files.isRegularFile(databasePath)) {
+            LOGGER.warn("Knowledge database health check failed: configured path is not a regular file");
             return new HealthStatus("DOWN", "personal-knowledge-service", "unavailable", null);
         }
         try (Connection connection = openReadOnly();
@@ -54,7 +59,14 @@ public class SqliteKnowledgeQueryRepository implements KnowledgeQueryRepository 
             Integer schemaVersion = result.next() ? Integer.valueOf(result.getString(1)) : null;
             String status = Integer.valueOf(1).equals(schemaVersion) ? "UP" : "DOWN";
             return new HealthStatus(status, "personal-knowledge-service", "available", schemaVersion);
-        } catch (SQLException | NumberFormatException exception) {
+        } catch (SQLException exception) {
+            LOGGER.warn(
+                    "Knowledge database health check failed: SQL state={}, error code={}",
+                    exception.getSQLState(),
+                    exception.getErrorCode());
+            return new HealthStatus("DOWN", "personal-knowledge-service", "unavailable", null);
+        } catch (NumberFormatException exception) {
+            LOGGER.warn("Knowledge database health check failed: schema version is not numeric");
             return new HealthStatus("DOWN", "personal-knowledge-service", "unavailable", null);
         }
     }
@@ -206,7 +218,10 @@ public class SqliteKnowledgeQueryRepository implements KnowledgeQueryRepository 
         Properties properties = new Properties();
         properties.setProperty("open_mode", "1");
         properties.setProperty("foreign_keys", "true");
-        return DriverManager.getConnection("jdbc:sqlite:" + databasePath, properties);
+        String encodedPath = databasePath.toUri().getRawPath();
+        return DriverManager.getConnection(
+                "jdbc:sqlite:file:" + encodedPath + "?mode=ro&immutable=1",
+                properties);
     }
 
     private boolean supportsTrigramSearch(Connection connection, String query)

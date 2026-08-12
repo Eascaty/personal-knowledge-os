@@ -313,6 +313,16 @@ Python 主流水线 ───────→ SQLite schema v1 ← Java 21 只读
 - 未来原生 App 复用 OpenAPI v1，并在客户端适配层实现鉴权、缓存和同步，不复制 Python 处理逻辑。
 - 在目标平台、离线编辑和同步策略明确前不创建空移动端工程，以免过早锁定技术栈。
 
+### 5.6 Java 服务部署与可观测边界
+
+- API 镜像使用固定 Temurin 21 补丁版本的多阶段构建，运行阶段只保留 JRE 和可执行 JAR，并使用非 root UID 10001。
+- `.dockerignore` 从构建上下文排除 `workspace/`、导出物、站点生成物和 SQLite 文件；真实知识不得进入镜像层。
+- Compose 要求显式提供经过一致性验证的 SQLite 快照，只读挂载；容器根文件系统只读、移除全部 Linux capabilities，并启用 `no-new-privileges`。SQLite JDBC 原生库只允许解压到16MB、归 UID 10001 独占的临时挂载，普通 `/tmp` 不放宽执行权限。
+- API 通过 SQLite URI `mode=ro&immutable=1` 打开已验证快照，不创建 WAL/SHM sidecar，也不把正在写入的实时数据库当成不可变文件；部署前必须先运行一致性快照流程。
+- `/actuator/health/liveness` 只表示进程可响应；`/actuator/health/readiness` 额外检查 SQLite 可读且 schema 为 v1。除 health 外不暴露管理端点，也不展示健康详情。
+- 数据库健康失败只在服务端记录脱敏原因类别、SQL state 与错误码，不记录数据库路径、查询内容或知识数据。
+- 默认端口只绑定 `127.0.0.1`。容器化只是可重复部署单元，不等于公网安全方案；远程访问前必须另行设计 TLS、认证、授权和同步冲突策略。
+
 ## 6. 项目目录
 
 项目已经迁移为模块化单仓库：
@@ -329,6 +339,7 @@ knowledge/
 ├── exports/public/     # 用户知识唯一公开候选
 ├── docs/
 ├── ops/
+├── compose.yaml        # API 本机只读容器编排
 ├── scripts/
 └── tests/e2e/
 ```

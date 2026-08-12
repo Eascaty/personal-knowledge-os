@@ -226,6 +226,20 @@ flowchart LR
 
 数据库不在默认路径时，可以在启动前设置 `KNOWLEDGE_DB_PATH`。服务默认只绑定本机回环地址，不会自动暴露到局域网或公网。
 
+### Docker 启动只读 API
+
+先使用 `./scripts/backup` 生成并验证一致性 SQLite 快照，再把快照的绝对路径传给 Compose。容器不会接触原始资料、Vault 或 private 站点：
+
+```bash
+KNOWLEDGE_DB_FILE=/absolute/path/to/verified-snapshot.sqlite3 \
+docker compose up --build -d
+
+curl http://127.0.0.1:8080/actuator/health/liveness
+curl http://127.0.0.1:8080/actuator/health/readiness
+```
+
+镜像使用固定 Temurin 21 补丁版本、多阶段构建和 UID 10001；Compose 默认只绑定 `127.0.0.1`，根文件系统与数据库挂载均只读，并移除全部 Linux capabilities。SQLite JDBC 只获准在一个16MB、UID 10001 专用的临时挂载中加载原生库，不获得其他写目录；数据库以 `mode=ro&immutable=1` 打开，因此必须使用 `./scripts/backup` 生成的已验证快照，不能直接挂载正在写入的实时数据库。数据库不可读或 schema 不是 v1 时，readiness 返回失败。停止服务使用 `docker compose down`。
+
 ## 公开站点与隐私边界
 
 本地私密网站：
@@ -265,9 +279,9 @@ personal-knowledge-os/
 ## 当前质量状态
 
 - Python：持续覆盖架构边界、共享契约、幂等、分类、隐私门禁、越界路径、网站构建和公开 Demo 隔离。
-- Java：27 项测试，覆盖只读 API、全文搜索、受限离线导入与跨 Python/Java 项目锁；JaCoCo 指令/分支覆盖率由 CI 门禁持续要求不低于80%/60%。
+- Java：覆盖只读 API、全文搜索、受限离线导入、跨 Python/Java 项目锁与存活/就绪探针；JaCoCo 指令/分支覆盖率由 CI 门禁持续要求不低于80%/60%。
 - Web：静态包/API v1 两种数据源适配器测试，并完成桌面与390×844手机浏览器验收。
-- CI：Python 3.9、3.12、3.13、Java 21 与 Public Demo 均为必需检查。
+- CI：Python 3.9、3.12、3.13、Java 21、Public Demo 与非 root 容器冒烟均为持续验证项。
 - 安全：CodeQL、Dependabot、Secret Scanning、Push Protection 已启用。
 - 发布：提供可校验的 Spring Boot JAR 和 SHA-256 文件。
 
@@ -299,7 +313,7 @@ personal-knowledge-os/
 
 - J2：中文全文搜索、安全高亮和性能基准已完成。
 - J3：受限 Java 离线导入 CLI；复用 schema v1，通过跨运行时项目锁和单事务保证幂等，不开放 HTTP 写入。
-- J4：Docker、可观测性和可部署服务（OpenAPI v1 契约已提前完成）。
+- J4：非 root Docker/Compose、存活与数据库就绪探针、容器 CI 已完成；远程认证和同步留到真实部署需求明确后设计。
 - 持续丰富公开 Demo 的虚构知识样例和交互验收。
 - 将大型综合笔记按 Markdown 标题拆成多张知识卡片。
 

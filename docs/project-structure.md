@@ -36,6 +36,7 @@ knowledge/
 ├── exports/public/                 # 用户知识唯一公开候选
 ├── docs/                           # 权威设计、ADR、运行手册和历史报告
 ├── ops/                            # 可选系统运维模板
+├── compose.yaml                    # Java API 的本机只读容器编排
 ├── scripts/                        # 跨应用稳定入口
 └── tests/
     ├── fixtures/                   # 固定虚构样例
@@ -55,6 +56,8 @@ knowledge/
 - `workspace/` 是真实私密状态；原始资料只追加，不被重构脚本覆盖。
 - `exports/public/` 仍是用户知识唯一允许公开发布的候选目录。
 - GitHub Pages Demo 只使用 `tests/fixtures/` 的固定虚构资料和 `config/runtime.example.json`。
+- `apps/api/Dockerfile` 的构建上下文由 `.dockerignore` 排除整个 `workspace/`、导出物和生成物；镜像不包含任何真实知识。
+- `compose.yaml` 只接受显式指定的 SQLite 文件，只读挂载且默认绑定 `127.0.0.1`；它不是公网认证或同步方案。
 
 ## 依赖方向
 

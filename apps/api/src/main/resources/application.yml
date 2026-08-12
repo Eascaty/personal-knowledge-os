@@ -3,10 +3,32 @@ spring:
     name: personal-knowledge-service
   jackson:
     default-property-inclusion: non_null
+  lifecycle:
+    timeout-per-shutdown-phase: 15s
 
 server:
   address: ${SERVER_ADDRESS:127.0.0.1}
   port: ${PORT:8080}
+  shutdown: graceful
 
 knowledge:
   database-path: ${KNOWLEDGE_DB_PATH:workspace/data/state/knowledge.sqlite3}
+
+management:
+  endpoints:
+    access:
+      default: none
+    web:
+      discovery:
+        enabled: false
+      exposure:
+        include: health
+  endpoint:
+    health:
+      access: read-only
+      show-details: never
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: readinessState,knowledgeDatabase

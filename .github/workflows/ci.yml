@@ -68,3 +68,63 @@ jobs:
       - name: Build and test Java service
         working-directory: apps/api
         run: ./mvnw --batch-mode verify
+
+  container-smoke:
+    name: Container Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Create isolated schema v1 database
+        run: |
+          smoke_root="${RUNNER_TEMP}/knowledge-api-smoke"
+          mkdir -p "${smoke_root}/config"
+          cp config/taxonomy.json config/runtime.example.json "${smoke_root}/config/"
+          PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=apps/pipeline/src \
+            python3 -B -m knowledge_os --root "${smoke_root}" init
+          chmod -R a+rX "${smoke_root}"
+          echo "SMOKE_DB=${smoke_root}/workspace/data/state/knowledge.sqlite3" \
+            >> "${GITHUB_ENV}"
+      - name: Build non-root API image
+        run: docker build --tag personal-knowledge-os-api:ci --file apps/api/Dockerfile .
+      - name: Verify container readiness and read-only database
+        run: |
+          before=$(sha256sum "${SMOKE_DB}" | cut -d ' ' -f 1)
+          docker run --detach --name knowledge-api-smoke \
+            --read-only --tmpfs /tmp:size=64m,mode=1777 \
+            --tmpfs /sqlite-native:size=16m,uid=10001,gid=10001,mode=0700,exec,nosuid,nodev \
+            --cap-drop ALL --security-opt no-new-privileges \
+            --publish 127.0.0.1:18080:8080 \
+            --volume "${SMOKE_DB}:/data/knowledge.sqlite3:ro" \
+            personal-knowledge-os-api:ci
+          trap 'docker logs knowledge-api-smoke; docker rm --force knowledge-api-smoke' EXIT
+          test "$(docker inspect --format '{{.Config.User}}' knowledge-api-smoke)" = "10001:10001"
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:18080/actuator/health/readiness \
+              | grep --quiet '"status":"UP"'; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          if test "${ready:-false}" != "true"; then
+            curl --silent http://127.0.0.1:18080/actuator/health/readiness || true
+            docker exec knowledge-api-smoke sh -c \
+              'id; ls -ldn /data /data/knowledge.sqlite3 /sqlite-native; test -r /data/knowledge.sqlite3'
+            docker logs knowledge-api-smoke
+          fi
+          test "${ready:-false}" = "true"
+          curl --fail --silent http://127.0.0.1:18080/actuator/health/liveness \
+            | grep --quiet '"status":"UP"'
+          curl --fail --silent http://127.0.0.1:18080/actuator/health/readiness \
+            | grep --quiet '"status":"UP"'
+          curl --fail --silent http://127.0.0.1:18080/api/v1/health \
+            | grep --quiet '"schema_version":1'
+          after=$(sha256sum "${SMOKE_DB}" | cut -d ' ' -f 1)
+          test "${before}" = "${after}"
