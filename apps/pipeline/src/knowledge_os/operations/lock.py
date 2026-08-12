@@ -1,15 +1,16 @@
 """A small, process-safe project lock.
 
-The lock uses ``flock`` because the supported scheduler target is macOS.  The
-lock file remains in place after release; ownership is represented by the
-kernel lock, not by the mere presence of the file.  This avoids unsafe stale
-lock deletion.
+The lock uses a POSIX record lock so Python and Java ``FileChannel`` writers
+share the same kernel-enforced mutex.  The lock file remains in place after
+release; ownership is represented by the kernel lock, not by the mere presence
+of the file.  This avoids unsafe stale lock deletion.
 """
 
 from __future__ import annotations
 
 import json
 import os
+import threading
 import time
 import uuid
 from datetime import datetime, timezone
@@ -49,6 +50,9 @@ class ProjectLock:
         A short, non-secret label stored as diagnostic metadata.
     """
 
+    _registry_guard = threading.Lock()
+    _held_paths: set[Path] = set()
+
     def __init__(
         self,
         project_root: PathLike,
@@ -80,48 +84,60 @@ class ProjectLock:
         if fcntl is None:
             raise RuntimeError("ProjectLock requires fcntl on this platform")
 
-        self.path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        flags = os.O_RDWR | os.O_CREAT
-        descriptor = os.open(str(self.path), flags, 0o600)
-        handle = os.fdopen(descriptor, "r+", encoding="utf-8")
-        deadline = time.monotonic() + self.timeout
+        with self._registry_guard:
+            if self.path in self._held_paths:
+                raise LockUnavailable(
+                    "Knowledge OS project is already locked (same process)"
+                )
+            self._held_paths.add(self.path)
 
-        while True:
-            try:
-                fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-                break
-            except BlockingIOError:
-                if time.monotonic() >= deadline:
-                    owner = self._read_owner(handle)
-                    handle.close()
-                    owner_text = self._format_owner(owner)
-                    raise LockUnavailable(
-                        "Knowledge OS project is already locked{}".format(owner_text)
-                    )
-                time.sleep(min(self.poll_interval, max(0.0, deadline - time.monotonic())))
-
-        token = uuid.uuid4().hex
-        metadata: Dict[str, Any] = {
-            "schema_version": 1,
-            "pid": os.getpid(),
-            "purpose": self.purpose,
-            "acquired_at": datetime.now(timezone.utc).isoformat(),
-            "token": token,
-        }
-        handle.seek(0)
-        handle.truncate()
-        json.dump(metadata, handle, ensure_ascii=True, sort_keys=True)
-        handle.write("\n")
-        handle.flush()
-        os.fsync(handle.fileno())
         try:
-            os.chmod(self.path, 0o600)
-        except OSError:
-            pass
+            self.path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            flags = os.O_RDWR | os.O_CREAT
+            descriptor = os.open(str(self.path), flags, 0o600)
+            handle = os.fdopen(descriptor, "r+", encoding="utf-8")
+            deadline = time.monotonic() + self.timeout
 
-        self._handle = handle
-        self._token = token
-        return self
+            while True:
+                try:
+                    fcntl.lockf(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except BlockingIOError:
+                    if time.monotonic() >= deadline:
+                        owner = self._read_owner(handle)
+                        handle.close()
+                        owner_text = self._format_owner(owner)
+                        raise LockUnavailable(
+                            "Knowledge OS project is already locked{}".format(owner_text)
+                        )
+                    time.sleep(min(self.poll_interval, max(0.0, deadline - time.monotonic())))
+
+            token = uuid.uuid4().hex
+            metadata: Dict[str, Any] = {
+                "schema_version": 1,
+                "pid": os.getpid(),
+                "purpose": self.purpose,
+                "acquired_at": datetime.now(timezone.utc).isoformat(),
+                "token": token,
+            }
+            handle.seek(0)
+            handle.truncate()
+            json.dump(metadata, handle, ensure_ascii=True, sort_keys=True)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+            try:
+                os.chmod(self.path, 0o600)
+            except OSError:
+                pass
+
+            self._handle = handle
+            self._token = token
+            return self
+        except Exception:
+            with self._registry_guard:
+                self._held_paths.discard(self.path)
+            raise
 
     def release(self) -> None:
         handle = self._handle
@@ -131,9 +147,11 @@ class ProjectLock:
         self._token = None
         try:
             if fcntl is not None:
-                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+                fcntl.lockf(handle.fileno(), fcntl.LOCK_UN)
         finally:
             handle.close()
+            with self._registry_guard:
+                self._held_paths.discard(self.path)
 
     def __enter__(self) -> "ProjectLock":
         return self.acquire()

@@ -208,3 +208,12 @@
 - 公开搜索结果增加纯文本高亮标题、命中片段和相关度；FTS 与 LIKE 查询均强制过滤 private 内容，未扩大 Java 只读边界。
 - 固定2,000条虚构 public 中文资料完成10次预热和50次测量，中位数1.325ms、p95 2.260ms；测试不读取真实个人知识。
 - PR #21 首轮 Python 3.9/3.12/3.13、Java 21、Public Demo 与 CodeQL 三语言检查全部成功。
+- PR #21 已以普通合并进入 `main`，合并提交为 `08f8eaed088be48fe9ce762daeda6aef7a6c6180`；Issue #10 自动关闭，本地与远端 J2 分支均已删除。
+- 合并后的 `main` 再次通过 CI、CodeQL 三语言和 GitHub Pages 部署；线上公开 Demo 返回 HTTPS 200。
+
+### Java J3 受限离线导入候选（2026-08-12）
+
+- 创建 Issue #22，范围限定为本地文件入队、不可变 raw、内容哈希幂等、事务回滚和跨 Python/Java 的项目锁；不增加 HTTP 写接口。
+- Java CLI 只复用 schema v1 创建 source、初始 extract 任务和审计事件；Python 继续独占 schema、任务处理、分类、提炼与发布。
+- Python 项目锁切换为 POSIX 记录锁，并保留同进程竞争保护，使 Java `FileChannel` 与 Python 写任务共享同一个内核互斥边界。
+- 草稿 PR #23 的 Python 3.9/3.12/3.13、Java 21、Public Demo 与 CodeQL Java/Python/JavaScript 门禁全部成功，已具备合入受保护 `main` 的条件。

@@ -15,7 +15,7 @@ knowledge/
 │   │       ├── site/build/         # 规范化、payload、PWA 渲染与原子构建
 │   │       ├── publish/            # 可选发布适配器
 │   │       └── cli.py              # 命令行入口
-│   ├── api/                        # Java 21 + Spring Boot 只读 API
+│   ├── api/                        # Java 21 只读 API + 受限离线导入 CLI
 │   └── web/
 │       └── src/                    # HTML、CSS、JavaScript、离线页
 ├── packages/
@@ -45,8 +45,9 @@ knowledge/
 
 ## 边界与责任
 
-- `apps/pipeline/` 是唯一写入方；它拥有 SQLite schema、任务队列、分类和导出。
-- `apps/api/` 只读 SQLite schema v1，不迁移、不建表、不修改任务状态。
+- `apps/pipeline/` 是主写入方；它独占 SQLite schema、任务处理、分类和导出。
+- `apps/api/` 的 HTTP 服务只读 SQLite schema v1；同模块的可选离线 CLI 只创建 source、初始 extract 任务和审计事件，不迁移、不建表、不处理任务。
+- Python 与 Java 写入使用同一个 POSIX 项目锁，禁止并发修改 raw 和 SQLite；Java 导入在单事务失败时回滚数据库并清理新 raw。
 - `apps/web/` 是网站源码唯一位置；`workspace/site/` 只保存可重建产物。
 - Web 数据源适配器支持静态构建和同源 API v1；Java HTTP 控制器经应用服务访问仓储，UI 与 API 都不直接拥有数据库写入权。
 - `packages/contracts/` 描述跨语言数据/API 边界，不包含用户知识。

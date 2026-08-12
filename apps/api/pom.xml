@@ -13,7 +13,7 @@
 
     <groupId>io.github.eascaty</groupId>
     <artifactId>personal-knowledge-service</artifactId>
-    <version>0.3.1</version>
+    <version>0.4.0</version>
     <name>personal-knowledge-service</name>
     <description>Personal Knowledge OS read-only API</description>
 
@@ -100,6 +100,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <layout>ZIP</layout>
+                </configuration>
             </plugin>
         </plugins>
     </build>
