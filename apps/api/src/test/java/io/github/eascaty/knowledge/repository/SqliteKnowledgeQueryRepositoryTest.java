@@ -49,6 +49,21 @@ class SqliteKnowledgeQueryRepositoryTest {
     }
 
     @Test
+    void opensWalDatabaseAsImmutableReadOnlyWithoutSidecarWrites() throws Exception {
+        Files.deleteIfExists(database.resolveSibling(database.getFileName() + "-wal"));
+        Files.deleteIfExists(database.resolveSibling(database.getFileName() + "-shm"));
+        database.getParent().toFile().setWritable(false, false);
+        try {
+            assertThat(repository.health().status()).isEqualTo("UP");
+            assertThat(repository.findDocuments("G1", 0, 20).total()).isEqualTo(1);
+            assertThat(database.resolveSibling(database.getFileName() + "-wal")).doesNotExist();
+            assertThat(database.resolveSibling(database.getFileName() + "-shm")).doesNotExist();
+        } finally {
+            database.getParent().toFile().setWritable(true, false);
+        }
+    }
+
+    @Test
     void returnsOnlyPublicDocumentsAndSanitizesSource() throws Exception {
         PageResult<?> result = repository.findDocuments("G1", 0, 20);
 
@@ -112,6 +127,7 @@ class SqliteKnowledgeQueryRepositoryTest {
     private void createDatabase() throws Exception {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + database);
              Statement statement = connection.createStatement()) {
+            statement.execute("PRAGMA journal_mode=WAL");
             statement.executeUpdate("CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)");
             statement.executeUpdate("INSERT INTO metadata VALUES ('schema_version', '1')");
             statement.executeUpdate("INSERT INTO metadata VALUES ('fts_tokenizer', 'trigram')");

@@ -8,6 +8,6 @@ HTTP 服务不拥有导入、分类、迁移或任务状态写入权。控制器
 
 在仓库根目录使用 `./scripts/java-test` 运行全部测试与覆盖率门禁，使用 `./scripts/java-service` 启动本地服务。
 
-J4 提供 `apps/api/Dockerfile` 与根目录 `compose.yaml`。镜像采用固定 Temurin 21 补丁版本、多阶段构建和非 root UID 10001；Compose 只读挂载已验证 SQLite 快照，默认绑定 `127.0.0.1`，启用只读根文件系统并移除全部 Linux capabilities。`/actuator/health/liveness` 只判断进程存活，`/actuator/health/readiness` 额外要求数据库可读且 schema 为 v1；除 health 外不暴露其他 Actuator 端点。
+J4 提供 `apps/api/Dockerfile` 与根目录 `compose.yaml`。镜像采用固定 Temurin 21 补丁版本、多阶段构建和非 root UID 10001；Compose 只读挂载已验证 SQLite 快照，API 以 `mode=ro&immutable=1` 打开且不创建 WAL/SHM sidecar。默认绑定 `127.0.0.1`，启用只读根文件系统并移除全部 Linux capabilities。`/actuator/health/liveness` 只判断进程存活，`/actuator/health/readiness` 额外要求数据库可读且 schema 为 v1；除 health 外不暴露其他 Actuator 端点。
 
 J3 提供独立的离线文件导入 CLI：`./scripts/java-import <文件>`。它只写入不可变 raw、source、初始 extract 任务和审计事件，不开放 HTTP 写接口，也不执行分类、提炼或 schema 迁移。Java 与 Python 写入共用 `workspace/data/state/knowledge-os.lock`，有其他写任务时立即拒绝运行。

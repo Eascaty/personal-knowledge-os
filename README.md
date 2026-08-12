@@ -238,7 +238,7 @@ curl http://127.0.0.1:8080/actuator/health/liveness
 curl http://127.0.0.1:8080/actuator/health/readiness
 ```
 
-镜像使用固定 Temurin 21 补丁版本、多阶段构建和 UID 10001；Compose 默认只绑定 `127.0.0.1`，根文件系统与数据库挂载均只读，并移除全部 Linux capabilities。SQLite JDBC 只获准在一个16MB、UID 10001 专用的临时挂载中加载原生库，不获得其他写目录。数据库不可读或 schema 不是 v1 时，readiness 返回失败。停止服务使用 `docker compose down`。
+镜像使用固定 Temurin 21 补丁版本、多阶段构建和 UID 10001；Compose 默认只绑定 `127.0.0.1`，根文件系统与数据库挂载均只读，并移除全部 Linux capabilities。SQLite JDBC 只获准在一个16MB、UID 10001 专用的临时挂载中加载原生库，不获得其他写目录；数据库以 `mode=ro&immutable=1` 打开，因此必须使用 `./scripts/backup` 生成的已验证快照，不能直接挂载正在写入的实时数据库。数据库不可读或 schema 不是 v1 时，readiness 返回失败。停止服务使用 `docker compose down`。
 
 ## 公开站点与隐私边界
 

@@ -52,6 +52,7 @@
 - 非 root 容器、只读根文件系统、只读 SQLite 挂载、无 capabilities 与数据库哈希不变
 - SQLite JDBC 原生库使用专用受限 tmpfs；普通 `/tmp` 与数据库挂载不获得执行权限
 - readiness 失败时 CI 输出容器 UID、挂载权限和脱敏 SQL 状态，响应仍不公开数据库详情
+- SQLite 快照通过 `mode=ro&immutable=1` 打开，不创建或依赖 WAL/SHM sidecar
 
 ## 端到端结果
 

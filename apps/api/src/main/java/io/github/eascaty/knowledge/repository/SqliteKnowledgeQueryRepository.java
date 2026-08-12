@@ -218,7 +218,10 @@ public class SqliteKnowledgeQueryRepository implements KnowledgeQueryRepository 
         Properties properties = new Properties();
         properties.setProperty("open_mode", "1");
         properties.setProperty("foreign_keys", "true");
-        return DriverManager.getConnection("jdbc:sqlite:" + databasePath, properties);
+        String encodedPath = databasePath.toUri().getRawPath();
+        return DriverManager.getConnection(
+                "jdbc:sqlite:file:" + encodedPath + "?mode=ro&immutable=1",
+                properties);
     }
 
     private boolean supportsTrigramSearch(Connection connection, String query)
