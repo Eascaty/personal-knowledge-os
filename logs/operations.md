@@ -216,3 +216,4 @@
 - 创建 Issue #22，范围限定为本地文件入队、不可变 raw、内容哈希幂等、事务回滚和跨 Python/Java 的项目锁；不增加 HTTP 写接口。
 - Java CLI 只复用 schema v1 创建 source、初始 extract 任务和审计事件；Python 继续独占 schema、任务处理、分类、提炼与发布。
 - Python 项目锁切换为 POSIX 记录锁，并保留同进程竞争保护，使 Java `FileChannel` 与 Python 写任务共享同一个内核互斥边界。
+- 草稿 PR #23 的 Python 3.9/3.12/3.13、Java 21、Public Demo 与 CodeQL Java/Python/JavaScript 门禁全部成功，已具备合入受保护 `main` 的条件。
