@@ -2,7 +2,7 @@
 
 - 日期：2026-08-12（Asia/Shanghai）
 - 运行环境：macOS、Python 3.9.6、SQLite FTS5 trigram、Temurin JDK 21.0.12、Maven 3.9.11
-- 结果：28 项 Python 测试、32 项 Java 测试与2个 Web 数据源场景全部通过；J4 容器最终结果以远端门禁为准
+- 结果：28 项 Python 测试、34 项 Java 测试与2个 Web 数据源场景全部通过；J4 Linux 容器冒烟通过
 - 正式目录复验：`$HOME/AI/knowledge`
 - 最终健康检查：PASS；隐私问题0；断链0；网络请求0
 - 浏览器验收：桌面1280×720与手机390×844布局正常，分类导航可交互，控制台0错误

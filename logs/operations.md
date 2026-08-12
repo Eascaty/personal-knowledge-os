@@ -217,3 +217,9 @@
 - Java CLI 只复用 schema v1 创建 source、初始 extract 任务和审计事件；Python 继续独占 schema、任务处理、分类、提炼与发布。
 - Python 项目锁切换为 POSIX 记录锁，并保留同进程竞争保护，使 Java `FileChannel` 与 Python 写任务共享同一个内核互斥边界。
 - 草稿 PR #23 的 Python 3.9/3.12/3.13、Java 21、Public Demo 与 CodeQL Java/Python/JavaScript 门禁全部成功，已具备合入受保护 `main` 的条件。
+
+### Java J4 可部署只读服务候选（2026-08-12）
+
+- 创建 Issue #24 和草稿 PR #26；Docker 只作为可选 Java 只读 API 部署层，不替代 Python 流水线或静态网站。
+- Linux 容器门禁发现并修复 SQLite JDBC 原生库加载目录与 WAL 快照只读打开问题；最终以非 root、只读根文件系统、只读数据库和 `mode=ro&immutable=1` 通过冒烟。
+- PR #26 的 Python 3.9/3.12/3.13、Java 21、Container Smoke、Public Demo 与 CodeQL Java/Python/JavaScript 全部成功。
