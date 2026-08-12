@@ -91,6 +91,33 @@ class ArchitectureBoundaryTests(unittest.TestCase):
         self.assertIn("KnowledgeQueryService", controller)
         self.assertNotIn("KnowledgeQueryRepository", controller)
 
+    def test_container_boundary_excludes_private_workspace(self):
+        root = Path(__file__).resolve().parents[1]
+        dockerfile = (root / "apps" / "api" / "Dockerfile").read_text(
+            encoding="utf-8"
+        )
+        dockerignore = (root / ".dockerignore").read_text(encoding="utf-8")
+        compose = (root / "compose.yaml").read_text(encoding="utf-8")
+
+        self.assertIn("USER 10001:10001", dockerfile)
+        self.assertIn("HEALTHCHECK", dockerfile)
+        self.assertIn("eclipse-temurin:21.0.11_10-jdk-alpine-3.23", dockerfile)
+        self.assertIn("eclipse-temurin:21.0.11_10-jre-alpine-3.23", dockerfile)
+        self.assertIn("! -name '*.jar.original'", dockerfile)
+        self.assertNotIn("COPY workspace", dockerfile)
+        dockerignore_lines = dockerignore.splitlines()
+        self.assertEqual(dockerignore_lines[0], "**")
+        self.assertIn("!apps/api/pom.xml", dockerignore_lines)
+        self.assertIn("!apps/api/src/**", dockerignore_lines)
+        self.assertNotIn("!workspace", dockerignore_lines)
+        self.assertIn("read_only: true", compose)
+        self.assertIn("no-new-privileges:true", compose)
+        self.assertIn("internal: true", compose)
+        self.assertIn("pids_limit: 256", compose)
+        self.assertIn("mem_limit:", compose)
+        self.assertIn("cpus:", compose)
+        self.assertIn("KNOWLEDGE_DB_FILE:?", compose)
+
 
 if __name__ == "__main__":
     unittest.main()

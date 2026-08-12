@@ -1,8 +1,8 @@
 # 项目状态
 
 - 更新时间：2026-08-12（Asia/Shanghai）
-- 阶段：v0.4.0 架构重构、Java J2 中文全文搜索与 J3 受限离线导入均已完成交付验证
-- 总体状态：J3 的 Python、Java、Web、公开演示与三语言 CodeQL 门禁全部成功；项目保持可发布
+- 阶段：Java J4 可部署只读服务进入交付验证
+- 总体状态：J4 已完成非 root 容器、只读 Compose 边界、存活/数据库就绪探针与容器 CI；项目保持可发布
 
 ## 已实现
 
@@ -31,6 +31,8 @@
 - Java J3 提供受限离线文件导入 CLI：内容哈希幂等、不可变 raw、单事务入队，与 Python 共用跨运行时项目锁；HTTP API 仍保持只读。
 - Java API 结构性排除 private 内容、`origin`、`raw_path` 和绝对路径。
 - Java HTTP 默认仅监听 `127.0.0.1`，外部监听必须显式设置环境变量。
+- Java API 提供 Actuator liveness/readiness；readiness 复用 schema v1 只读检查，不公开健康详情。
+- J4 容器使用固定 Temurin 21 补丁版本和非 root UID 10001；Compose 根文件系统与数据库均只读，移除全部 capabilities，并默认只绑定本机回环地址。
 - launchd 项目内模板，未修改 macOS 系统目录。
 
 ## 已验证环境
@@ -44,13 +46,14 @@
 ## 最近验证
 
 - Python 3.9 语法解析通过。
-- 27 项 Python unittest 全部通过。
+- 28 项 Python unittest 全部通过。
 - Python 存储、知识处理、检查和网站构建已拆为职责模块；兼容 facade 保留旧导入，架构测试限制实现模块不超过600行。
 - 工程已迁移为 `apps/ + packages/ + workspace/` 单仓库：Python、Java、Web 各自归位，私密输入、SQLite、Vault 与私密构建统一进入 Git 忽略的 `workspace/`。
 - 真实 SQLite 迁移前已完成一致性备份，迁移后完整性检查、现有资料去重、全流水线、发布门禁与健康检查通过。
 - canonical JSON Schema v1 与只读 API OpenAPI v1 已集中到 `packages/contracts/`；Python 建站强制校验，Python/Java 共用虚构契约样例。
 - Web 已通过数据源接口解耦静态包与 API v1；Java 控制器通过应用服务访问仓储，未来 App 无需读取 SQLite 或依赖页面内部状态。
 - Web 静态/API 两种适配器场景2/2通过；Java J3 27/27通过，JaCoCo 指令89.4%、分支74.1%，门禁通过。
+- J4 增加5项 Java 健康指标与实际 HTTP 探针测试，Java 测试总数为32项；最终覆盖率与 Linux 容器冒烟由远端 CI 验证。
 - Java J2 固定2,000条中文资料基准完成：50次测量中位数1.325ms、p95 2.260ms；1秒回归门禁通过。
 - Python 包、Java JAR 与运行时版本统一为0.4.0，并由架构测试阻止版本漂移。
 - 重构后的公开 Demo 在实际浏览器完成搜索、详情、关系地图和390×844手机布局验收，控制台0错误。
@@ -95,4 +98,5 @@
 ## 后续里程碑
 
 1. 用户准备发布真实私密站点时，再配置 Cloudflare Pages + Access；默认仍不上传 private 数据。
-2. 确认原生 App 的目标平台与离线/同步需求后，再创建移动端应用；现阶段直接复用 OpenAPI v1。
+2. 确认 Java API 的真实远程部署与访问者范围后，再设计认证、TLS 终止和同步；默认容器仅用于本机或受保护网络。
+3. 确认原生 App 的目标平台与离线/同步需求后，再创建移动端应用；现阶段直接复用 OpenAPI v1。
